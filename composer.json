@@ -1,0 +1,9 @@
+{
+    "name": "unocha/un_date",
+    "description": "UN date and time twig filters for Drupal 8",
+    "type": "drupal-module",
+    "license": "GPL-2.0-only",
+    "require": {
+        "composer/installers": "^1.2"
+    }
+}

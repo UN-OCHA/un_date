@@ -329,7 +329,13 @@ class CustomTwig extends AbstractExtension {
       $ampm = 'p.m.';
     }
 
-    return $date->format('g.i', $options) . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
+    // Hide zero minutes.
+    if ($date->format('i', $options) === '00') {
+      return $date->format('g', $options) . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
+    }
+    else {
+      return $date->format('g.i', $options) . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
+    }
   }
 
   /**

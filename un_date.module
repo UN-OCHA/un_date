@@ -1,0 +1,30 @@
+<?php
+
+/**
+ * @file
+ * Module file.
+ */
+
+/**
+ * Implements hook_theme().
+ */
+function un_date_theme($existing, $type, $theme, $path) {
+  return [
+    'un_date_datetime_range_timezone' => [
+      'variables' => [
+        'iso_start_date' => NULL,
+        'iso_end_date' => NULL,
+        'start_date' => NULL,
+        'start_time' => NULL,
+        'end_date' => NULL,
+        'end_time' => NULL,
+        'separator' => NULL,
+        'timezone' => NULL,
+        'display_timezone' => NULL,
+        'same_date' => NULL,
+        'same_day' => NULL,
+        'all_day' => NULL,
+      ],
+    ],
+  ];
+}

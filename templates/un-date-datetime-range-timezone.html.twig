@@ -1,0 +1,34 @@
+{#
+/**
+ * @file
+ * The template.
+ */
+#}
+
+<dl{{ attributes.addClass('uno-event-date') }}>
+  {% if same_date %}
+  <div class="uno-event-date__wrapper uno-event-date__wrapper--date uno-event-date__wrapper--date--start">
+    <dt class="uno-event-date__label">{{ same_date ? 'Date:'|t : 'Start date:'|t }}</dt>
+    <dd class="uno-event-date__date"><time class="uno-event-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time></dd>
+  </div>
+  {% else %}
+    {% if same_day %}
+      <div class="uno-event-date__wrapper uno-event-date__wrapper--date uno-event-date__wrapper--date--start">
+        <dt class="uno-event-date__label">{{ 'Date:'|t }}</dt>
+        <dd class="uno-event-date__date">
+          <time class="uno-event-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}</time>
+          -
+          <time class="uno-event-date__date__value" datetime="{{ iso_end_date }}">{{ end_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time></dd>
+      </div>
+    {% else %}
+      <div class="uno-event-date__wrapper uno-event-date__wrapper--date uno-event-date__wrapper--date--start">
+        <dt class="uno-event-date__label">{{ 'Start date:'|t }}</dt>
+        <dd class="uno-event-date__date"><time class="uno-event-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time></dd>
+      </div>
+      <div class="uno-event-date__wrapper uno-event-date__wrapper--date uno-event-date__wrapper--date--end">
+        <dt class="uno-event-date__label">{{ 'End date:'|t }}</dt>
+        <dd class="uno-event-date__date"><time class="uno-event-date__date__value" datetime="{{ iso_end_date }}">{{ end_date }} {{ end_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time></dd>
+      </div>
+    {% endif %}
+  {% endif %}
+</dl>

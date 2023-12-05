@@ -1,0 +1,15 @@
+.un-date {
+  display: block;
+}
+.un-date__wrapper {
+  display: block;
+}
+.un-date__label {
+  display: inline;
+}
+.un-date__date {
+  display: inline;
+}
+.un-date__time {
+  display: inline;
+}

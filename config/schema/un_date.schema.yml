@@ -1,0 +1,30 @@
+field.formatter.settings.un_date_datetime:
+  type: mapping
+  label: 'Datetime default display format settings'
+  mapping:
+    display_timezone:
+      type: boolean
+      label: 'Display timezone'
+    convert_to_utc:
+      type: boolean
+      label: 'Convert to UTC'
+field.formatter.settings.un_date_daterange:
+  type: mapping
+  label: 'Datetime default display format settings'
+  mapping:
+    display_timezone:
+      type: boolean
+      label: 'Display timezone'
+    convert_to_utc:
+      type: boolean
+      label: 'Convert to UTC'
+field.formatter.settings.un_date_daterange_timezone:
+  type: mapping
+  label: 'Datetime default display format settings'
+  mapping:
+    display_timezone:
+      type: boolean
+      label: 'Display timezone'
+    convert_to_utc:
+      type: boolean
+      label: 'Convert to UTC'

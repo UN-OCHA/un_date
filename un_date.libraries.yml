@@ -1,0 +1,4 @@
+un-date:
+  css:
+    theme:
+      components/un-date/un-date.css: {}

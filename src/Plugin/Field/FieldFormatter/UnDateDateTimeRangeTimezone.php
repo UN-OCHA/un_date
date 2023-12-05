@@ -4,8 +4,9 @@ namespace Drupal\un_date\Plugin\Field\FieldFormatter;
 
 use DateTimeZone;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\datetime_range_timezone\Plugin\Field\FieldFormatter\DateRangeTimezoneFormatterBase;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\un_date\Trait\UnDateTimeTrait;
 
 /**
@@ -20,7 +21,7 @@ use Drupal\un_date\Trait\UnDateTimeTrait;
  * )
  */
 
-class UnDateRangeTimezone extends DateRangeTimezoneFormatterBase {
+class UnDateDateTimeRangeTimezone extends FormatterBase {
 
   use UnDateTimeTrait;
 
@@ -55,7 +56,7 @@ class UnDateRangeTimezone extends DateRangeTimezoneFormatterBase {
         $same_day = TRUE;
       }
 
-      $timezone = new DateTimeZone('UTC');
+      $timezone = new DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
       if ($item->timezone) {
         $timezone = new DateTimeZone($item->timezone);
         $start_date->setTimezone($timezone);
@@ -93,7 +94,7 @@ class UnDateRangeTimezone extends DateRangeTimezoneFormatterBase {
   public static function defaultSettings() {
     return [
       'separator' => '-',
-      'display_timezone' => FALSE,
+      'display_timezone' => TRUE,
       'convert_to_utc' => FALSE,
     ] + parent::defaultSettings();
   }

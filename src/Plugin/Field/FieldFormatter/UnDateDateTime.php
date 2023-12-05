@@ -55,13 +55,16 @@ class UnDateDateTime extends FormatterBase {
       $date->setTimeZone($timezone);
 
       $theme = 'un_date_date';
+      $iso_start_date = $date->format('Y-m-d');
+
       if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATETIME) {
         $theme = 'un_date_datetime';
+        $iso_start_date = $date->format('c');
       }
 
       $elements[$delta] = [
         '#theme' => $theme . '__' . $theme_suggestions,
-        '#iso_start_date' => $date ? $date->format('c') : '',
+        '#iso_start_date' => $iso_start_date,
         '#start_date' => $this->formatDate($date, $utc),
         '#start_time' => $this->formatTime($date, $utc),
         '#timezone' => $timezone->getName(),
@@ -75,17 +78,6 @@ class UnDateDateTime extends FormatterBase {
     }
 
     return $elements;
-  }
-
-  protected function setTimeZone(DrupalDateTime $date) {
-    if ($this->getFieldSetting('datetime_type') === DateTimeItem::DATETIME_TYPE_DATE) {
-      // A date without time has no timezone conversion.
-      $timezone = DateTimeItemInterface::STORAGE_TIMEZONE;
-    }
-    else {
-      $timezone = date_default_timezone_get();
-    }
-    $date->setTimeZone(timezone_open($timezone));
   }
 
   /**

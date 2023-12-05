@@ -7,7 +7,6 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Datetime\Entity\DateFormat;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\Core\Form\FormState;
 use Drupal\Tests\datetime\Functional\DateTestBase;
 
 /**
@@ -104,7 +103,7 @@ class DateTimeFieldTest extends DateTestBase {
       /** @var \Drupal\Core\Datetime\DateFormatterInterface $date_formatter */
       $date_formatter = $this->container->get('date.formatter');
       $expected = '31.12.2012';
-      $expected_iso = $date_formatter->format($date->getTimestamp(), 'custom', 'c', DateTimeItemInterface::STORAGE_TIMEZONE);
+      $expected_iso = $date_formatter->format($date->getTimestamp(), 'custom', 'Y-m-d', DateTimeItemInterface::STORAGE_TIMEZONE);
       $output = $this->renderTestEntity($id);
       $this->assertStringContainsString($expected, $output, new FormattableMarkup('Formatted date field displayed as %expected with %expected_iso attribute in %timezone.', [
         '%expected' => $expected,
@@ -123,6 +122,8 @@ class DateTimeFieldTest extends DateTestBase {
    * Tests date and time field.
    */
   public function testDatetimeField() {
+    $this->setSiteTimezone(DateTimeItemInterface::STORAGE_TIMEZONE);
+
     $field_name = $this->fieldStorage->getName();
     // Change the field to a datetime field.
     $this->fieldStorage->setSetting('datetime_type', 'datetime');
@@ -136,7 +137,7 @@ class DateTimeFieldTest extends DateTestBase {
     $date = new DrupalDateTime($value, DateTimeItemInterface::STORAGE_TIMEZONE);
 
     // Update the timezone to the system default.
-    $date->setTimezone(timezone_open(date_default_timezone_get()));
+    $date->setTimezone(timezone_open(DateTimeItemInterface::STORAGE_TIMEZONE));
 
     // Reset display options since these get changed below.
     $this->displayOptions = [

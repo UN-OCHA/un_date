@@ -67,13 +67,18 @@ class UnDateDateTimeRange extends FormatterBase {
       $end_date->setTimeZone($timezone);
 
       $theme = 'un_date_date_range';
+      $iso_start_date = $start_date->format('Y-m-d');
+      $iso_end_date = $end_date->format('Y-m-d') ? '';
+
       if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATETIME) {
         $theme = 'un_date_datetime_range';
-      }
+        $iso_start_date = $start_date->format('c');
+        $iso_end_date = $end_date->format('c') ?? '';
+        }
       $elements[$delta] = [
         '#theme' => $theme . '__' . $theme_suggestions,
-        '#iso_start_date' => $start_date ? $start_date->format('c') : '',
-        '#iso_end_date' => $end_date ? $end_date->format('c') : '',
+        '#iso_start_date' => $iso_start_date,
+        '#iso_end_date' => $iso_end_date,
         '#start_date' => $this->formatDate($start_date, $utc),
         '#start_time' => $this->formatTime($start_date, $utc),
         '#end_date' => $this->formatDate($end_date, $utc),

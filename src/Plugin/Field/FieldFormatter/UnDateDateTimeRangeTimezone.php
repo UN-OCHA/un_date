@@ -71,7 +71,6 @@ class UnDateDateTimeRangeTimezone extends FormatterBase {
         '#start_time' => $this->formatTime($start_date, $utc),
         '#end_date' => $this->formatDate($end_date, $utc),
         '#end_time' => $this->formatTime($end_date, $utc),
-        '#separator' => $this->getSetting('separator'),
         '#timezone' => $timezone->getName(),
         '#display_timezone' => $tz,
         '#same_date' => $same_date,
@@ -93,7 +92,6 @@ class UnDateDateTimeRangeTimezone extends FormatterBase {
    */
   public static function defaultSettings() {
     return [
-      'separator' => '-',
       'display_timezone' => TRUE,
       'convert_to_utc' => FALSE,
     ] + parent::defaultSettings();
@@ -104,13 +102,6 @@ class UnDateDateTimeRangeTimezone extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
-
-    $form['separator'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Date separator'),
-      '#description' => $this->t('The string to separate the start and end dates'),
-      '#default_value' => $this->getSetting('separator'),
-    ];
 
     $form['display_timezone'] = [
       '#type' => 'checkbox',
@@ -134,10 +125,6 @@ class UnDateDateTimeRangeTimezone extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = parent::settingsSummary();
-
-    if ($separator = $this->getSetting('separator')) {
-      $summary[] = $this->t('Separator: %separator', ['%separator' => $separator]);
-    }
 
     $summary[] = $this->t('@action the timezone', [
       '@action' => $this->getSetting('display_timezone') ? 'Showing' : 'Hiding',

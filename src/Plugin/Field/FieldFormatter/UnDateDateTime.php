@@ -85,7 +85,7 @@ class UnDateDateTime extends FormatterBase {
    */
   public static function defaultSettings() {
     return [
-      'display_timezone' => TRUE,
+      'display_timezone' => FALSE,
       'convert_to_utc' => FALSE,
     ] + parent::defaultSettings();
   }

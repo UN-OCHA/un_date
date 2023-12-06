@@ -2,9 +2,14 @@
 
 namespace Drupal\un_date\TwigExtension;
 
+use DateTime;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeFieldItemList;
+use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
+use Drupal\un_date\Trait\UnDateTimeTrait;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -13,6 +18,8 @@ use Twig\TwigFunction;
  * Custom twig filters for dates.
  */
 class CustomTwig extends AbstractExtension {
+
+  use UnDateTimeTrait;
 
   /**
    * {@inheritdoc}
@@ -49,7 +56,7 @@ class CustomTwig extends AbstractExtension {
    * @return string
    *   Formatted date.
    */
-  public function getUnDate(DrupalDateTime $date, bool $to_utc = FALSE) {
+  public function getUnDate(DateTime|DrupalDateTime $date, bool $to_utc = FALSE) {
     return $this->formatDate($date, $to_utc);
   }
 
@@ -66,7 +73,7 @@ class CustomTwig extends AbstractExtension {
    * @return string
    *   Formatted time.
    */
-  public function getUnTime(DrupalDateTime $date, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
+  public function getUnTime(DateTime|DrupalDateTime $date, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
     return $this->formatTime($date, $to_utc, $show_timezone);
   }
 
@@ -83,7 +90,7 @@ class CustomTwig extends AbstractExtension {
    * @return string
    *   Formatted date and time.
    */
-  public function getUnDateTime(DrupalDateTime $date, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
+  public function getUnDateTime(DateTime|DrupalDateTime $date, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
     return $this->formatDateTime($date, $to_utc, $show_timezone);
   }
 
@@ -111,10 +118,21 @@ class CustomTwig extends AbstractExtension {
       $daterange = $daterange_list->first();
     }
 
+    if ($daterange_list instanceof DateRangeItem) {
+      $daterange = $daterange_list;
+    }
+
+    if ($daterange_list instanceof DateRangeFieldItemList) {
+      $daterange = $daterange_list->first();
+    }
+
+    if ($daterange_list instanceof DateTimeItem) {
+      $daterange = $daterange_list;
+    }
+
     if (!$daterange) {
       return NULL;
     }
-
     if ($this->formatDate($daterange->start_date) === $this->formatDate($daterange->end_date)) {
       return $this->formatDateTime($daterange->start_date, $to_utc, FALSE) . ' — ' . $this->formatTime($daterange->end_date, $to_utc, $show_timezone);
     }
@@ -155,10 +173,10 @@ class CustomTwig extends AbstractExtension {
       if ($this->allDay($daterange)) {
         return 'All day';
       }
-      return $this->formatTime($daterange->start_date, $to_utc, FALSE) . ' — ' . $this->formatTime($daterange->end_date, $to_utc, $show_timezone);
+      return $this->formatTime($daterange->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatTime($daterange->end_date, $to_utc, $show_timezone);
     }
     else {
-      return $this->formatDateTime($daterange->start_date, $to_utc, FALSE) . ' — ' . $this->formatDateTime($daterange->end_date, $to_utc, $show_timezone);
+      return $this->formatDateTime($daterange->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDateTime($daterange->end_date, $to_utc, $show_timezone);
     }
   }
 
@@ -301,117 +319,6 @@ class CustomTwig extends AbstractExtension {
     }
 
     return FALSE;
-  }
-
-  /**
-   * Format time.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted time.
-   */
-  protected function formatTime(DrupalDateTime $date, bool $to_utc = FALSE, $show_timezone = FALSE) {
-    $options = [];
-    if ($to_utc) {
-      $options = [
-        'timezone' => 'UTC',
-      ];
-    }
-
-    $ampm = 'a.m.';
-    if ($date->format('a', $options) === 'pm') {
-      $ampm = 'p.m.';
-    }
-
-    // Hide zero minutes.
-    if ($date->format('i', $options) === '00') {
-      return $date->format('g', $options) . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
-    }
-    else {
-      return $date->format('g.i', $options) . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
-    }
-  }
-
-  /**
-   * Format date.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   *
-   * @return string
-   *   Formatted date.
-   */
-  protected function formatDate(DrupalDateTime $date, bool $to_utc = FALSE) {
-    $options = [];
-    if ($to_utc) {
-      $options = [
-        'timezone' => 'UTC',
-      ];
-    }
-
-    return $date->format('d.m.Y', $options);
-  }
-
-  /**
-   * Format datetime.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted date.
-   */
-  protected function formatDateTime(DrupalDateTime $date, bool $to_utc = FALSE, $show_timezone = FALSE) {
-    return $this->formatDate($date, $to_utc) . ' ' . $this->formatTime($date, $to_utc, $show_timezone);
-  }
-
-  /**
-   * Format timezone.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted timezone.
-   */
-  protected function formatTimezone(DrupalDateTime $date, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
-    if ($show_timezone) {
-      if ($to_utc) {
-        return ' UTC';
-      }
-      return ' ' . $date->getTimezone()->getName();
-    }
-
-    return '';
-  }
-
-  /**
-   * Get timezone offset.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   *
-   * @return string
-   *   Offset.
-   */
-  protected function getTimezoneOffset(DrupalDateTime $date) {
-    return $date->getTimezone()->getOffset($date->getPhpDateTime());
   }
 
 }

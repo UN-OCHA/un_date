@@ -68,7 +68,7 @@ class UnDateDateTimeRange extends FormatterBase {
 
       $theme = 'un_date_date_range';
       $iso_start_date = $start_date->format('Y-m-d');
-      $iso_end_date = $end_date->format('Y-m-d') ? '';
+      $iso_end_date = $end_date->format('Y-m-d') ?? '';
 
       if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATETIME) {
         $theme = 'un_date_datetime_range';
@@ -83,7 +83,6 @@ class UnDateDateTimeRange extends FormatterBase {
         '#start_time' => $this->formatTime($start_date, $utc),
         '#end_date' => $this->formatDate($end_date, $utc),
         '#end_time' => $this->formatTime($end_date, $utc),
-        '#separator' => $this->getSetting('separator'),
         '#timezone' => $timezone->getName(),
         '#display_timezone' => $tz,
         '#same_date' => $same_date,
@@ -105,8 +104,7 @@ class UnDateDateTimeRange extends FormatterBase {
    */
   public static function defaultSettings() {
     return [
-      'separator' => '-',
-      'display_timezone' => TRUE,
+      'display_timezone' => FALSE,
       'convert_to_utc' => FALSE,
     ] + parent::defaultSettings();
   }
@@ -116,13 +114,6 @@ class UnDateDateTimeRange extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state) {
     $form = parent::settingsForm($form, $form_state);
-
-    $form['separator'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Date separator'),
-      '#description' => $this->t('The string to separate the start and end dates'),
-      '#default_value' => $this->getSetting('separator'),
-    ];
 
     $form['display_timezone'] = [
       '#type' => 'checkbox',
@@ -146,10 +137,6 @@ class UnDateDateTimeRange extends FormatterBase {
    */
   public function settingsSummary() {
     $summary = parent::settingsSummary();
-
-    if ($separator = $this->getSetting('separator')) {
-      $summary[] = $this->t('Separator: %separator', ['%separator' => $separator]);
-    }
 
     $summary[] = $this->t('@action the timezone', [
       '@action' => $this->getSetting('display_timezone') ? 'Showing' : 'Hiding',

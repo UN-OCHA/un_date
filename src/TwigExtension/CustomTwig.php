@@ -294,29 +294,4 @@ class CustomTwig extends AbstractExtension {
     return $date_item->timezone === 'UTC';
   }
 
-  /**
-   * Is all day event.
-   *
-   * @param Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $date_item
-   *   Drupal date time object.
-   *
-   * @return bool
-   *   TRUE if it's an all day event.
-   */
-  protected function allDay(DateRangeItem|DateRecurItem $date_item) {
-    $options = [
-      'timezone' => 'UTC',
-    ];
-
-    if ($date_item->start_date->format('Hi', $options) === '0000' && $date_item->end_date->format('Hi', $options) === '0000') {
-      return TRUE;
-    }
-
-    if ($date_item->start_date->format('Hi', $options) === '0000' && $date_item->end_date->format('Hi', $options) === '2359') {
-      return TRUE;
-    }
-
-    return FALSE;
-  }
-
 }

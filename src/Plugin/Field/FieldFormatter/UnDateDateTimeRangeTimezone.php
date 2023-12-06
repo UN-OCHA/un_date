@@ -49,7 +49,7 @@ class UnDateDateTimeRangeTimezone extends FormatterBase {
       $same_date = FALSE;
       $same_day = FALSE;
 
-      if ($start_date == $end_date) {
+      if ($start_date->format('c') == $end_date->format('c')) {
         $same_date = TRUE;
       }
       elseif ($this->formatDate($start_date, $utc) == $this->formatDate($end_date, $utc)) {

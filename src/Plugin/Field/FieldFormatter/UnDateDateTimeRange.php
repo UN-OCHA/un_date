@@ -39,7 +39,7 @@ class UnDateDateTimeRange extends FormatterBase {
     ]);
 
     foreach ($items as $delta => $item) {
-      /** @var \Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone $item */
+      /** @var \Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem $item */
       /** @var \Drupal\Core\Datetime\DrupalDateTime $start_date */
       $start_date = $item->start_date;
       /** @var \Drupal\Core\Datetime\DrupalDateTime $end_date */
@@ -50,7 +50,7 @@ class UnDateDateTimeRange extends FormatterBase {
       $same_date = FALSE;
       $same_day = FALSE;
 
-      if ($start_date == $end_date) {
+      if ($start_date->format('c') == $end_date->format('c')) {
         $same_date = TRUE;
       }
       elseif ($this->formatDate($start_date, $utc) == $this->formatDate($end_date, $utc)) {
@@ -74,7 +74,8 @@ class UnDateDateTimeRange extends FormatterBase {
         $theme = 'un_date_datetime_range';
         $iso_start_date = $start_date->format('c');
         $iso_end_date = $end_date->format('c') ?? '';
-        }
+      }
+
       $elements[$delta] = [
         '#theme' => $theme . '__' . $theme_suggestions,
         '#iso_start_date' => $iso_start_date,
@@ -87,7 +88,7 @@ class UnDateDateTimeRange extends FormatterBase {
         '#display_timezone' => $tz,
         '#same_date' => $same_date,
         '#same_day' => $same_day,
-        '#all_day' => FALSE,
+        '#all_day' => $this->allDay($item),
         '#cache' => [
           'contexts' => [
             'timezone',

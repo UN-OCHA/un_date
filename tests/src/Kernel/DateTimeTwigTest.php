@@ -65,6 +65,16 @@ class DateTimeTwigTest extends KernelTestBase {
         'template' => '{{ variable|un_datetime }}',
         'date' => new DateTime('2023-12-06T10:00:12'),
       ],
+//      'datetime_all_day' => [
+//        'expected' => '06.12.2023 10 a.m.',
+//        'template' => '{{ un_is_all_day(variable) }}',
+//        'date' => new DateTime('2023-12-06T10:00:12'),
+//      ],
+      'datetime_is_utc' => [
+        'expected' => '1',
+        'template' => '{{ un_is_utc(variable) }}',
+        'date' => new DateTime('2023-12-06T10:00:12'),
+      ],
     ];
   }
 

@@ -142,6 +142,49 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
   }
 
   /**
+   * @dataProvider providerTestDataLocalTimes
+   */
+  public function testTwigFiltersDateRangeNamedLocal($expected, $start, $end) {
+    $template = '{{ variable|un_daterange_named("local_times") }}';
+    $field_name = $this->fieldStorage->getName();
+    // Create an entity.
+    $entity = EntityTest::create([
+      'name' => $this->randomString(),
+      $field_name => [
+        'value' => $start,
+        'end_value' => $end,
+      ],
+    ]);
+
+    $variable = $entity->{$field_name};
+    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+
+    $variable = $entity->{$field_name}->first();
+    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+  }
+
+  /**
+   * @dataProvider providerTestDataFilters
+   */
+  public function testTwigFiltersUnDate($expected, $template, $start, $end) {
+    $field_name = $this->fieldStorage->getName();
+    // Create an entity.
+    $entity = EntityTest::create([
+      'name' => $this->randomString(),
+      $field_name => [
+        'value' => $start,
+        'end_value' => $end,
+      ],
+    ]);
+
+    $variable = $entity->{$field_name};
+    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+
+    $variable = $entity->{$field_name}->first();
+    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+  }
+
+  /**
    * Provide test examples.
    */
   public function providerTestData() {
@@ -174,7 +217,40 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
     ];
   }
 
-    /**
+  /**
+   * Provide test examples.
+   */
+  public function providerTestDataLocalTimes() {
+    return [
+      'same' => [
+        'expected' => '10.11 a.m. — 10.11 a.m. UTC',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-06T10:11:12',
+      ],
+      'same_day' => [
+        'expected' => '10.11 a.m. — 11.11 a.m. UTC',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-06T11:11:12',
+      ],
+      'next_day' => [
+        'expected' => '10.11 a.m. — 11.11 a.m. UTC',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-07T11:11:12',
+      ],
+      'all_day' => [
+        'expected' => '',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-06T23:59:59',
+      ],
+      'all_day_multi' => [
+        'expected' => '',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-07T23:59:59',
+      ],
+    ];
+  }
+
+  /**
    * Provide test examples.
    */
   public function providerTestDataTimes() {
@@ -202,6 +278,74 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
       'all_day_multi' => [
         'expected' => '06.12.2023 — 07.12.2023',
         'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-07T23:59:59',
+      ],
+    ];
+  }
+
+  /**
+   * Provide test examples.
+   */
+  public function providerTestDataFilters() {
+    return [
+      'date' => [
+        'expected' => '06.12.2023',
+        'template' => '{{ variable|un_date }}',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'time' => [
+        'expected' => '10.11 a.m.',
+        'template' => '{{ variable|un_time }}',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'datetime' => [
+        'expected' => '06.12.2023 10.11 a.m.',
+        'template' => '{{ variable|un_datetime }}',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'date_no_minutes' => [
+        'expected' => '06.12.2023',
+        'template' => '{{ variable|un_date }}',
+        'start' => '2023-12-06T10:00:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'time_no_minutes' => [
+        'expected' => '10 a.m.',
+        'template' => '{{ variable|un_time }}',
+        'start' => '2023-12-06T10:00:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'datetime_no_minutes' => [
+        'expected' => '06.12.2023 10 a.m.',
+        'template' => '{{ variable|un_datetime }}',
+        'start' => '2023-12-06T10:00:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'datetime_all_day_0' => [
+        'expected' => '',
+        'template' => '{{ un_is_all_day(variable) }}',
+        'start' => '2023-12-06T10:00:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'datetime_all_day_1' => [
+        'expected' => '1',
+        'template' => '{{ un_is_all_day(variable) }}',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-06T23:59:59',
+      ],
+      'datetime_all_day_1' => [
+        'expected' => '1',
+        'template' => '{{ un_is_all_day(variable) }}',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'datetime_is_utc' => [
+        'expected' => '1',
+        'template' => '{{ un_is_utc(variable) }}',
+        'start' => '2023-12-06T10:00:12',
         'end' => '2023-12-07T23:59:59',
       ],
     ];

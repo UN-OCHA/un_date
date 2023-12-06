@@ -3,7 +3,6 @@
 namespace Drupal\Tests\un_date\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
@@ -15,7 +14,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  *
  * @group datetime
  */
-class DateRangeFieldDateTimeRenderTest extends FieldKernelTestBase {
+class DateRangeFieldDateRangeRenderTest extends FieldKernelTestBase {
 
   /**
    * A field storage to use in this test class.
@@ -36,6 +35,7 @@ class DateRangeFieldDateTimeRenderTest extends FieldKernelTestBase {
    */
   protected static $modules = [
     'datetime',
+    'datetime_range',
     'un_date',
   ];
 
@@ -55,8 +55,8 @@ class DateRangeFieldDateTimeRenderTest extends FieldKernelTestBase {
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => mb_strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
-      'type' => 'datetime',
-      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
+      'type' => 'daterange',
+      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATETIME],
     ]);
     $this->fieldStorage->save();
 
@@ -68,7 +68,7 @@ class DateRangeFieldDateTimeRenderTest extends FieldKernelTestBase {
     $this->field->save();
 
     $display_options = [
-      'type' => 'un_date_datetime',
+      'type' => 'un_date_daterange',
       'label' => 'hidden',
       'settings' => [
         'display_timezone' => FALSE,
@@ -87,13 +87,14 @@ class DateRangeFieldDateTimeRenderTest extends FieldKernelTestBase {
   /**
    * @dataProvider providerTestData
    */
-  public function testDateTime($expected, $date) {
+  public function testDateRange($expected, $start, $end) {
     $field_name = $this->fieldStorage->getName();
     // Create an entity.
     $entity = EntityTest::create([
       'name' => $this->randomString(),
       $field_name => [
-        'value' => $date,
+        'value' => $start,
+        'end_value' => $end,
       ],
     ]);
 
@@ -107,23 +108,28 @@ class DateRangeFieldDateTimeRenderTest extends FieldKernelTestBase {
     return [
       'same' => [
         'expected' => 'Date: 06.12.2023 10.11 a.m.',
-        'date' => '2023-12-06T10:11:12',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-06T10:11:12',
       ],
       'same_day' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m.',
-        'date' => '2023-12-06T10:11:12',
+        'expected' => 'Date: 06.12.2023 10.11 a.m. — 11.11 a.m.',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-06T11:11:12',
       ],
       'next_day' => [
-        'expected' => 'Date: 06.12.2023 10 a.m.',
-        'date' => '2023-12-06T10:00:12',
+        'expected' => 'Start date: 06.12.2023 10.11 a.m. End date: 07.12.2023 11.11 a.m.',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-07T11:11:12',
       ],
       'all_day' => [
-        'expected' => 'Date: 06.12.2023 12 a.m.',
-        'date' => '2023-12-06T00:00:00',
+        'expected' => 'Date: 06.12.2023',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-06T23:59:59',
       ],
       'all_day_multi' => [
-        'expected' => 'Date: 06.12.2023 12 a.m.',
-        'date' => '2023-12-06T00:00:00',
+        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-07T23:59:59',
       ],
     ];
   }

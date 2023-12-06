@@ -3,11 +3,13 @@
 namespace Drupal\un_date\TwigExtension;
 
 use DateTime;
+use DateTimeZone;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeFieldItemList;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\un_date\Trait\UnDateTimeTrait;
@@ -57,8 +59,19 @@ class CustomTwig extends AbstractExtension {
    * @return string
    *   Formatted date.
    */
-  public function getUnDate(DateTime|DrupalDateTime $date, bool $to_utc = FALSE) {
-    return $this->formatDate($date, $to_utc);
+  public function getUnDate($in, bool $to_utc = FALSE) {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return NULL;
+    }
+
+    // Restrict to one date.
+    if (isset($date_item->start_date)) {
+      $date_item = $date_item->start_date;
+    }
+
+    return $this->formatDate($date_item, $to_utc);
   }
 
   /**
@@ -74,8 +87,19 @@ class CustomTwig extends AbstractExtension {
    * @return string
    *   Formatted time.
    */
-  public function getUnTime(DateTime|DrupalDateTime $date, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
-    return $this->formatTime($date, $to_utc, $show_timezone);
+  public function getUnTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return NULL;
+    }
+
+    // Restrict to one date.
+    if (isset($date_item->start_date)) {
+      $date_item = $date_item->start_date;
+    }
+
+    return $this->formatTime($date_item, $to_utc, $show_timezone);
   }
 
   /**
@@ -91,8 +115,19 @@ class CustomTwig extends AbstractExtension {
    * @return string
    *   Formatted date and time.
    */
-  public function getUnDateTime(DateTime|DrupalDateTime $date, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
-    return $this->formatDateTime($date, $to_utc, $show_timezone);
+  public function getUnDateTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return NULL;
+    }
+
+    // Restrict to one date.
+    if (isset($date_item->start_date)) {
+      $date_item = $date_item->start_date;
+    }
+
+    return $this->formatDateTime($date_item, $to_utc, $show_timezone);
   }
 
   /**
@@ -232,17 +267,15 @@ class CustomTwig extends AbstractExtension {
       return $in->first();
     }
 
+    if ($in instanceof DateTime) {
+      return $in;
+    }
+
     return NULL;
   }
 
   /**
    * Format time.
-   *
-   * @param Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange
-   *   Drupal date time object.
-   *
-   * @return string
-   *   Formatted time.
    */
   protected function localTimes(DateRangeItem|DateRecurItem $daterange) {
     $to_utc = FALSE;
@@ -291,7 +324,16 @@ class CustomTwig extends AbstractExtension {
   public function isUtc($in) {
     $date_item = $this->getDateItem($in);
 
-    return $date_item->timezone === 'UTC';
+    if (!$date_item) {
+      return NULL;
+    }
+
+    $timezone = new DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
+    if (isset($date_item->timezone)) {
+      $timezone = new DateTimeZone($date_item->timezone);
+    }
+
+    return $timezone->getName() === 'UTC';
   }
 
 }

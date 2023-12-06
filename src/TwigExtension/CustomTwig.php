@@ -6,6 +6,7 @@ use DateTime;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeFieldItemList;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
@@ -108,17 +109,30 @@ class CustomTwig extends AbstractExtension {
    *   Formatted date.
    */
   public function getUnDaterange($in, bool $to_utc = FALSE, $show_timezone = FALSE) {
-    $daterange = $this->getDateRangeItem($in);
+    $date_item = $this->getDateItem($in);
 
-    if (!$daterange) {
+    if (!$date_item) {
       return NULL;
     }
-    if ($this->formatDate($daterange->start_date) === $this->formatDate($daterange->end_date)) {
-      return $this->formatDateTime($daterange->start_date, $to_utc, FALSE) . ' — ' . $this->formatTime($daterange->end_date, $to_utc, $show_timezone);
+
+    // Same.
+    if ($date_item->start_date->format('c') == $date_item->end_date->format('c')) {
+      return $this->formatDateTime($date_item->start_date, $to_utc, $show_timezone);
     }
-    else {
-      return $this->formatDateTime($daterange->start_date, $to_utc, FALSE) . ' — ' . $this->formatDateTime($daterange->end_date, $to_utc, $show_timezone);
+
+    // Same day.
+    if ($this->formatDate($date_item->start_date) === $this->formatDate($date_item->end_date)) {
+      if ($this->allDay($date_item)) {
+        return $this->formatDate($date_item->start_date, $to_utc, FALSE);
+      }
+      return $this->formatDateTime($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatTime($date_item->end_date, $to_utc, $show_timezone);
     }
+
+    if ($this->allDay($date_item)) {
+      return $this->formatDate($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDate($date_item->end_date, $to_utc, FALSE);
+    }
+
+    return $this->formatDateTime($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $to_utc, $show_timezone);
   }
 
   /**
@@ -135,21 +149,30 @@ class CustomTwig extends AbstractExtension {
    *   Formatted date.
    */
   public function getUnDaterangeTimes($in, bool $to_utc = FALSE, $show_timezone = FALSE) {
-    $daterange = $this->getDateRangeItem($in);
+    $date_item = $this->getDateItem($in);
 
-    if (!$daterange) {
+    if (!$date_item) {
       return NULL;
     }
 
-    if ($this->formatDate($daterange->start_date, $to_utc) === $this->formatDate($daterange->end_date, $to_utc)) {
-      if ($this->allDay($daterange)) {
+    // Same.
+    if ($date_item->start_date->format('c') == $date_item->end_date->format('c')) {
+      return $this->formatTime($date_item->start_date, $to_utc, $show_timezone);
+    }
+
+    // Same day.
+    if ($this->formatDate($date_item->start_date, $to_utc) === $this->formatDate($date_item->end_date, $to_utc)) {
+      if ($this->allDay($date_item)) {
         return 'All day';
       }
-      return $this->formatTime($daterange->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatTime($daterange->end_date, $to_utc, $show_timezone);
+      return $this->formatTime($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatTime($date_item->end_date, $to_utc, $show_timezone);
     }
-    else {
-      return $this->formatDateTime($daterange->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDateTime($daterange->end_date, $to_utc, $show_timezone);
+
+    if ($this->allDay($date_item)) {
+      return $this->formatDate($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDate($date_item->end_date, $to_utc, FALSE);
     }
+
+    return $this->formatDateTime($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $to_utc, $show_timezone);
   }
 
   /**
@@ -164,18 +187,18 @@ class CustomTwig extends AbstractExtension {
    *   Formatted date.
    */
   public function getUnDaterangeNamed($in, $format = 'default') {
-    $daterange = $this->getDateRangeItem($in);
+    $date_item = $this->getDateItem($in);
 
-    if (!$daterange) {
+    if (!$date_item) {
       return NULL;
     }
 
     switch ($format) {
       case 'local_times':
-        return $this->localTimes($daterange);
+        return $this->localTimes($date_item);
 
       case 'default':
-        return $this->getUnDaterange($daterange);
+        return $this->getUnDaterange($date_item);
     }
 
     return NULL;
@@ -184,7 +207,7 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get date range item.
    */
-  protected function getDateRangeItem($in) {
+  protected function getDateItem($in) {
     if ($in instanceof DateRecurItem) {
       return $in;
     }
@@ -203,6 +226,10 @@ class CustomTwig extends AbstractExtension {
 
     if ($in instanceof DateTimeItem) {
       return $in;
+    }
+
+    if ($in instanceof DateTimeFieldItemList) {
+      return $in->first();
     }
 
     return NULL;
@@ -242,22 +269,14 @@ class CustomTwig extends AbstractExtension {
    * @return bool
    *   TRUE if it's an all day event.
    */
-  public function isAllDay($daterange_list) {
-    $daterange = NULL;
+  public function isAllDay($in) {
+    $date_item = $this->getDateItem($in);
 
-    if ($daterange_list instanceof DateRecurItem) {
-      $daterange = $daterange_list;
-    }
-
-    if ($daterange_list instanceof DateRecurFieldItemList) {
-      $daterange = $daterange_list->first();
-    }
-
-    if (!$daterange) {
+    if (!$date_item) {
       return NULL;
     }
 
-    return $this->allDay($daterange);
+    return $this->allDay($date_item);
   }
 
   /**
@@ -269,43 +288,31 @@ class CustomTwig extends AbstractExtension {
    * @return bool
    *   TRUE if timezone is UTC.
    */
-  public function isUtc($daterange_list) {
-    $daterange = NULL;
+  public function isUtc($in) {
+    $date_item = $this->getDateItem($in);
 
-    if ($daterange_list instanceof DateRecurItem) {
-      $daterange = $daterange_list;
-    }
-
-    if ($daterange_list instanceof DateRecurFieldItemList) {
-      $daterange = $daterange_list->first();
-    }
-
-    if (!$daterange) {
-      return NULL;
-    }
-
-    return $daterange->timezone === 'UTC';
+    return $date_item->timezone === 'UTC';
   }
 
   /**
    * Is all day event.
    *
-   * @param Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange
+   * @param Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $date_item
    *   Drupal date time object.
    *
    * @return bool
    *   TRUE if it's an all day event.
    */
-  protected function allDay(DateRangeItem|DateRecurItem $daterange) {
+  protected function allDay(DateRangeItem|DateRecurItem $date_item) {
     $options = [
       'timezone' => 'UTC',
     ];
 
-    if ($daterange->start_date->format('Hi', $options) === '0000' && $daterange->end_date->format('Hi', $options) === '0000') {
+    if ($date_item->start_date->format('Hi', $options) === '0000' && $date_item->end_date->format('Hi', $options) === '0000') {
       return TRUE;
     }
 
-    if ($daterange->start_date->format('Hi', $options) === '0000' && $daterange->end_date->format('Hi', $options) === '2359') {
+    if ($date_item->start_date->format('Hi', $options) === '0000' && $date_item->end_date->format('Hi', $options) === '2359') {
       return TRUE;
     }
 

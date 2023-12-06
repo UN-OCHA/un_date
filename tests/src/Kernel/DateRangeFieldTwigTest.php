@@ -147,7 +147,7 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
   public function providerTestData() {
     return [
       'same' => [
-        'expected' => '06.12.2023 10.11 a.m. — 10.11 a.m.',
+        'expected' => '06.12.2023 10.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
       ],
@@ -161,6 +161,16 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
       ],
+      'all_day' => [
+        'expected' => '06.12.2023',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-06T23:59:59',
+      ],
+      'all_day_multi' => [
+        'expected' => '06.12.2023 — 07.12.2023',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-07T23:59:59',
+      ],
     ];
   }
 
@@ -170,7 +180,7 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
   public function providerTestDataTimes() {
     return [
       'same' => [
-        'expected' => '10.11 a.m. — 10.11 a.m.',
+        'expected' => '10.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
       ],
@@ -183,6 +193,16 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
         'expected' => '06.12.2023 10.11 a.m. — 07.12.2023 11.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
+      ],
+      'all_day' => [
+        'expected' => 'All day',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-06T23:59:59',
+      ],
+      'all_day_multi' => [
+        'expected' => '06.12.2023 — 07.12.2023',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-07T23:59:59',
       ],
     ];
   }

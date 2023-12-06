@@ -59,8 +59,6 @@ class UnDateDateTimeRangeTimezone extends FormatterBase {
       $timezone = new DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
       if ($item->timezone) {
         $timezone = new DateTimeZone($item->timezone);
-        $start_date->setTimezone($timezone);
-        $end_date->setTimezone($timezone);
       }
 
       $elements[$delta] = [
@@ -75,7 +73,7 @@ class UnDateDateTimeRangeTimezone extends FormatterBase {
         '#display_timezone' => $tz,
         '#same_date' => $same_date,
         '#same_day' => $same_day,
-        '#all_day' => FALSE,
+        '#all_day' => $this->allDay($item, $timezone->getName()),
         '#cache' => [
           'contexts' => [
             'timezone',

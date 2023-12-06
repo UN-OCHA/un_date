@@ -63,8 +63,6 @@ class UnDateDateTimeRange extends FormatterBase {
       if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATETIME) {
         $timezone = new DateTimeZone(date_default_timezone_get());
       }
-      $start_date->setTimeZone($timezone);
-      $end_date->setTimeZone($timezone);
 
       $theme = 'un_date_date_range';
       $iso_start_date = $start_date->format('Y-m-d');
@@ -88,7 +86,7 @@ class UnDateDateTimeRange extends FormatterBase {
         '#display_timezone' => $tz,
         '#same_date' => $same_date,
         '#same_day' => $same_day,
-        '#all_day' => $this->allDay($item),
+        '#all_day' => $this->allDay($item, $timezone->getName()),
         '#cache' => [
           'contexts' => [
             'timezone',

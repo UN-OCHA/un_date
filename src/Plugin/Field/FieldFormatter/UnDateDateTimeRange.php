@@ -50,7 +50,7 @@ class UnDateDateTimeRange extends FormatterBase {
       $same_date = FALSE;
       $same_day = FALSE;
 
-      if ($start_date->format('c') == $end_date->format('c')) {
+      if ($start_date->getTimestamp() == $end_date->getTimestamp()) {
         $same_date = TRUE;
       }
       elseif ($this->formatDate($start_date, $utc) == $this->formatDate($end_date, $utc)) {

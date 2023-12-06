@@ -1,0 +1,41 @@
+{#
+/**
+ * @file
+ * The template.
+ */
+#}
+{{ attach_library('un_date/un-date') }}
+
+<dl{{ attributes.addClass('un-date') }}>
+  {% if same_date %}
+  <div class="un-date__wrapper un-date__wrapper--date un-date__wrapper--date--start">
+    <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time>
+  </div>
+  {% else %}
+    {% if same_day %}
+      <div class="un-date__wrapper un-date__wrapper--date un-date__wrapper--date--start">
+        {% if all_day %}
+          <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }}</time>
+        {% else %}
+          <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}</time>
+          —
+          <time class="un-date__date__value" datetime="{{ iso_end_date }}">{{ end_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time>
+        {% endif %}
+      </div>
+    {% else %}
+      <div class="un-date__wrapper un-date__wrapper--date un-date__wrapper--date--start">
+        {% if all_day %}
+          <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }}</time>
+        {% else %}
+          <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time>
+        {% endif %}
+        —
+        {% if all_day %}
+          <time class="un-date__date__value" datetime="{{ iso_end_date }}">{{ end_date }}</time>
+        {% else %}
+          <time class="un-date__date__value" datetime="{{ iso_end_date }}">{{ end_date }} {{ end_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time>
+        {% endif %}
+      </div>
+    {% endif %}
+  {% endif %}
+</dl>

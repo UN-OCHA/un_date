@@ -107,28 +107,8 @@ class CustomTwig extends AbstractExtension {
    * @return string
    *   Formatted date.
    */
-  public function getUnDaterange($daterange_list, bool $to_utc = FALSE, $show_timezone = FALSE) {
-    $daterange = NULL;
-
-    if ($daterange_list instanceof DateRecurItem) {
-      $daterange = $daterange_list;
-    }
-
-    if ($daterange_list instanceof DateRecurFieldItemList) {
-      $daterange = $daterange_list->first();
-    }
-
-    if ($daterange_list instanceof DateRangeItem) {
-      $daterange = $daterange_list;
-    }
-
-    if ($daterange_list instanceof DateRangeFieldItemList) {
-      $daterange = $daterange_list->first();
-    }
-
-    if ($daterange_list instanceof DateTimeItem) {
-      $daterange = $daterange_list;
-    }
+  public function getUnDaterange($in, bool $to_utc = FALSE, $show_timezone = FALSE) {
+    $daterange = $this->getDateRangeItem($in);
 
     if (!$daterange) {
       return NULL;
@@ -154,16 +134,8 @@ class CustomTwig extends AbstractExtension {
    * @return string
    *   Formatted date.
    */
-  public function getUnDaterangeTimes($daterange_list, bool $to_utc = FALSE, $show_timezone = FALSE) {
-    $daterange = NULL;
-
-    if ($daterange_list instanceof DateRecurItem) {
-      $daterange = $daterange_list;
-    }
-
-    if ($daterange_list instanceof DateRecurFieldItemList) {
-      $daterange = $daterange_list->first();
-    }
+  public function getUnDaterangeTimes($in, bool $to_utc = FALSE, $show_timezone = FALSE) {
+    $daterange = $this->getDateRangeItem($in);
 
     if (!$daterange) {
       return NULL;
@@ -191,16 +163,8 @@ class CustomTwig extends AbstractExtension {
    * @return string
    *   Formatted date.
    */
-  public function getUnDaterangeNamed($daterange_list, $format = 'default') {
-    $daterange = NULL;
-
-    if ($daterange_list instanceof DateRecurItem) {
-      $daterange = $daterange_list;
-    }
-
-    if ($daterange_list instanceof DateRecurFieldItemList) {
-      $daterange = $daterange_list->first();
-    }
+  public function getUnDaterangeNamed($in, $format = 'default') {
+    $daterange = $this->getDateRangeItem($in);
 
     if (!$daterange) {
       return NULL;
@@ -218,6 +182,33 @@ class CustomTwig extends AbstractExtension {
   }
 
   /**
+   * Get date range item.
+   */
+  protected function getDateRangeItem($in) {
+    if ($in instanceof DateRecurItem) {
+      return $in;
+    }
+
+    if ($in instanceof DateRecurFieldItemList) {
+      return $in->first();
+    }
+
+    if ($in instanceof DateRangeItem) {
+      return $in;
+    }
+
+    if ($in instanceof DateRangeFieldItemList) {
+      return $in->first();
+    }
+
+    if ($in instanceof DateTimeItem) {
+      return $in;
+    }
+
+    return NULL;
+  }
+
+  /**
    * Format time.
    *
    * @param Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange
@@ -226,7 +217,7 @@ class CustomTwig extends AbstractExtension {
    * @return string
    *   Formatted time.
    */
-  protected function localTimes(DateRecurItem $daterange) {
+  protected function localTimes(DateRangeItem|DateRecurItem $daterange) {
     $to_utc = FALSE;
     $show_timezone = TRUE;
 
@@ -305,7 +296,7 @@ class CustomTwig extends AbstractExtension {
    * @return bool
    *   TRUE if it's an all day event.
    */
-  protected function allDay(DateRecurItem $daterange) {
+  protected function allDay(DateRangeItem|DateRecurItem $daterange) {
     $options = [
       'timezone' => 'UTC',
     ];

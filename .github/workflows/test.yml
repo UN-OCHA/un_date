@@ -88,6 +88,8 @@ jobs:
             --coverage-clover ./clover.xml \
             -c modules/custom/un_date/phpunit.xml modules/custom/un_date
           ls -hal
+          ls -hal modules/custom
+          ls -hal modules/custom/un_date
 
       - name: Monitor coverage
         id: coveralls

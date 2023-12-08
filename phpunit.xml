@@ -18,7 +18,8 @@
             ignoreDeprecatedCodeUnits="true"
             disableCodeCoverageIgnore="true">
     <include>
-      <directory suffix=".php">modules/custom/un_date/src</directory>
+      <directory suffix=".php">src</directory>
+      <directory suffix=".module">.</directory>
     </include>
   </coverage>
 </phpunit>

@@ -98,8 +98,8 @@ class DateRenderDateRangeTimezoneTest extends FieldKernelTestBase {
     $entity = EntityTest::create([
       'name' => $this->randomString(),
       $field_name => [
-        'value' => $start,
-        'end_value' => $end,
+        'value' => $this->doTimezoneConversion($start, $timezone),
+        'end_value' => $this->doTimezoneConversion($end, $timezone),
         'timezone' => $timezone,
       ],
     ]);
@@ -162,8 +162,8 @@ class DateRenderDateRangeTimezoneTest extends FieldKernelTestBase {
     $entity = EntityTest::create([
       'name' => $this->randomString(),
       $field_name => [
-        'value' => $start,
-        'end_value' => $end,
+        'value' => $this->doTimezoneConversion($start, $timezone),
+        'end_value' => $this->doTimezoneConversion($end, $timezone),
         'timezone' => $timezone,
       ],
     ]);

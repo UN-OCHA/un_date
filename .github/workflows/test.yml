@@ -1,11 +1,11 @@
 name: Test
 on: [pull_request]
 env:
-  MYSQL_USER: drupal
-  MYSQL_PASSWORD: drupal
+  MYSQL_USER: root
+  MYSQL_PASSWORD: root
   MYSQL_DATABASE: drupal
-  MYSQL_ROOT_PASSWORD: drupal
-  SIMPLETEST_DB: "mysql://drupal:drupal@localhost:3306/drupal"
+  MYSQL_ROOT_PASSWORD: root
+  SIMPLETEST_DB: "mysql://root:root@localhost:3306/drupal"
   SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
 
 jobs:

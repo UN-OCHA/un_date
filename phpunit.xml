@@ -10,7 +10,6 @@
          beStrictAboutOutputDuringTests="true"
          beStrictAboutChangesToGlobalState="true"
          failOnWarning="true"
-         printerClass="\Drupal\Tests\Listeners\HtmlOutputPrinter"
          cacheResult="false">
   <php>
     <!-- Set error reporting to E_ALL. -->
@@ -18,16 +17,6 @@
     <!-- Do not limit the amount of memory tests take to run. -->
     <ini name="memory_limit" value="-1"/>
     <env name="SYMFONY_DEPRECATIONS_HELPER" value="weak"/>
-    <env name="DTT_BASE_URL" value="http://drupal-starterkit.docksal.site/"/>
-    <env name="DTT_API_URL" value="http://localhost:9222"/>
-    <env name="SIMPLETEST_BASE_URL" value="http://127.0.0.1:8080"/>
-    <env name="SIMPLETEST_DB" value="mysql://root:root@localhost:3306/drupal"/>
-    <!-- Example BROWSERTEST_OUTPUT_DIRECTORY value: /path/to/webroot/sites/simpletest/browser_output -->
-    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/html/sites/default/browser_output"/>
-    <!-- To have browsertest output use an alternative base URL. For example if
-     SIMPLETEST_BASE_URL is an internal DDEV URL, you can set this to the
-     external DDev URL so you can follow the links directly.
-    -->
     <env name="BROWSERTEST_OUTPUT_BASE_URL" value=""/>
     <!-- To disable deprecation testing completely uncomment the next line. -->
     <!-- <env name="SYMFONY_DEPRECATIONS_HELPER" value="disabled"/> -->
@@ -65,8 +54,4 @@
       <directory>./modules/custom/*/src/Exception</directory>
     </exclude>
   </coverage>
-  <listeners>
-    <listener class="\Drupal\Tests\Listeners\DrupalListener">
-    </listener>
-  </listeners>
 </phpunit>

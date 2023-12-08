@@ -64,11 +64,6 @@
       <directory>./modules/custom/*/*/tests</directory>
       <directory>./modules/custom/*/src/Exception</directory>
     </exclude>
-    <report>
-      <html outputDirectory="coverage/html" lowUpperBound="50" highLowerBound="90"/>
-      <text outputFile="coverage/coverage.txt" showUncoveredFiles="false"/>
-      <xml outputDirectory="coverage/xml"/>
-    </report>
   </coverage>
   <listeners>
     <listener class="\Drupal\Tests\Listeners\DrupalListener">

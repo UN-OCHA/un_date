@@ -27,7 +27,7 @@ jobs:
       - name: Checkout module
         uses: actions/checkout@v2
         with:
-          path: modules/un_date
+          path: modules/custom/un_date
 
       - name: Setup PHP, with composer and extensions
         uses: shivammathur/setup-php@v2
@@ -67,7 +67,7 @@ jobs:
       - name: Check coding standards
         run: |
           ./vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer
-          ./vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,install,js modules/un_date
+          ./vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,install,js modules/custom/un_date
 
       - name: Install drush
         run: composer require "drush/drush ^11.0"
@@ -85,4 +85,4 @@ jobs:
       - name: Run tests
         run: |
           vendor/bin/phpunit --bootstrap core/tests/bootstrap.php \
-            -c modules/un_date/phpunit.xml modules/un_date
+            -c modules/custom/un_date/phpunit.xml modules/custom/un_date

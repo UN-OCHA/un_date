@@ -14,7 +14,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  *
  * @group datetime
  */
-class DateRenderDateRangeTimezoneTest extends FieldKernelTestBase {
+class DateRenderDateRangeTimezoneUtcTest extends FieldKernelTestBase {
 
   use UnDateTestTrait;
 

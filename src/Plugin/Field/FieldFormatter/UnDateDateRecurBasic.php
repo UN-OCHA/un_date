@@ -100,16 +100,10 @@ class UnDateDateRecurBasic extends FormatterBase {
    */
   public static function defaultSettings(): array {
     return [
-      // Show number of occurrences.
       'show_next' => 5,
-      // Whether number of occurrences should be per item or in total.
       'count_per_item' => TRUE,
-      // Date format for occurrences.
-      'occurrence_format_type' => 'medium',
-      // Date format for end date, if same day as start date.
-      'same_end_date_format_type' => 'medium',
-      'interpreter' => NULL,
-    ] + parent::defaultSettings();
+      'interpreter' => 'un_interpreter',
+    ];
   }
 
   /**
@@ -316,6 +310,7 @@ class UnDateDateRecurBasic extends FormatterBase {
         $rules = $item->getHelper()->getRules();
         $plugin = $interpreter->getPlugin();
         $cacheability->addCacheableDependency($interpreter);
+        // @todo current language, inject LanguageManagerInterface $language_manager
         $build['#interpretation'] = $plugin->interpret($rules, 'en');
       }
     }

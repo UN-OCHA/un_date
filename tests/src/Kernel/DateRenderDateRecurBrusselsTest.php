@@ -78,8 +78,10 @@ class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
       'type' => 'un_data_date_recur_basic',
       'label' => 'hidden',
       'settings' => [
-        'display_timezone' => TRUE,
-        'convert_to_utc' => FALSE,
+        'show_next' => 5,
+        'count_per_item' => TRUE,
+        // @todo add config in code.
+        'interpreter' => 'un_interpreter',
       ],
     ];
     EntityViewDisplay::create([
@@ -96,7 +98,7 @@ class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
    *
    * @dataProvider providerTestDataUtc
    */
-  public function testDateRangeUtc($expected, $start, $end, $timezone) {
+  public function testDateRangeUtc($expected, $start, $end, $timezone, $rrule = '') {
     $field_name = $this->fieldStorage->getName();
     // Create an entity.
     $entity = EntityTest::create([
@@ -105,6 +107,7 @@ class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
         'value' => $this->doTimezoneConversion($start, $timezone),
         'end_value' => $this->doTimezoneConversion($end, $timezone),
         'timezone' => $timezone,
+        'rrule' => $rrule,
       ],
     ]);
 
@@ -187,6 +190,48 @@ class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
         'timezone' => 'Europe/Brussels',
+      ],
+      'same_brussels_rrule' => [
+        'expected' => 'Date: 06.12.2038 10.11 a.m. (Europe/Brussels)',
+        'start' => '2038-12-06T10:11:12',
+        'end' => '2038-12-06T10:11:12',
+        'timezone' => 'Europe/Brussels',
+        'rrule' => 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO',
+      ],
+      'same_day_brussels_rrule' => [
+        'expected' => 'Date: 06.12.2038 10.11 a.m. — 11.11 a.m. (Europe/Brussels)',
+        'start' => '2038-12-06T10:11:12',
+        'end' => '2038-12-06T11:11:12',
+        'timezone' => 'Europe/Brussels',
+        'rrule' => 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO',
+      ],
+      'next_day_brussels_rrule' => [
+        'expected' => 'Start date: 06.12.2038 10.11 a.m. (Europe/Brussels) End date: 07.12.2038 11.11 a.m. (Europe/Brussels)',
+        'start' => '2038-12-06T10:11:12',
+        'end' => '2038-12-07T11:11:12',
+        'timezone' => 'Europe/Brussels',
+        'rrule' => 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO',
+      ],
+      'all_day_brussels_rrule' => [
+        'expected' => 'Date: 06.12.2038',
+        'start' => '2038-12-06T00:00:00',
+        'end' => '2038-12-06T23:59:59',
+        'timezone' => 'Europe/Brussels',
+        'rrule' => 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO',
+      ],
+      'all_day_2_brussels_rrule' => [
+        'expected' => 'Date: 06.12.2038',
+        'start' => '2038-12-06T00:00:00',
+        'end' => '2038-12-06T00:00:00',
+        'timezone' => 'Europe/Brussels',
+        'rrule' => 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO',
+      ],
+      'all_day_multi_brussels_rrule' => [
+        'expected' => 'Start date: 06.12.2038 End date: 07.12.2038',
+        'start' => '2038-12-06T00:00:00',
+        'end' => '2038-12-07T23:59:59',
+        'timezone' => 'Europe/Brussels',
+        'rrule' => 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO',
       ],
     ];
   }

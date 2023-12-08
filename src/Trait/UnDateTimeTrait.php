@@ -3,6 +3,7 @@
 namespace Drupal\un_date\Trait;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone;
@@ -131,6 +132,62 @@ trait UnDateTimeTrait {
     }
 
     return FALSE;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
+   */
+  public static function defaultSettings() {
+    return [
+      'display_timezone' => TRUE,
+      'convert_to_utc' => FALSE,
+    ] + parent::defaultSettings();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $form = parent::settingsForm($form, $form_state);
+
+    $form['display_timezone'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display Timezone'),
+      '#description' => $this->t('Should we display the timezone after the formatted date?'),
+      '#default_value' => $this->getSetting('display_timezone'),
+    ];
+
+    $form['convert_to_utc'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Convert to UTC'),
+      '#description' => $this->t('Should we convert to UTC?'),
+      '#default_value' => $this->getSetting('convert_to_utc'),
+    ];
+
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
+   */
+  public function settingsSummary() {
+    $summary = parent::settingsSummary();
+
+    $summary[] = $this->t('@action the timezone', [
+      '@action' => $this->getSetting('display_timezone') ? 'Showing' : 'Hiding',
+    ]);
+
+    $summary[] = $this->t('@action to UTC', [
+      '@action' => $this->getSetting('convert_to_utc') ? 'Convert' : 'Do not convert',
+    ]);
+
+    return $summary;
   }
 
 }

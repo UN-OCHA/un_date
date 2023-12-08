@@ -95,6 +95,8 @@ class UnDateDateRecurBasic extends FormatterBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
    */
   public static function defaultSettings(): array {
     return [
@@ -112,6 +114,8 @@ class UnDateDateRecurBasic extends FormatterBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
    */
   public function settingsForm(array $form, FormStateInterface $form_state): array {
     $form = parent::settingsForm($form, $form_state);
@@ -198,6 +202,8 @@ class UnDateDateRecurBasic extends FormatterBase {
    *   The current state of the form.
    * @param array $complete_form
    *   The complete form structure.
+   *
+   * @codeCoverageIgnore
    */
   public static function validateSettingsCountPerItem(array &$element, FormStateInterface $form_state, array &$complete_form): void {
     $countPerItem = $element['#value'] == static::COUNT_PER_ITEM_ITEM;
@@ -217,6 +223,8 @@ class UnDateDateRecurBasic extends FormatterBase {
    *   The current state of the form.
    * @param array $complete_form
    *   The complete form structure.
+   *
+   * @codeCoverageIgnore
    */
   public static function validateSettingsShowNext(array &$element, FormStateInterface $form_state, array &$complete_form): void {
     $arrayParents = array_slice($element['#array_parents'], 0, -2);
@@ -228,6 +236,8 @@ class UnDateDateRecurBasic extends FormatterBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
    */
   public function settingsSummary(): array {
     $this->formatType = $this->getSetting('format_type');

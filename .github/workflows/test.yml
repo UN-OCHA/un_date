@@ -62,7 +62,7 @@ jobs:
 
       - name: Define DRUPAL_ROOT env variable
         run: |
-          echo "DRUPAL_ROOT=/home/runner/work/un_date/un_date/drupal" >> $GITHUB_ENV
+          echo "DRUPAL_ROOT=$HOME/drupal" >> $GITHUB_ENV
 
       - name: Check coding standards
         run: |
@@ -83,22 +83,18 @@ jobs:
           vendor/bin/drush en $DRUPAL_MODULE_NAME -y
 
       - name: Run tests
-        working-directory: ${{ env.DRUPAL_ROOT }}
         run: |
           vendor/bin/phpunit --bootstrap core/tests/bootstrap.php \
-            --coverage-clover ~/clover.xml \
+            --coverage-clover ./clover.xml \
             -c modules/custom/un_date/phpunit.xml modules/custom/un_date
-
-      - name: Start MySql service
-        run: |
-          ls $HOME
+          ls -hal
 
       - name: Monitor coverage
         id: coveralls
         uses: slavcodev/coverage-monitor-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          coverage_path: "~/clover.xml"
+          coverage_path: "./clover.xml"
           threshold_alert: 0
           threshold_warning: 50
           threshold_metric: "lines"

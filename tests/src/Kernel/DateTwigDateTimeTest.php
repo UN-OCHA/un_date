@@ -11,7 +11,7 @@ use Drupal\KernelTests\KernelTestBase;
  *
  * @group Theme
  */
-class DateTimeTwigTest extends KernelTestBase {
+class DateTwigDateTimeTest extends KernelTestBase {
 
   /**
    * Modules to enable.

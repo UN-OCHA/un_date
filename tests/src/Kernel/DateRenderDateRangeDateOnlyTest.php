@@ -14,7 +14,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  *
  * @group datetime
  */
-class DateRangeFieldDateRangeRenderTest extends FieldKernelTestBase {
+class DateRenderDateRangeDateOnlyTest extends FieldKernelTestBase {
 
   use UnDateTestTrait;
 
@@ -58,7 +58,7 @@ class DateRangeFieldDateRangeRenderTest extends FieldKernelTestBase {
       'field_name' => mb_strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
       'type' => 'daterange',
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATETIME],
+      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATE],
     ]);
     $this->fieldStorage->save();
 
@@ -109,34 +109,29 @@ class DateRangeFieldDateRangeRenderTest extends FieldKernelTestBase {
   public function providerTestData() {
     return [
       'same' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m.',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-06T10:11:12',
+        'expected' => 'Date: 06.12.2023',
+        'start' => '2023-12-06',
+        'end' => '2023-12-06',
       ],
       'same_day' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m. — 11.11 a.m.',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-06T11:11:12',
+        'expected' => 'Date: 06.12.2023',
+        'start' => '2023-12-06',
+        'end' => '2023-12-06',
       ],
       'next_day' => [
-        'expected' => 'Start date: 06.12.2023 10.11 a.m. End date: 07.12.2023 11.11 a.m.',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-07T11:11:12',
+        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
+        'start' => '2023-12-06',
+        'end' => '2023-12-07',
       ],
       'all_day' => [
         'expected' => 'Date: 06.12.2023',
-        'start' => '2023-12-06T00:00:00',
-        'end' => '2023-12-06T23:59:59',
-      ],
-      'all_day_2' => [
-        'expected' => 'Date: 06.12.2023',
-        'start' => '2023-12-06T00:00:00',
-        'end' => '2023-12-06T00:00:00',
+        'start' => '2023-12-06',
+        'end' => '2023-12-06',
       ],
       'all_day_multi' => [
         'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
-        'start' => '2023-12-06T00:00:00',
-        'end' => '2023-12-07T23:59:59',
+        'start' => '2023-12-06',
+        'end' => '2023-12-07',
       ],
     ];
   }

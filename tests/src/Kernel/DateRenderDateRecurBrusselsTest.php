@@ -13,7 +13,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  *
  * @group datetime
  */
-class DateRecurRenderUtcTest extends FieldKernelTestBase {
+class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
 
   use UnDateTestTrait;
 
@@ -52,7 +52,7 @@ class DateRecurRenderUtcTest extends FieldKernelTestBase {
     // Set an explicit site timezone.
     $this->config('system.date')
       ->set('timezone.user.configurable', 0)
-      ->set('timezone.default', 'UTC')
+      ->set('timezone.default', 'Europe/Brussels')
       ->save();
 
     // Add a datetime range field.

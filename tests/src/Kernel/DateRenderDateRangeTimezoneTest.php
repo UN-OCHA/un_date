@@ -3,6 +3,7 @@
 namespace Drupal\Tests\un_date\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -13,7 +14,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  *
  * @group datetime
  */
-class DateRecurRenderBrusselsTest extends FieldKernelTestBase {
+class DateRenderDateRangeTimezoneTest extends FieldKernelTestBase {
 
   use UnDateTestTrait;
 
@@ -31,15 +32,13 @@ class DateRecurRenderBrusselsTest extends FieldKernelTestBase {
    */
   protected $field;
 
-  protected $strictConfigSchema = FALSE;
-
   /**
    * {@inheritdoc}
    */
   protected static $modules = [
-    'date_recur',
-    'datetime_range',
     'datetime',
+    'datetime_range',
+    'datetime_range_timezone',
     'un_date',
   ];
 
@@ -52,14 +51,15 @@ class DateRecurRenderBrusselsTest extends FieldKernelTestBase {
     // Set an explicit site timezone.
     $this->config('system.date')
       ->set('timezone.user.configurable', 0)
-      ->set('timezone.default', 'Europe/Brussels')
+      ->set('timezone.default', 'UTC')
       ->save();
 
     // Add a datetime range field.
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => mb_strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
-      'type' => 'date_recur',
+      'type' => 'daterange_timezone',
+      'settings' => ['datetime_type' => DateRangeTimezone::DATETIME_TYPE_DATETIME],
     ]);
     $this->fieldStorage->save();
 
@@ -71,7 +71,7 @@ class DateRecurRenderBrusselsTest extends FieldKernelTestBase {
     $this->field->save();
 
     $display_options = [
-      'type' => 'un_data_date_recur_basic',
+      'type' => 'un_date_daterange_timezone',
       'label' => 'hidden',
       'settings' => [
         'display_timezone' => TRUE,
@@ -96,8 +96,8 @@ class DateRecurRenderBrusselsTest extends FieldKernelTestBase {
     $entity = EntityTest::create([
       'name' => $this->randomString(),
       $field_name => [
-        'value' => $this->doTimezoneConversion($start, $timezone),
-        'end_value' => $this->doTimezoneConversion($end, $timezone),
+        'value' => $start,
+        'end_value' => $end,
         'timezone' => $timezone,
       ],
     ]);
@@ -110,77 +110,41 @@ class DateRecurRenderBrusselsTest extends FieldKernelTestBase {
    */
   public function providerTestDataUtc() {
     return [
-      'same_utc' => [
+      'same' => [
         'expected' => 'Date: 06.12.2023 10.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
         'timezone' => 'UTC',
       ],
-      'same_day_utc' => [
+      'same_day' => [
         'expected' => 'Date: 06.12.2023 10.11 a.m. — 11.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'UTC',
       ],
-      'next_day_utc' => [
+      'next_day' => [
         'expected' => 'Start date: 06.12.2023 10.11 a.m. (UTC) End date: 07.12.2023 11.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
         'timezone' => 'UTC',
       ],
-      'all_day_utc' => [
+      'all_day' => [
         'expected' => 'Date: 06.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
         'timezone' => 'UTC',
       ],
-      'all_day_2_utc' => [
+      'all_day_2' => [
         'expected' => 'Date: 06.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T00:00:00',
         'timezone' => 'UTC',
       ],
-      'all_day_multi_utc' => [
+      'all_day_multi' => [
         'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
         'timezone' => 'UTC',
-      ],
-      'same_brussels' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m. (Europe/Brussels)',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-06T10:11:12',
-        'timezone' => 'Europe/Brussels',
-      ],
-      'same_day_brussels' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m. — 11.11 a.m. (Europe/Brussels)',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-06T11:11:12',
-        'timezone' => 'Europe/Brussels',
-      ],
-      'next_day_brussels' => [
-        'expected' => 'Start date: 06.12.2023 10.11 a.m. (Europe/Brussels) End date: 07.12.2023 11.11 a.m. (Europe/Brussels)',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-07T11:11:12',
-        'timezone' => 'Europe/Brussels',
-      ],
-      'all_day_brussels' => [
-        'expected' => 'Date: 06.12.2023',
-        'start' => '2023-12-06T00:00:00',
-        'end' => '2023-12-06T23:59:59',
-        'timezone' => 'Europe/Brussels',
-      ],
-      'all_day_2_brussels' => [
-        'expected' => 'Date: 06.12.2023',
-        'start' => '2023-12-06T00:00:00',
-        'end' => '2023-12-06T00:00:00',
-        'timezone' => 'Europe/Brussels',
-      ],
-      'all_day_multi_brussels' => [
-        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
-        'start' => '2023-12-06T00:00:00',
-        'end' => '2023-12-07T23:59:59',
-        'timezone' => 'Europe/Brussels',
       ],
     ];
   }
@@ -194,8 +158,8 @@ class DateRecurRenderBrusselsTest extends FieldKernelTestBase {
     $entity = EntityTest::create([
       'name' => $this->randomString(),
       $field_name => [
-        'value' => $this->doTimezoneConversion($start, $timezone),
-        'end_value' => $this->doTimezoneConversion($end, $timezone),
+        'value' => $start,
+        'end_value' => $end,
         'timezone' => $timezone,
       ],
     ]);

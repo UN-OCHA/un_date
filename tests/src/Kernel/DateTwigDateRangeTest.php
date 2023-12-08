@@ -15,7 +15,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  *
  * @group datetime
  */
-class DateRangeFieldTwigTest extends FieldKernelTestBase {
+class DateTwigDateRangeTest extends FieldKernelTestBase {
 
   /**
    * A field storage to use in this test class.

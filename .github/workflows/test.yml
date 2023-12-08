@@ -83,6 +83,7 @@ jobs:
           vendor/bin/drush en $DRUPAL_MODULE_NAME -y
 
       - name: Run tests
+        working-directory: ${{ env.DRUPAL_ROOT }}
         run: |
           vendor/bin/phpunit --bootstrap core/tests/bootstrap.php \
             --coverage-clover ~/clover.xml \

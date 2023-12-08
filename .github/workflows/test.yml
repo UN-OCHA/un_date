@@ -62,7 +62,7 @@ jobs:
 
       - name: Define DRUPAL_ROOT env variable
         run: |
-          echo "DRUPAL_ROOT=$HOME/drupal" >> $GITHUB_ENV
+          echo "DRUPAL_ROOT=/home/runner/work/un_date/un_date/drupal" >> $GITHUB_ENV
 
       - name: Check coding standards
         run: |

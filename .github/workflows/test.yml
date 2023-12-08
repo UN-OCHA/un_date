@@ -5,6 +5,19 @@ jobs:
   testing:
     name: Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
     runs-on: ubuntu-latest
+    services:
+      mariadb:
+        image: mariadb:10.9
+        env:
+          MYSQL_USER: drupal
+          MYSQL_PASSWORD: drupal
+          MYSQL_DATABASE: drupal
+          MYSQL_ROOT_PASSWORD: drupal
+        ports:
+          - 3306:3306
+    env:
+      SIMPLETEST_DB: "mysql://drupal:drupal@mariadb:3306/drupal"
+      SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
     strategy:
       fail-fast: false
       matrix:
@@ -53,8 +66,31 @@ jobs:
           composer --dev --no-interaction --no-progress require \
             drupal/coder:8.3.13 phpunit/phpunit
 
+      - name: Define DRUPAL_ROOT env variable
+        run: |
+          echo "DRUPAL_ROOT=$HOME/drupal" >> $GITHUB_ENV
+
       - name: Check coding standards
         run: |
           ./vendor/bin/phpcs --config-set installed_paths vendor/drupal/coder/coder_sniffer
           ./vendor/bin/phpcs --standard=Drupal,DrupalPractice --extensions=php,module,install,js modules/un_date
-          ./vendor/bin/phpunit --debug modules/un_date
+
+      - name: Install drush
+        run: composer require "drush/drush ^11.0"
+
+      - name: Install PHPCS
+        run: |
+          composer config --no-plugins \
+            allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+          composer require --dev "drupal/coder"
+
+      - name: Install Drupal
+        run: |
+          php -d sendmail_path=$(which true); vendor/bin/drush --yes -v \
+            site-install minimal --db-url="$SIMPLETEST_DB"
+          vendor/bin/drush en $DRUPAL_MODULE_NAME -y
+
+      - name: Run tests
+        run: |
+          vendor/bin/phpunit --bootstrap core/tests/bootstrap.php \
+            -c modules/un_date/phpunit.xml modules/un_date

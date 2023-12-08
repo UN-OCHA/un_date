@@ -54,9 +54,9 @@ class UnDateDateTimeRangeTimezone extends FormatterBase {
         $same_day = TRUE;
       }
 
-      $timezone = new DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
+      $timezone = new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
       if ($item->timezone) {
-        $timezone = new DateTimeZone($item->timezone);
+        $timezone = new \DateTimeZone($item->timezone);
       }
 
       $elements[$delta] = [

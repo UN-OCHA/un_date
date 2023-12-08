@@ -52,7 +52,7 @@ class CustomTwig extends AbstractExtension {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     // Restrict to one date.
@@ -70,7 +70,7 @@ class CustomTwig extends AbstractExtension {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     // Restrict to one date.
@@ -88,7 +88,7 @@ class CustomTwig extends AbstractExtension {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     // Restrict to one date.
@@ -106,7 +106,7 @@ class CustomTwig extends AbstractExtension {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     // Same.
@@ -136,9 +136,10 @@ class CustomTwig extends AbstractExtension {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
+    /** @var Datetime */
     // Same.
     if ($date_item->start_date->format('c') == $date_item->end_date->format('c')) {
       return $this->formatTime($date_item->start_date, $to_utc, $show_timezone);
@@ -166,7 +167,7 @@ class CustomTwig extends AbstractExtension {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     switch ($format) {
@@ -177,7 +178,7 @@ class CustomTwig extends AbstractExtension {
         return $this->getUnDaterange($date_item);
     }
 
-    return NULL;
+    return '';
   }
 
   /**
@@ -225,7 +226,7 @@ class CustomTwig extends AbstractExtension {
     // Only output time if dates are equal.
     if ($this->formatDate($daterange->start_date, TRUE) === $this->formatDate($daterange->start_date, FALSE)) {
       if ($this->allDay($daterange)) {
-        return NULL;
+        return '';
       }
       return $this->formatTime($daterange->start_date, $to_utc, FALSE) . ' — ' . $this->formatTime($daterange->end_date, $to_utc, $show_timezone);
     }
@@ -241,7 +242,7 @@ class CustomTwig extends AbstractExtension {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return FALSE;
     }
 
     if ($in instanceof \DateTime) {
@@ -258,7 +259,7 @@ class CustomTwig extends AbstractExtension {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return FALSE;
     }
 
     $timezone = new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);

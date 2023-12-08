@@ -120,36 +120,6 @@ class UnDateDateRecurBasic extends FormatterBase {
   public function settingsForm(array $form, FormStateInterface $form_state): array {
     $form = parent::settingsForm($form, $form_state);
 
-    $originalFormatType = $form['format_type'];
-    unset($form['format_type']);
-
-    // Redefine format type to change the natural order of form fields.
-    $form['format_type'] = $originalFormatType;
-    $form['format_type']['#title'] = $this->t('Non-Repeating Date format');
-    $form['format_type']['#description'] = $this->t('Date format used for field values without repeat rules.');
-    $form['occurrence_format_type'] = $originalFormatType;
-    $form['occurrence_format_type']['#title'] = $this->t('Start and end date format');
-    $form['occurrence_format_type']['#default_value'] = $this->getSetting('occurrence_format_type');
-    $form['occurrence_format_type']['#description'] = $this->t('Date format used for field values with repeat rules.');
-    $form['same_end_date_format_type'] = $originalFormatType;
-    $form['same_end_date_format_type']['#title'] = $this->t('Same day end date format');
-    $form['same_end_date_format_type']['#description'] = $this->t('Date format used for end date if field value has repeat rule. Used only if occurs on same calendar day as start date.');
-    $form['same_end_date_format_type']['#default_value'] = $this->getSetting('same_end_date_format_type');
-
-    // Redefine separator to change the natural order of form fields.
-    $originalSeparator = $form['separator'];
-    unset($form['separator']);
-    $form['separator'] = $originalSeparator;
-    // Change the width of the field if not already set. (Not set by default)
-    $form['separator']['#size'] ??= 5;
-
-    // Redefine timezone to change the natural order of form fields.
-    $originalTimezoneOverride = $form['timezone_override'];
-    unset($form['timezone_override']);
-    $form['timezone_override'] = $originalTimezoneOverride;
-    $form['timezone_override']['#empty_option'] = $this->t('Use current user timezone');
-    $form['timezone_override']['#description'] = $this->t('Change the timezone used for displaying dates (not recommended).');
-
     $interpreterOptions = array_map(
       fn (DateRecurInterpreterInterface $interpreter): string => $interpreter->label() ?? (string) $this->t('- Missing label -'),
       $this->dateRecurInterpreterStorage->loadMultiple()
@@ -240,8 +210,7 @@ class UnDateDateRecurBasic extends FormatterBase {
    * @codeCoverageIgnore
    */
   public function settingsSummary(): array {
-    $this->formatType = $this->getSetting('format_type');
-    $summary = parent::settingsSummary();
+    $summary = [];
 
     $countPerItem = $this->getSetting('count_per_item');
     $showOccurrencesCount = $this->getSetting('show_next');

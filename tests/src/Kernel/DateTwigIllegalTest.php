@@ -4,7 +4,6 @@ namespace Drupal\Tests\un_date\Kernel;
 
 use Drupal\Core\Render\RenderContext;
 use Drupal\KernelTests\KernelTestBase;
-use stdClass;
 
 /**
  * Tests Twig with MarkupInterface objects.
@@ -39,42 +38,42 @@ class DateTwigIllegalTest extends KernelTestBase {
       'un_date' => [
         'expected' => '',
         'template' => '{{ variable|un_date }}',
-        'date' => new stdClass(),
+        'date' => new \stdClass(),
       ],
       'un_time' => [
         'expected' => '',
         'template' => '{{ variable|un_time }}',
-        'date' => new stdClass(),
+        'date' => new \stdClass(),
       ],
       'un_datetime' => [
         'expected' => '',
         'template' => '{{ variable|un_datetime }}',
-        'date' => new stdClass(),
+        'date' => new \stdClass(),
       ],
       'un_daterange' => [
         'expected' => '',
         'template' => '{{ variable|un_daterange }}',
-        'date' => new stdClass(),
+        'date' => new \stdClass(),
       ],
       'un_daterange_times' => [
         'expected' => '',
         'template' => '{{ variable|un_daterange_times }}',
-        'date' => new stdClass(),
+        'date' => new \stdClass(),
       ],
       'un_daterange_named' => [
         'expected' => '',
         'template' => '{{ variable|un_daterange_named }}',
-        'date' => new stdClass(),
+        'date' => new \stdClass(),
       ],
       'un_is_all_day' => [
         'expected' => '',
         'template' => '{{ un_is_all_day(variable) }}',
-        'date' => new stdClass(),
+        'date' => new \stdClass(),
       ],
       'un_is_utc' => [
         'expected' => '',
         'template' => '{{ un_is_utc(variable) }}',
-        'date' => new stdClass(),
+        'date' => new \stdClass(),
       ],
       'un_date_string' => [
         'expected' => '',

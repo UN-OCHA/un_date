@@ -6,3 +6,4 @@ test_dependencies:
   - drupal:datetime
   - drupal:datetime_range
   - datetime_range_timezone:datetime_range_timezone
+  - date_recur:date_recur

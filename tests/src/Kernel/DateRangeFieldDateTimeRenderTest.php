@@ -4,7 +4,6 @@ namespace Drupal\Tests\un_date\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -16,6 +15,8 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  * @group datetime
  */
 class DateRangeFieldDateTimeRenderTest extends FieldKernelTestBase {
+
+  use UnDateTestTrait;
 
   /**
    * A field storage to use in this test class.
@@ -126,17 +127,6 @@ class DateRangeFieldDateTimeRenderTest extends FieldKernelTestBase {
         'date' => '2023-12-06T00:00:00',
       ],
     ];
-  }
-
-  protected function renderIt($entity_type, $entity) {
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type);
-    $build = $view_builder->view($entity);
-    $output = \Drupal::service('renderer')->renderRoot($build);
-
-    $output = strip_tags($output->__toString());
-    $output = preg_replace('/\s+/', ' ', $output);
-
-    return $output;
   }
 
 }

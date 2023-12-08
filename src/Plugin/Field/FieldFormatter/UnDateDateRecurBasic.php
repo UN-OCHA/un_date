@@ -4,6 +4,8 @@ declare(strict_types = 1);
 
 namespace Drupal\un_date\Plugin\Field\FieldFormatter;
 
+use DateTime;
+use DateTimeInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Datetime\DateFormatterInterface;
@@ -17,6 +19,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Entity\DateRecurInterpreterInterface;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\un_date\Trait\UnDateTimeTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -316,9 +319,12 @@ class UnDateDateRecurBasic extends FormatterBase {
       '#is_recurring' => $item->isRecurring(),
     ];
 
-    $startDate = $item->start_date;
+    /** @var \Drupal\date_recur\DateRange $first_upcoming */
+    $first_upcoming = $this->getFirstUpcoming($item);
+    $startDate = $first_upcoming->getStart();
+
     /** @var \Drupal\Core\Datetime\DrupalDateTime|null $endDate */
-    $endDate = $item->end_date ?? $startDate;
+    $endDate = $first_upcoming->getEnd() ?? $startDate;
     if (!$startDate || !$endDate) {
       return $build;
     }
@@ -340,7 +346,7 @@ class UnDateDateRecurBasic extends FormatterBase {
 
     // Occurrences are generated even if the item is not recurring.
     $build['#occurrences'] = array_map(
-      function (DateRange $occurrence): array {
+      function (DateRange $occurrence) use ($theme_suggestions): array {
         $startDate = DrupalDateTime::createFromDateTime($occurrence->getStart());
         $endDate = DrupalDateTime::createFromDateTime($occurrence->getEnd());
         return $this->buildDateRangeValue(
@@ -358,6 +364,27 @@ class UnDateDateRecurBasic extends FormatterBase {
   }
 
   /**
+   * Get first upcoming occurrence of a date.
+   */
+  function getFirstUpcoming(DateRecurItem $item) {
+    if (!$item->isRecurring()) {
+      return $item->getHelper()->getOccurrences()[0];
+    }
+
+    // Generate all occurences.
+    $today = new \DateTime('now');
+    $today->setTime(0, 0, 0, 0);
+    foreach ($item->getHelper()->getOccurrences($today, NULL, 99) as $date) {
+      if ($date->getStart()->getTimestamp() >= $today->getTimestamp()) {
+        return $date;
+      }
+    }
+
+    // Return first one, if no future one is found.
+    return $item->getHelper()->getOccurrences()[0];
+  }
+
+  /**
    * Builds a date range suitable for rendering.
    *
    * @param \Drupal\Core\Datetime\DrupalDateTime $startDate
@@ -370,9 +397,12 @@ class UnDateDateRecurBasic extends FormatterBase {
    * @return array
    *   A render array.
    */
-  protected function buildDateRangeValue(DrupalDateTime $start_date, DrupalDateTime $end_date, $isOccurrence, $theme_suggestions = ''): array {
+  protected function buildDateRangeValue(DrupalDateTime|DateTimeInterface $start_date, DrupalDateTime|DateTimeInterface $end_date, $isOccurrence, $theme_suggestions = ''): array {
     $same_date = FALSE;
     $same_day = FALSE;
+
+    $timezone = $start_date->getTimezone();
+    $all_day = $this->allDayStartEnd($start_date, $end_date, $timezone);
 
     if ($start_date->getTimestamp() == $end_date->getTimestamp()) {
       $same_date = TRUE;
@@ -380,8 +410,6 @@ class UnDateDateRecurBasic extends FormatterBase {
     elseif ($this->formatDate($start_date) == $this->formatDate($end_date)) {
       $same_day = TRUE;
     }
-
-    $timezone = $start_date->getTimezone();
 
     $iso_start_date = $start_date->format('c');
     $iso_end_date = $end_date->format('c') ?? '';
@@ -397,7 +425,7 @@ class UnDateDateRecurBasic extends FormatterBase {
       '#display_timezone' => TRUE,
       '#same_date' => $same_date,
       '#same_day' => $same_day,
-      '#all_day' => FALSE,
+      '#all_day' => $all_day,
       '#cache' => [
         'contexts' => [
           'timezone',

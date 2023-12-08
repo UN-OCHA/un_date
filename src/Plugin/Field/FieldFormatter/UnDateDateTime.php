@@ -2,9 +2,6 @@
 
 namespace Drupal\un_date\Plugin\Field\FieldFormatter;
 
-use DateTimeZone;
-use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeFormatterBase;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -48,9 +45,9 @@ class UnDateDateTime extends FormatterBase {
       $tz = $this->getSetting('display_timezone');
       $datetime_type = $this->getFieldSetting('datetime_type');
 
-      $timezone = new DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
+      $timezone = new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
       if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATETIME) {
-        $timezone = new DateTimeZone(date_default_timezone_get());
+        $timezone = new \DateTimeZone(date_default_timezone_get());
       }
       $date->setTimeZone($timezone);
 

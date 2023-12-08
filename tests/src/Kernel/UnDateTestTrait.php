@@ -6,7 +6,11 @@ use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 
+/**
+ * Common functions.
+ */
 trait UnDateTestTrait {
+
   /**
    * {@inheritdoc}
    */
@@ -30,6 +34,9 @@ trait UnDateTestTrait {
     return $date->setTimezone($storage_timezone)->format($storage_format);
   }
 
+  /**
+   * Render entity.
+   */
   protected function renderIt($entity_type, $entity) {
     $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type);
     $build = $view_builder->view($entity);

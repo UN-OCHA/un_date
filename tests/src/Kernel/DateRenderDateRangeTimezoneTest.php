@@ -88,6 +88,8 @@ class DateRenderDateRangeTimezoneTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test UTC dates.
+   *
    * @dataProvider providerTestDataUtc
    */
   public function testDateRangeUtc($expected, $start, $end, $timezone) {
@@ -150,6 +152,8 @@ class DateRenderDateRangeTimezoneTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test random timezones.
+   *
    * @dataProvider providerTestDataRandom
    */
   public function testDateRangeRandom($expected, $start, $end, $timezone) {

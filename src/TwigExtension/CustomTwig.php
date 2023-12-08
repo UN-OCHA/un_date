@@ -2,9 +2,6 @@
 
 namespace Drupal\un_date\TwigExtension;
 
-use DateTime;
-use DateTimeZone;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList;
@@ -50,16 +47,8 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Format date.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   *
-   * @return string
-   *   Formatted date.
    */
-  public function getUnDate($in, bool $to_utc = FALSE) {
+  public function getUnDate($in, bool $to_utc = FALSE) : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -76,18 +65,8 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Format time.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted time.
    */
-  public function getUnTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
+  public function getUnTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE) : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -104,18 +83,8 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Format date and time.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted date and time.
    */
-  public function getUnDateTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
+  public function getUnDateTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE) : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -132,18 +101,8 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Format daterange.
-   *
-   * @param \Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList|Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange_list
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted date.
    */
-  public function getUnDaterange($in, bool $to_utc = FALSE, $show_timezone = FALSE) {
+  public function getUnDaterange($in, bool $to_utc = FALSE, $show_timezone = FALSE) : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -172,18 +131,8 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Format daterange.
-   *
-   * @param \Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList|Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange_list
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted date.
    */
-  public function getUnDaterangeTimes($in, bool $to_utc = FALSE, $show_timezone = FALSE) {
+  public function getUnDaterangeTimes($in, bool $to_utc = FALSE, $show_timezone = FALSE) : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -212,16 +161,8 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Format daterange.
-   *
-   * @param \Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList|Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange_list
-   *   Drupal date time object.
-   * @param string $format
-   *   Named format output.
-   *
-   * @return string
-   *   Formatted date.
    */
-  public function getUnDaterangeNamed($in, $format = 'default') {
+  public function getUnDaterangeNamed($in, $format = 'default') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -267,7 +208,7 @@ class CustomTwig extends AbstractExtension {
       return $in->first();
     }
 
-    if ($in instanceof DateTime) {
+    if ($in instanceof \DateTime) {
       return $in;
     }
 
@@ -277,7 +218,7 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format time.
    */
-  protected function localTimes(DateRangeItem|DateRecurItem $daterange) {
+  protected function localTimes(DateRangeItem|DateRecurItem $daterange) : string {
     $to_utc = FALSE;
     $show_timezone = TRUE;
 
@@ -295,18 +236,16 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Is all day event.
-   *
-   * @param \Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList|Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange_list
-   *   Drupal date time object.
-   *
-   * @return bool
-   *   TRUE if it's an all day event.
    */
-  public function isAllDay($in) {
+  public function isAllDay($in) : bool {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
       return NULL;
+    }
+
+    if ($in instanceof \DateTime) {
+      return FALSE;
     }
 
     return $this->allDay($date_item);
@@ -314,23 +253,17 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Is UTC timezone.
-   *
-   * @param \Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList|Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange_list
-   *   Drupal date time object.
-   *
-   * @return bool
-   *   TRUE if timezone is UTC.
    */
-  public function isUtc($in) {
+  public function isUtc($in) : bool {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
       return NULL;
     }
 
-    $timezone = new DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
+    $timezone = new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
     if (isset($date_item->timezone)) {
-      $timezone = new DateTimeZone($date_item->timezone);
+      $timezone = new \DateTimeZone($date_item->timezone);
     }
 
     return $timezone->getName() === 'UTC';

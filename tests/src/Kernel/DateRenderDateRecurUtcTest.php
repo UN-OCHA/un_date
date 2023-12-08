@@ -31,6 +31,9 @@ class DateRenderDateRecurUtcTest extends FieldKernelTestBase {
    */
   protected $field;
 
+  /**
+   * {@inheritdoc}
+   */
   protected $strictConfigSchema = FALSE;
 
   /**
@@ -88,6 +91,8 @@ class DateRenderDateRecurUtcTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test with UTC timezone.
+   *
    * @dataProvider providerTestDataUtc
    */
   public function testDateRangeUtc($expected, $start, $end, $timezone) {
@@ -186,6 +191,8 @@ class DateRenderDateRecurUtcTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test with random timezones.
+   *
    * @dataProvider providerTestDataRandom
    */
   public function testDateRangeRandom($expected, $start, $end, $timezone) {

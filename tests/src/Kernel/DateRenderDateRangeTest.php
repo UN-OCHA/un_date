@@ -87,6 +87,8 @@ class DateRenderDateRangeTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test date ranges.
+   *
    * @dataProvider providerTestData
    */
   public function testDateRange($expected, $start, $end) {

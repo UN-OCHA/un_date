@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\un_date\Plugin\Field\FieldFormatter;
 
-use DateTime;
-use DateTimeInterface;
 use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Datetime\DateFormatterInterface;
@@ -19,7 +17,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Entity\DateRecurInterpreterInterface;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
-use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\un_date\Trait\UnDateTimeTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -366,7 +363,7 @@ class UnDateDateRecurBasic extends FormatterBase {
   /**
    * Get first upcoming occurrence of a date.
    */
-  function getFirstUpcoming(DateRecurItem $item) {
+  protected function getFirstUpcoming(DateRecurItem $item) {
     if (!$item->isRecurring()) {
       return $item->getHelper()->getOccurrences()[0];
     }
@@ -386,18 +383,8 @@ class UnDateDateRecurBasic extends FormatterBase {
 
   /**
    * Builds a date range suitable for rendering.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $startDate
-   *   The start date.
-   * @param \Drupal\Core\Datetime\DrupalDateTime $endDate
-   *   The end date.
-   * @param bool $isOccurrence
-   *   Whether the range is an occurrence of a repeating value.
-   *
-   * @return array
-   *   A render array.
    */
-  protected function buildDateRangeValue(DrupalDateTime|DateTimeInterface $start_date, DrupalDateTime|DateTimeInterface $end_date, $isOccurrence, $theme_suggestions = ''): array {
+  protected function buildDateRangeValue(DrupalDateTime|\DateTimeInterface $start_date, DrupalDateTime|\DateTimeInterface $end_date, $isOccurrence, $theme_suggestions = ''): array {
     $same_date = FALSE;
     $same_day = FALSE;
 

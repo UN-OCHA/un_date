@@ -85,15 +85,19 @@ jobs:
       - name: Run tests
         run: |
           vendor/bin/phpunit --bootstrap core/tests/bootstrap.php \
-            --coverage-clover $DRUPAL_ROOT/clover.xml \
+            --coverage-clover ~/clover.xml \
             -c modules/custom/un_date/phpunit.xml modules/custom/un_date
+
+      - name: Start MySql service
+        run: |
+          ls $HOME
 
       - name: Monitor coverage
         id: coveralls
         uses: slavcodev/coverage-monitor-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          coverage_path: "$DRUPAL_ROOT/clover.xml"
+          coverage_path: "~/clover.xml"
           threshold_alert: 0
           threshold_warning: 50
           threshold_metric: "lines"

@@ -87,17 +87,17 @@ jobs:
           vendor/bin/phpunit --bootstrap core/tests/bootstrap.php \
             --coverage-clover ./clover.xml \
             -c modules/custom/un_date/phpunit.xml modules/custom/un_date
-          ls -hal
-          ls -hal modules/custom
-          ls -hal modules/custom/un_date
 
-      - name: Monitor coverage
+      - name: Monitor coverage for Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
         id: coveralls
         uses: slavcodev/coverage-monitor-action@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          status_context: Monitor coverage for Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
+          comment_context: Monitor coverage for Drupal ${{ matrix.drupal-core }} - PHP ${{ matrix.php-versions }}
           coverage_path: "./clover.xml"
           threshold_alert: 0
           threshold_warning: 50
           threshold_metric: "lines"
           comment_footer: false
+

@@ -18,6 +18,7 @@
             ignoreDeprecatedCodeUnits="true"
             disableCodeCoverageIgnore="true">
     <include>
+      <!-- Relative to this file! -->
       <directory suffix=".php">src</directory>
       <directory suffix=".module">.</directory>
     </include>

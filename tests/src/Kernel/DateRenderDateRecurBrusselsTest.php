@@ -12,6 +12,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  * Test datetime range field type via API.
  *
  * @group datetime
+ * @phpcs:disable DrupalPractice.Objects.StrictSchemaDisabled.StrictConfigSchema
  */
 class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
 

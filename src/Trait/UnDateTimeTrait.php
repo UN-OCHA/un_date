@@ -15,6 +15,9 @@ trait UnDateTimeTrait {
 
   const SEPARATOR = '—';
 
+  /**
+   * List of supported formats for months.
+   */
   protected array $monthFormats = [
     'numeric' => 'As a number',
     'full' => 'Full month name',
@@ -87,6 +90,7 @@ trait UnDateTimeTrait {
       case 'abbreviation':
         $date_format = 'd M. Y';
         break;
+
     }
 
     if ($date instanceof \DateTime) {

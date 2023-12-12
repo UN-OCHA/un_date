@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone;
+use Twig\Extension\AbstractExtension;
 
 /**
  * Common formatting methods.
@@ -71,7 +72,7 @@ trait UnDateTimeTrait {
   /**
    * Format date.
    */
-  protected function formatDate(\DateTime|DrupalDateTime|DateRangeItem $date, bool $to_utc = FALSE) : string {
+  protected function formatDate(\DateTime|DrupalDateTime|DateRangeItem $date, bool $to_utc = FALSE, $month_format = 'numeric') : string {
     $options = [];
     if ($to_utc) {
       $options = [
@@ -79,8 +80,13 @@ trait UnDateTimeTrait {
       ];
     }
 
+    // Twig doens't have a setting.
+    if (!$this instanceof AbstractExtension) {
+      $month_format = $this->getSetting('month_format') ?? 'numeric';
+    }
+
     $date_format = 'd.m.Y';
-    switch ($this->getSetting('month_format') ?? 'numeric') {
+    switch ($month_format) {
       case 'numeric':
         $date_format = 'd.m.Y';
         break;
@@ -103,8 +109,8 @@ trait UnDateTimeTrait {
   /**
    * Format datetime.
    */
-  protected function formatDateTime(\DateTime|DrupalDateTime|DateRangeItem $date, bool $to_utc = FALSE, $show_timezone = FALSE) : string {
-    return $this->formatDate($date, $to_utc) . ' ' . $this->formatTime($date, $to_utc, $show_timezone);
+  protected function formatDateTime(\DateTime|DrupalDateTime|DateRangeItem $date, bool $to_utc = FALSE, $show_timezone = FALSE, $month_format = 'numeric') : string {
+    return $this->formatDate($date, $to_utc, $month_format) . ' ' . $this->formatTime($date, $to_utc, $show_timezone);
   }
 
   /**

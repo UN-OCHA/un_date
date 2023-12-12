@@ -48,7 +48,7 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format date.
    */
-  public function getUnDate($in, bool $to_utc = FALSE) : string {
+  public function getUnDate($in, bool $to_utc = FALSE, $month_format = 'numeric') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -60,7 +60,7 @@ class CustomTwig extends AbstractExtension {
       $date_item = $date_item->start_date;
     }
 
-    return $this->formatDate($date_item, $to_utc);
+    return $this->formatDate($date_item, $to_utc, $month_format);
   }
 
   /**
@@ -84,7 +84,7 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format date and time.
    */
-  public function getUnDateTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE) : string {
+  public function getUnDateTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE, $month_format = 'numeric') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -96,13 +96,13 @@ class CustomTwig extends AbstractExtension {
       $date_item = $date_item->start_date;
     }
 
-    return $this->formatDateTime($date_item, $to_utc, $show_timezone);
+    return $this->formatDateTime($date_item, $to_utc, $show_timezone, $month_format);
   }
 
   /**
    * Format daterange.
    */
-  public function getUnDaterange($in, bool $to_utc = FALSE, $show_timezone = FALSE) : string {
+  public function getUnDaterange($in, bool $to_utc = FALSE, $show_timezone = FALSE, $month_format = 'numeric') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -111,28 +111,28 @@ class CustomTwig extends AbstractExtension {
 
     // Same.
     if ($date_item->start_date->format('c') == $date_item->end_date->format('c')) {
-      return $this->formatDateTime($date_item->start_date, $to_utc, $show_timezone);
+      return $this->formatDateTime($date_item->start_date, $to_utc, $show_timezone, $month_format);
     }
 
     // Same day.
     if ($this->formatDate($date_item->start_date) === $this->formatDate($date_item->end_date)) {
       if ($this->allDay($date_item)) {
-        return $this->formatDate($date_item->start_date, $to_utc, FALSE);
+        return $this->formatDate($date_item->start_date, $to_utc, FALSE, $month_format);
       }
-      return $this->formatDateTime($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatTime($date_item->end_date, $to_utc, $show_timezone);
+      return $this->formatDateTime($date_item->start_date, $to_utc, FALSE, $month_format) . $this->getSeparator() . $this->formatTime($date_item->end_date, $to_utc, $show_timezone);
     }
 
     if ($this->allDay($date_item)) {
-      return $this->formatDate($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDate($date_item->end_date, $to_utc, FALSE);
+      return $this->formatDate($date_item->start_date, $to_utc, FALSE, $month_format) . $this->getSeparator() . $this->formatDate($date_item->end_date, $to_utc, FALSE, $month_format);
     }
 
-    return $this->formatDateTime($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $to_utc, $show_timezone);
+    return $this->formatDateTime($date_item->start_date, $to_utc, FALSE, $month_format) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $to_utc, $show_timezone, $month_format);
   }
 
   /**
    * Format daterange.
    */
-  public function getUnDaterangeTimes($in, bool $to_utc = FALSE, $show_timezone = FALSE) : string {
+  public function getUnDaterangeTimes($in, bool $to_utc = FALSE, $show_timezone = FALSE, $month_format = 'numeric') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -154,16 +154,16 @@ class CustomTwig extends AbstractExtension {
     }
 
     if ($this->allDay($date_item)) {
-      return $this->formatDate($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDate($date_item->end_date, $to_utc, FALSE);
+      return $this->formatDate($date_item->start_date, $to_utc, FALSE, $month_format) . $this->getSeparator() . $this->formatDate($date_item->end_date, $to_utc, FALSE, $month_format);
     }
 
-    return $this->formatDateTime($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $to_utc, $show_timezone);
+    return $this->formatDateTime($date_item->start_date, $to_utc, FALSE, $month_format) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $to_utc, $show_timezone, $month_format);
   }
 
   /**
    * Format daterange.
    */
-  public function getUnDaterangeNamed($in, $format = 'default') : string {
+  public function getUnDaterangeNamed($in, $format = 'default', $month_format = 'numeric') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
@@ -172,10 +172,10 @@ class CustomTwig extends AbstractExtension {
 
     switch ($format) {
       case 'local_times':
-        return $this->localTimes($date_item);
+        return $this->localTimes($date_item, $month_format);
 
       case 'default':
-        return $this->getUnDaterange($date_item);
+        return $this->getUnDaterange($date_item, $month_format);
     }
 
     return '';
@@ -219,7 +219,7 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format time.
    */
-  protected function localTimes(DateRangeItem|DateRecurItem $daterange) : string {
+  protected function localTimes(DateRangeItem|DateRecurItem $daterange, $month_format = 'numeric') : string {
     $to_utc = FALSE;
     $show_timezone = TRUE;
 
@@ -231,7 +231,7 @@ class CustomTwig extends AbstractExtension {
       return $this->formatTime($daterange->start_date, $to_utc, FALSE) . ' — ' . $this->formatTime($daterange->end_date, $to_utc, $show_timezone);
     }
     else {
-      return $this->formatDateTime($daterange->start_date, $to_utc, FALSE) . ' — ' . $this->formatDateTime($daterange->end_date, $to_utc, $show_timezone);
+      return $this->formatDateTime($daterange->start_date, $to_utc, FALSE, $month_format) . ' — ' . $this->formatDateTime($daterange->end_date, $to_utc, $show_timezone, $month_format);
     }
   }
 

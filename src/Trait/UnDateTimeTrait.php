@@ -15,6 +15,12 @@ trait UnDateTimeTrait {
 
   const SEPARATOR = '—';
 
+  protected array $monthFormats = [
+    'numeric' => 'As a number',
+    'full' => 'Full month name',
+    'abbreviation' => 'Abbreviated month name',
+  ];
+
   /**
    * Format time.
    */
@@ -70,11 +76,24 @@ trait UnDateTimeTrait {
       ];
     }
 
-    if ($date instanceof \DateTime) {
-      return $date->format('d.m.Y');
+    $date_format = 'd.m.Y';
+    switch ($this->getSetting('month_format') ?? 'numeric') {
+      case 'numeric':
+        $date_format = 'd.m.Y';
+        break;
+      case 'full':
+        $date_format = 'd F Y';
+        break;
+      case 'abbreviation':
+        $date_format = 'd M. Y';
+        break;
     }
 
-    return $date->format('d.m.Y', $options);
+    if ($date instanceof \DateTime) {
+      return $date->format($date_format);
+    }
+
+    return $date->format($date_format, $options);
   }
 
   /**
@@ -143,6 +162,7 @@ trait UnDateTimeTrait {
     return [
       'display_timezone' => TRUE,
       'convert_to_utc' => FALSE,
+      'month_format' => 'numeric',
     ] + parent::defaultSettings();
   }
 
@@ -168,6 +188,14 @@ trait UnDateTimeTrait {
       '#default_value' => $this->getSetting('convert_to_utc'),
     ];
 
+    $form['month_format'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Month format'),
+      '#options' => $this->monthFormats,
+      '#description' => $this->t('In which format will the month be displayed'),
+      '#default_value' => $this->getSetting('month_format'),
+    ];
+
     return $form;
   }
 
@@ -185,6 +213,10 @@ trait UnDateTimeTrait {
 
     $summary[] = $this->t('@action to UTC', [
       '@action' => $this->getSetting('convert_to_utc') ? 'Convert' : 'Do not convert',
+    ]);
+
+    $summary[] = $this->t('Month display: @action', [
+      '@action' => $this->monthFormats[$this->getSetting('month_format') ?? 'numeric'],
     ]);
 
     return $summary;

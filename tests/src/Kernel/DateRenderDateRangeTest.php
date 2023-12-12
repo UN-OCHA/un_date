@@ -14,7 +14,9 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  *
  * @group datetime
  */
-class DateRangeFieldDateRangeRenderTest extends FieldKernelTestBase {
+class DateRenderDateRangeTest extends FieldKernelTestBase {
+
+  use UnDateTestTrait;
 
   /**
    * A field storage to use in this test class.
@@ -85,6 +87,8 @@ class DateRangeFieldDateRangeRenderTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test date ranges.
+   *
    * @dataProvider providerTestData
    */
   public function testDateRange($expected, $start, $end) {
@@ -137,17 +141,6 @@ class DateRangeFieldDateRangeRenderTest extends FieldKernelTestBase {
         'end' => '2023-12-07T23:59:59',
       ],
     ];
-  }
-
-  protected function renderIt($entity_type, $entity) {
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type);
-    $build = $view_builder->view($entity);
-    $output = \Drupal::service('renderer')->renderRoot($build);
-
-    $output = strip_tags($output->__toString());
-    $output = preg_replace('/\s+/', ' ', $output);
-
-    return $output;
   }
 
 }

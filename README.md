@@ -1,8 +1,14 @@
-# UN Date twig filters
+# UN Date formatters and twig filters
+
+Standard at https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-time#dates
 
 ## Todo
 
 - Add support for *all day*
+- Month as
+  - Full name
+  - Abbrevation
+  - Number
 
 All filter allow options
 

@@ -3,8 +3,7 @@
 namespace Drupal\Tests\un_date\Kernel;
 
 use Drupal\Core\Entity\Entity\EntityViewDisplay;
-use Drupal\Core\Render\RenderContext;
-use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
+use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\entity_test\Entity\EntityTest;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
@@ -15,7 +14,9 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  *
  * @group datetime
  */
-class DateRangeFieldDateRenderTest extends FieldKernelTestBase {
+class DateRenderDateTimeTest extends FieldKernelTestBase {
+
+  use UnDateTestTrait;
 
   /**
    * A field storage to use in this test class.
@@ -36,7 +37,6 @@ class DateRangeFieldDateRenderTest extends FieldKernelTestBase {
    */
   protected static $modules = [
     'datetime',
-    'datetime_range',
     'un_date',
   ];
 
@@ -56,8 +56,8 @@ class DateRangeFieldDateRenderTest extends FieldKernelTestBase {
     $this->fieldStorage = FieldStorageConfig::create([
       'field_name' => mb_strtolower($this->randomMachineName()),
       'entity_type' => 'entity_test',
-      'type' => 'daterange',
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATE],
+      'type' => 'datetime',
+      'settings' => ['datetime_type' => DateTimeItem::DATETIME_TYPE_DATETIME],
     ]);
     $this->fieldStorage->save();
 
@@ -69,7 +69,7 @@ class DateRangeFieldDateRenderTest extends FieldKernelTestBase {
     $this->field->save();
 
     $display_options = [
-      'type' => 'un_date_daterange',
+      'type' => 'un_date_datetime',
       'label' => 'hidden',
       'settings' => [
         'display_timezone' => FALSE,
@@ -86,16 +86,17 @@ class DateRangeFieldDateRenderTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test datetimes.
+   *
    * @dataProvider providerTestData
    */
-  public function testDateRange($expected, $start, $end) {
+  public function testDateTime($expected, $date) {
     $field_name = $this->fieldStorage->getName();
     // Create an entity.
     $entity = EntityTest::create([
       'name' => $this->randomString(),
       $field_name => [
-        'value' => $start,
-        'end_value' => $end,
+        'value' => $date,
       ],
     ]);
 
@@ -108,42 +109,26 @@ class DateRangeFieldDateRenderTest extends FieldKernelTestBase {
   public function providerTestData() {
     return [
       'same' => [
-        'expected' => 'Date: 06.12.2023',
-        'start' => '2023-12-06',
-        'end' => '2023-12-06',
+        'expected' => 'Date: 06.12.2023 10.11 a.m.',
+        'date' => '2023-12-06T10:11:12',
       ],
       'same_day' => [
-        'expected' => 'Date: 06.12.2023',
-        'start' => '2023-12-06',
-        'end' => '2023-12-06',
+        'expected' => 'Date: 06.12.2023 10.11 a.m.',
+        'date' => '2023-12-06T10:11:12',
       ],
       'next_day' => [
-        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
-        'start' => '2023-12-06',
-        'end' => '2023-12-07',
+        'expected' => 'Date: 06.12.2023 10 a.m.',
+        'date' => '2023-12-06T10:00:12',
       ],
       'all_day' => [
-        'expected' => 'Date: 06.12.2023',
-        'start' => '2023-12-06',
-        'end' => '2023-12-06',
+        'expected' => 'Date: 06.12.2023 12 a.m.',
+        'date' => '2023-12-06T00:00:00',
       ],
       'all_day_multi' => [
-        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
-        'start' => '2023-12-06',
-        'end' => '2023-12-07',
+        'expected' => 'Date: 06.12.2023 12 a.m.',
+        'date' => '2023-12-06T00:00:00',
       ],
     ];
-  }
-
-  protected function renderIt($entity_type, $entity) {
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type);
-    $build = $view_builder->view($entity);
-    $output = \Drupal::service('renderer')->renderRoot($build);
-
-    $output = strip_tags($output->__toString());
-    $output = preg_replace('/\s+/', ' ', $output);
-
-    return $output;
   }
 
 }

@@ -15,7 +15,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  *
  * @group datetime
  */
-class DateRangeFieldTwigTest extends FieldKernelTestBase {
+class DateTwigDateRangeTest extends FieldKernelTestBase {
 
   /**
    * A field storage to use in this test class.
@@ -76,6 +76,8 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test date ranges.
+   *
    * @dataProvider providerTestData
    */
   public function testTwigFiltersDateRange($expected, $start, $end) {
@@ -98,6 +100,8 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test date ranges.
+   *
    * @dataProvider providerTestDataTimes
    */
   public function testTwigFiltersDateRangeTimes($expected, $start, $end) {
@@ -120,6 +124,8 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test named ranges.
+   *
    * @dataProvider providerTestData
    */
   public function testTwigFiltersDateRangeNamed($expected, $start, $end) {
@@ -142,6 +148,8 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test named ranges.
+   *
    * @dataProvider providerTestDataLocalTimes
    */
   public function testTwigFiltersDateRangeNamedLocal($expected, $start, $end) {
@@ -164,6 +172,8 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test un_date.
+   *
    * @dataProvider providerTestDataFilters
    */
   public function testTwigFiltersUnDate($expected, $template, $start, $end) {
@@ -352,6 +362,8 @@ class DateRangeFieldTwigTest extends FieldKernelTestBase {
   }
 
   /**
+   * Render twig template.
+   *
    * @return \Drupal\Component\Render\MarkupInterface
    *   The rendered HTML.
    */

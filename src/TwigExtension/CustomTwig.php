@@ -2,9 +2,6 @@
 
 namespace Drupal\un_date\TwigExtension;
 
-use DateTime;
-use DateTimeZone;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList;
@@ -50,20 +47,12 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Format date.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   *
-   * @return string
-   *   Formatted date.
    */
-  public function getUnDate($in, bool $to_utc = FALSE) {
+  public function getUnDate($in, bool $to_utc = FALSE, $month_format = 'numeric') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     // Restrict to one date.
@@ -71,27 +60,17 @@ class CustomTwig extends AbstractExtension {
       $date_item = $date_item->start_date;
     }
 
-    return $this->formatDate($date_item, $to_utc);
+    return $this->formatDate($date_item, $to_utc, $month_format);
   }
 
   /**
    * Format time.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted time.
    */
-  public function getUnTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
+  public function getUnTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE) : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     // Restrict to one date.
@@ -104,22 +83,12 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Format date and time.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $date
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted date and time.
    */
-  public function getUnDateTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE) {
+  public function getUnDateTime($in, bool $to_utc = FALSE, bool $show_timezone = FALSE, $month_format = 'numeric') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     // Restrict to one date.
@@ -127,69 +96,50 @@ class CustomTwig extends AbstractExtension {
       $date_item = $date_item->start_date;
     }
 
-    return $this->formatDateTime($date_item, $to_utc, $show_timezone);
+    return $this->formatDateTime($date_item, $to_utc, $show_timezone, $month_format);
   }
 
   /**
    * Format daterange.
-   *
-   * @param \Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList|Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange_list
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted date.
    */
-  public function getUnDaterange($in, bool $to_utc = FALSE, $show_timezone = FALSE) {
+  public function getUnDaterange($in, bool $to_utc = FALSE, $show_timezone = FALSE, $month_format = 'numeric') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     // Same.
     if ($date_item->start_date->format('c') == $date_item->end_date->format('c')) {
-      return $this->formatDateTime($date_item->start_date, $to_utc, $show_timezone);
+      return $this->formatDateTime($date_item->start_date, $to_utc, $show_timezone, $month_format);
     }
 
     // Same day.
     if ($this->formatDate($date_item->start_date) === $this->formatDate($date_item->end_date)) {
       if ($this->allDay($date_item)) {
-        return $this->formatDate($date_item->start_date, $to_utc, FALSE);
+        return $this->formatDate($date_item->start_date, $to_utc, FALSE, $month_format);
       }
-      return $this->formatDateTime($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatTime($date_item->end_date, $to_utc, $show_timezone);
+      return $this->formatDateTime($date_item->start_date, $to_utc, FALSE, $month_format) . $this->getSeparator() . $this->formatTime($date_item->end_date, $to_utc, $show_timezone);
     }
 
     if ($this->allDay($date_item)) {
-      return $this->formatDate($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDate($date_item->end_date, $to_utc, FALSE);
+      return $this->formatDate($date_item->start_date, $to_utc, FALSE, $month_format) . $this->getSeparator() . $this->formatDate($date_item->end_date, $to_utc, FALSE, $month_format);
     }
 
-    return $this->formatDateTime($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $to_utc, $show_timezone);
+    return $this->formatDateTime($date_item->start_date, $to_utc, FALSE, $month_format) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $to_utc, $show_timezone, $month_format);
   }
 
   /**
    * Format daterange.
-   *
-   * @param \Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList|Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange_list
-   *   Drupal date time object.
-   * @param bool $to_utc
-   *   Convert to UTC.
-   * @param bool $show_timezone
-   *   Show timezone.
-   *
-   * @return string
-   *   Formatted date.
    */
-  public function getUnDaterangeTimes($in, bool $to_utc = FALSE, $show_timezone = FALSE) {
+  public function getUnDaterangeTimes($in, bool $to_utc = FALSE, $show_timezone = FALSE, $month_format = 'numeric') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
+    /** @var Datetime */
     // Same.
     if ($date_item->start_date->format('c') == $date_item->end_date->format('c')) {
       return $this->formatTime($date_item->start_date, $to_utc, $show_timezone);
@@ -204,39 +154,31 @@ class CustomTwig extends AbstractExtension {
     }
 
     if ($this->allDay($date_item)) {
-      return $this->formatDate($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDate($date_item->end_date, $to_utc, FALSE);
+      return $this->formatDate($date_item->start_date, $to_utc, FALSE, $month_format) . $this->getSeparator() . $this->formatDate($date_item->end_date, $to_utc, FALSE, $month_format);
     }
 
-    return $this->formatDateTime($date_item->start_date, $to_utc, FALSE) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $to_utc, $show_timezone);
+    return $this->formatDateTime($date_item->start_date, $to_utc, FALSE, $month_format) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $to_utc, $show_timezone, $month_format);
   }
 
   /**
    * Format daterange.
-   *
-   * @param \Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList|Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange_list
-   *   Drupal date time object.
-   * @param string $format
-   *   Named format output.
-   *
-   * @return string
-   *   Formatted date.
    */
-  public function getUnDaterangeNamed($in, $format = 'default') {
+  public function getUnDaterangeNamed($in, $format = 'default', $month_format = 'numeric') : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     switch ($format) {
       case 'local_times':
-        return $this->localTimes($date_item);
+        return $this->localTimes($date_item, $month_format);
 
       case 'default':
-        return $this->getUnDaterange($date_item);
+        return $this->getUnDaterange($date_item, $month_format);
     }
 
-    return NULL;
+    return '';
   }
 
   /**
@@ -267,7 +209,7 @@ class CustomTwig extends AbstractExtension {
       return $in->first();
     }
 
-    if ($in instanceof DateTime) {
+    if ($in instanceof \DateTime) {
       return $in;
     }
 
@@ -277,36 +219,34 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format time.
    */
-  protected function localTimes(DateRangeItem|DateRecurItem $daterange) {
+  protected function localTimes(DateRangeItem|DateRecurItem $daterange, $month_format = 'numeric') : string {
     $to_utc = FALSE;
     $show_timezone = TRUE;
 
     // Only output time if dates are equal.
     if ($this->formatDate($daterange->start_date, TRUE) === $this->formatDate($daterange->start_date, FALSE)) {
       if ($this->allDay($daterange)) {
-        return NULL;
+        return '';
       }
       return $this->formatTime($daterange->start_date, $to_utc, FALSE) . ' — ' . $this->formatTime($daterange->end_date, $to_utc, $show_timezone);
     }
     else {
-      return $this->formatDateTime($daterange->start_date, $to_utc, FALSE) . ' — ' . $this->formatDateTime($daterange->end_date, $to_utc, $show_timezone);
+      return $this->formatDateTime($daterange->start_date, $to_utc, FALSE, $month_format) . ' — ' . $this->formatDateTime($daterange->end_date, $to_utc, $show_timezone, $month_format);
     }
   }
 
   /**
    * Is all day event.
-   *
-   * @param \Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList|Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange_list
-   *   Drupal date time object.
-   *
-   * @return bool
-   *   TRUE if it's an all day event.
    */
-  public function isAllDay($in) {
+  public function isAllDay($in) : bool {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return FALSE;
+    }
+
+    if ($in instanceof \DateTime) {
+      return FALSE;
     }
 
     return $this->allDay($date_item);
@@ -314,23 +254,17 @@ class CustomTwig extends AbstractExtension {
 
   /**
    * Is UTC timezone.
-   *
-   * @param \Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList|Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem $daterange_list
-   *   Drupal date time object.
-   *
-   * @return bool
-   *   TRUE if timezone is UTC.
    */
-  public function isUtc($in) {
+  public function isUtc($in) : bool {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return FALSE;
     }
 
-    $timezone = new DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
+    $timezone = new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
     if (isset($date_item->timezone)) {
-      $timezone = new DateTimeZone($date_item->timezone);
+      $timezone = new \DateTimeZone($date_item->timezone);
     }
 
     return $timezone->getName() === 'UTC';

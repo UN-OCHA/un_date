@@ -2,12 +2,8 @@
 
 namespace Drupal\un_date\Plugin\Field\FieldFormatter;
 
-use DateTimeZone;
-use Drupal\datetime\Plugin\Field\FieldFormatter\DateTimeFormatterBase;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\un_date\Trait\UnDateTimeTrait;
@@ -48,9 +44,9 @@ class UnDateDateTime extends FormatterBase {
       $tz = $this->getSetting('display_timezone');
       $datetime_type = $this->getFieldSetting('datetime_type');
 
-      $timezone = new DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
+      $timezone = new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
       if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATETIME) {
-        $timezone = new DateTimeZone(date_default_timezone_get());
+        $timezone = new \DateTimeZone(date_default_timezone_get());
       }
       $date->setTimeZone($timezone);
 
@@ -78,56 +74,6 @@ class UnDateDateTime extends FormatterBase {
     }
 
     return $elements;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function defaultSettings() {
-    return [
-      'display_timezone' => FALSE,
-      'convert_to_utc' => FALSE,
-    ] + parent::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    $form = parent::settingsForm($form, $form_state);
-
-    $form['display_timezone'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Display Timezone'),
-      '#description' => $this->t('Should we display the timezone after the formatted date?'),
-      '#default_value' => $this->getSetting('display_timezone'),
-    ];
-
-    $form['convert_to_utc'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Convert to UTC'),
-      '#description' => $this->t('Should we convert to UTC?'),
-      '#default_value' => $this->getSetting('convert_to_utc'),
-    ];
-
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function settingsSummary() {
-    $summary = parent::settingsSummary();
-
-    $summary[] = $this->t('@action the timezone', [
-      '@action' => $this->getSetting('display_timezone') ? 'Showing' : 'Hiding',
-    ]);
-
-    $summary[] = $this->t('@action to UTC', [
-      '@action' => $this->getSetting('convert_to_utc') ? 'Convert' : 'Do not convert',
-    ]);
-
-    return $summary;
   }
 
 }

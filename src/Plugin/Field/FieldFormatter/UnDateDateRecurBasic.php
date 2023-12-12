@@ -95,56 +95,24 @@ class UnDateDateRecurBasic extends FormatterBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
    */
   public static function defaultSettings(): array {
     return [
-      // Show number of occurrences.
       'show_next' => 5,
-      // Whether number of occurrences should be per item or in total.
       'count_per_item' => TRUE,
-      // Date format for occurrences.
-      'occurrence_format_type' => 'medium',
-      // Date format for end date, if same day as start date.
-      'same_end_date_format_type' => 'medium',
-      'interpreter' => NULL,
-    ] + parent::defaultSettings();
+      'interpreter' => 'un_interpreter',
+    ];
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
    */
   public function settingsForm(array $form, FormStateInterface $form_state): array {
     $form = parent::settingsForm($form, $form_state);
-
-    $originalFormatType = $form['format_type'];
-    unset($form['format_type']);
-
-    // Redefine format type to change the natural order of form fields.
-    $form['format_type'] = $originalFormatType;
-    $form['format_type']['#title'] = $this->t('Non-Repeating Date format');
-    $form['format_type']['#description'] = $this->t('Date format used for field values without repeat rules.');
-    $form['occurrence_format_type'] = $originalFormatType;
-    $form['occurrence_format_type']['#title'] = $this->t('Start and end date format');
-    $form['occurrence_format_type']['#default_value'] = $this->getSetting('occurrence_format_type');
-    $form['occurrence_format_type']['#description'] = $this->t('Date format used for field values with repeat rules.');
-    $form['same_end_date_format_type'] = $originalFormatType;
-    $form['same_end_date_format_type']['#title'] = $this->t('Same day end date format');
-    $form['same_end_date_format_type']['#description'] = $this->t('Date format used for end date if field value has repeat rule. Used only if occurs on same calendar day as start date.');
-    $form['same_end_date_format_type']['#default_value'] = $this->getSetting('same_end_date_format_type');
-
-    // Redefine separator to change the natural order of form fields.
-    $originalSeparator = $form['separator'];
-    unset($form['separator']);
-    $form['separator'] = $originalSeparator;
-    // Change the width of the field if not already set. (Not set by default)
-    $form['separator']['#size'] ??= 5;
-
-    // Redefine timezone to change the natural order of form fields.
-    $originalTimezoneOverride = $form['timezone_override'];
-    unset($form['timezone_override']);
-    $form['timezone_override'] = $originalTimezoneOverride;
-    $form['timezone_override']['#empty_option'] = $this->t('Use current user timezone');
-    $form['timezone_override']['#description'] = $this->t('Change the timezone used for displaying dates (not recommended).');
 
     $interpreterOptions = array_map(
       fn (DateRecurInterpreterInterface $interpreter): string => $interpreter->label() ?? (string) $this->t('- Missing label -'),
@@ -198,6 +166,8 @@ class UnDateDateRecurBasic extends FormatterBase {
    *   The current state of the form.
    * @param array $complete_form
    *   The complete form structure.
+   *
+   * @codeCoverageIgnore
    */
   public static function validateSettingsCountPerItem(array &$element, FormStateInterface $form_state, array &$complete_form): void {
     $countPerItem = $element['#value'] == static::COUNT_PER_ITEM_ITEM;
@@ -217,6 +187,8 @@ class UnDateDateRecurBasic extends FormatterBase {
    *   The current state of the form.
    * @param array $complete_form
    *   The complete form structure.
+   *
+   * @codeCoverageIgnore
    */
   public static function validateSettingsShowNext(array &$element, FormStateInterface $form_state, array &$complete_form): void {
     $arrayParents = array_slice($element['#array_parents'], 0, -2);
@@ -228,10 +200,11 @@ class UnDateDateRecurBasic extends FormatterBase {
 
   /**
    * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
    */
   public function settingsSummary(): array {
-    $this->formatType = $this->getSetting('format_type');
-    $summary = parent::settingsSummary();
+    $summary = [];
 
     $countPerItem = $this->getSetting('count_per_item');
     $showOccurrencesCount = $this->getSetting('show_next');
@@ -316,9 +289,12 @@ class UnDateDateRecurBasic extends FormatterBase {
       '#is_recurring' => $item->isRecurring(),
     ];
 
-    $startDate = $item->start_date;
+    /** @var \Drupal\date_recur\DateRange $first_upcoming */
+    $first_upcoming = $this->getFirstUpcoming($item);
+    $startDate = $first_upcoming->getStart();
+
     /** @var \Drupal\Core\Datetime\DrupalDateTime|null $endDate */
-    $endDate = $item->end_date ?? $startDate;
+    $endDate = $first_upcoming->getEnd() ?? $startDate;
     if (!$startDate || !$endDate) {
       return $build;
     }
@@ -334,13 +310,14 @@ class UnDateDateRecurBasic extends FormatterBase {
         $rules = $item->getHelper()->getRules();
         $plugin = $interpreter->getPlugin();
         $cacheability->addCacheableDependency($interpreter);
+        // @todo current language, inject LanguageManagerInterface $language_manager
         $build['#interpretation'] = $plugin->interpret($rules, 'en');
       }
     }
 
     // Occurrences are generated even if the item is not recurring.
     $build['#occurrences'] = array_map(
-      function (DateRange $occurrence): array {
+      function (DateRange $occurrence) use ($theme_suggestions): array {
         $startDate = DrupalDateTime::createFromDateTime($occurrence->getStart());
         $endDate = DrupalDateTime::createFromDateTime($occurrence->getEnd());
         return $this->buildDateRangeValue(
@@ -358,21 +335,35 @@ class UnDateDateRecurBasic extends FormatterBase {
   }
 
   /**
-   * Builds a date range suitable for rendering.
-   *
-   * @param \Drupal\Core\Datetime\DrupalDateTime $startDate
-   *   The start date.
-   * @param \Drupal\Core\Datetime\DrupalDateTime $endDate
-   *   The end date.
-   * @param bool $isOccurrence
-   *   Whether the range is an occurrence of a repeating value.
-   *
-   * @return array
-   *   A render array.
+   * Get first upcoming occurrence of a date.
    */
-  protected function buildDateRangeValue(DrupalDateTime $start_date, DrupalDateTime $end_date, $isOccurrence, $theme_suggestions = ''): array {
+  protected function getFirstUpcoming(DateRecurItem $item) {
+    if (!$item->isRecurring()) {
+      return $item->getHelper()->getOccurrences()[0];
+    }
+
+    // Generate all occurences.
+    $today = new \DateTime('now');
+    $today->setTime(0, 0, 0, 0);
+    foreach ($item->getHelper()->getOccurrences($today, NULL, 99) as $date) {
+      if ($date->getStart()->getTimestamp() >= $today->getTimestamp()) {
+        return $date;
+      }
+    }
+
+    // Return first one, if no future one is found.
+    return $item->getHelper()->getOccurrences()[0];
+  }
+
+  /**
+   * Builds a date range suitable for rendering.
+   */
+  protected function buildDateRangeValue(DrupalDateTime|\DateTimeInterface $start_date, DrupalDateTime|\DateTimeInterface $end_date, $isOccurrence, $theme_suggestions = ''): array {
     $same_date = FALSE;
     $same_day = FALSE;
+
+    $timezone = $start_date->getTimezone();
+    $all_day = $this->allDayStartEnd($start_date, $end_date, $timezone);
 
     if ($start_date->getTimestamp() == $end_date->getTimestamp()) {
       $same_date = TRUE;
@@ -380,8 +371,6 @@ class UnDateDateRecurBasic extends FormatterBase {
     elseif ($this->formatDate($start_date) == $this->formatDate($end_date)) {
       $same_day = TRUE;
     }
-
-    $timezone = $start_date->getTimezone();
 
     $iso_start_date = $start_date->format('c');
     $iso_end_date = $end_date->format('c') ?? '';
@@ -397,7 +386,7 @@ class UnDateDateRecurBasic extends FormatterBase {
       '#display_timezone' => TRUE,
       '#same_date' => $same_date,
       '#same_day' => $same_day,
-      '#all_day' => FALSE,
+      '#all_day' => $all_day,
       '#cache' => [
         'contexts' => [
           'timezone',

@@ -18,6 +18,8 @@ trait UnDateTimeTrait {
 
   /**
    * List of supported formats for months.
+   *
+   * @var array
    */
   protected array $monthFormats = [
     'numeric' => 'As a number',
@@ -90,9 +92,11 @@ trait UnDateTimeTrait {
       case 'numeric':
         $date_format = 'd.m.Y';
         break;
+
       case 'full':
         $date_format = 'd F Y';
         break;
+
       case 'abbreviation':
         $date_format = 'd M. Y';
         break;

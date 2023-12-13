@@ -271,10 +271,10 @@ class CustomTwig extends AbstractExtension {
   }
 
   /**
-   * Is Rtl language
+   * Is Rtl language.
    */
   public function isRtl() : bool {
-    $lang_code = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    return $lang_code == 'ar';
+    return un_date_current_language_rtl();
   }
+
 }

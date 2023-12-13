@@ -45,14 +45,14 @@ class DateRenderDateTimeTranslationTest extends FieldKernelTestBase {
    *
    * @var \Drupal\locale\StringStorageInterface
    */
-  protected $locale_storage;
+  protected $localeStorage;
 
   /**
    * The string translator.
    *
    * @var \Drupal\Core\StringTranslation\TranslationManager
    */
-  protected $string_translator;
+  protected $stringTranslator;
 
   /**
    * {@inheritdoc}
@@ -71,9 +71,9 @@ class DateRenderDateTimeTranslationTest extends FieldKernelTestBase {
   protected function setUp(): void {
     parent::setUp();
 
-    $this->string_translator = $this->container->get('string_translation');
+    $this->stringTranslator = $this->container->get('string_translation');
 
-    $this->locale_storage = $this->container->get('locale.storage');
+    $this->localeStorage = $this->container->get('locale.storage');
     $this->installSchema('locale', [
       'locales_location',
       'locales_source',
@@ -161,10 +161,10 @@ class DateRenderDateTimeTranslationTest extends FieldKernelTestBase {
   }
 
   /**
-   * Set language
+   * Set language.
    */
   protected function setLanguage(string $lang_code) {
-    $this->string_translator->setDefaultLangcode($lang_code);
+    $this->stringTranslator->setDefaultLangcode($lang_code);
 
     $language = \Drupal::languageManager()->getLanguage($lang_code);
     $language_manager = \Drupal::languageManager();

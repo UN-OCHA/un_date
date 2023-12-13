@@ -31,47 +31,53 @@ trait UnDateTimeTrait {
    * Format time.
    */
   protected function formatTime(\DateTime|DrupalDateTime $date, $show_timezone = FALSE) : string {
-    $options = [];
+    $ampm = '';
+    $time_format = 'g.i';
 
-    $ampm = 'a.m.';
-    if ($date instanceof \DateTime) {
-      if ($date->format('a') === 'pm') {
-        $ampm = 'p.m.';
-      }
-    }
-    else {
-      if ($date->format('a', $options) === 'pm') {
-        $ampm = 'p.m.';
-      }
+    switch ($this->getLocale()) {
+      case 'en':
+        $time_format = 'g.i';
+        if ($date->format('i') === '00') {
+          $time_format = 'g';
+        }
+
+        $ampm = ' a.m.';
+        if ($date->format('a') === 'pm') {
+          $ampm = ' p.m.';
+        }
+        break;
+
+      case 'fr':
+        $time_format = 'G \h i';
+        if ($date->format('i') === '00') {
+          $time_format = 'G \h\o\u\r\e\s';
+          if ($date->format('G') == '1') {
+            $time_format = 'G \h\o\u\r\e';
+          }
+        }
+
+        break;
+
+      case 'es':
+        $time_format = 'G.i \h\o\r\a\s';
+        if ($date->format('i') === '00') {
+          $time_format = 'G \h\o\r\a\s';
+          if ($date->format('G') == '1') {
+            $time_format = 'G \h\o\r\a';
+          }
+        }
+
+        break;
+
     }
 
-    if ($date instanceof \DateTime) {
-      // Hide zero minutes.
-      if ($date->format('i') === '00') {
-        return $date->format('g') . ' ' . $ampm . $this->formatTimezone($date, $show_timezone);
-      }
-      else {
-        return $date->format('g.i') . ' ' . $ampm . $this->formatTimezone($date, $show_timezone);
-      }
-    }
-
-    // Hide zero minutes.
-    if ($date->format('i', $options) === '00') {
-      return $date->format('g', $options) . ' ' . $ampm . $this->formatTimezone($date, $show_timezone);
-    }
-    else {
-      return $date->format('g.i', $options) . ' ' . $ampm . $this->formatTimezone($date, $show_timezone);
-    }
-
-    return '';
+    return $date->format($time_format) . $ampm . $this->formatTimezone($date, $show_timezone);
   }
 
   /**
    * Format date.
    */
   protected function formatDate(\DateTime|DrupalDateTime|DateRangeItem $date, $month_format = 'numeric') : string {
-    $options = [];
-
     // Twig doens't have a setting.
     if (!$this instanceof AbstractExtension) {
       $month_format = $this->getSetting('month_format') ?? 'numeric';
@@ -93,11 +99,7 @@ trait UnDateTimeTrait {
 
     }
 
-    if ($date instanceof \DateTime) {
-      return $date->format($date_format);
-    }
-
-    return $date->format($date_format, $options);
+    return $date->format($date_format);
   }
 
   /**
@@ -209,6 +211,13 @@ trait UnDateTimeTrait {
     ]);
 
     return $summary;
+  }
+
+  /**
+   * Get current site language.
+   */
+  public function getLocale() {
+    return \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 
 }

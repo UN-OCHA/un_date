@@ -1,14 +1,23 @@
 # UN Date formatters and twig filters
 
-Standard at https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-time#dates
+See [UN standard](https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-time#dates) for details.
+
+All dates will be outputted as entered, there's no automatic timezone conversion.
+
+We support English, French and Spanish.
 
 ## Todo
 
-- Test twig filter with full name
 - Test formatters with full name
-- Add translations
 
 ## Formatters
+
+There's support for the followig
+
+- Core datetime field
+- Core datetime_range field
+- Contrib [daterange_timezone](https://www.drupal.org/project/datetime_range_timezone)
+- Contrib [date_recur](https://www.drupal.org/project/date_recur)
 
 ## Twig filters and functions
 

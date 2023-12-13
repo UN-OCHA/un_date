@@ -110,32 +110,32 @@ class DateRenderDateRangeTest extends FieldKernelTestBase {
   public function providerTestData() {
     return [
       'same' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m.',
+        'expected' => 'Date: 6.12.2023 10.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
       ],
       'same_day' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m. — 11.11 a.m.',
+        'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
       ],
       'next_day' => [
-        'expected' => 'Start date: 06.12.2023 10.11 a.m. End date: 07.12.2023 11.11 a.m.',
+        'expected' => 'Start date: 6.12.2023 10.11 a.m. End date: 7.12.2023 11.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
       ],
       'all_day' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
       ],
       'all_day_2' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T00:00:00',
       ],
       'all_day_multi' => [
-        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
+        'expected' => 'Start date: 6.12.2023 End date: 7.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
       ],

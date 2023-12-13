@@ -38,3 +38,12 @@ field.formatter.settings.un_data_date_recur_basic:
     month_format:
       type: string
       label: 'Month format'
+    show_next:
+      type: string
+      label: 'Show maximum x number of occurences'
+    count_per_item:
+      type: string
+      label: 'count per field item or across all field items'
+    interpreter:
+      type: string
+      label: 'Interpreter'

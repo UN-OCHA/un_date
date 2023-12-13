@@ -200,27 +200,27 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
   public function providerTestData() {
     return [
       'same' => [
-        'expected' => '06.12.2023 10.11 a.m.',
+        'expected' => '6.12.2023 10.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
       ],
       'same_day' => [
-        'expected' => '06.12.2023 10.11 a.m. — 11.11 a.m.',
+        'expected' => '6.12.2023 10.11 a.m. — 11.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
       ],
       'next_day' => [
-        'expected' => '06.12.2023 10.11 a.m. — 07.12.2023 11.11 a.m.',
+        'expected' => '6.12.2023 10.11 a.m. — 7.12.2023 11.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
       ],
       'all_day' => [
-        'expected' => '06.12.2023',
+        'expected' => '6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
       ],
       'all_day_multi' => [
-        'expected' => '06.12.2023 — 07.12.2023',
+        'expected' => '6.12.2023 — 7.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
       ],
@@ -276,7 +276,7 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'end' => '2023-12-06T11:11:12',
       ],
       'next_day' => [
-        'expected' => '06.12.2023 10.11 a.m. — 07.12.2023 11.11 a.m.',
+        'expected' => '6.12.2023 10.11 a.m. — 7.12.2023 11.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
       ],
@@ -286,7 +286,7 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'end' => '2023-12-06T23:59:59',
       ],
       'all_day_multi' => [
-        'expected' => '06.12.2023 — 07.12.2023',
+        'expected' => '6.12.2023 — 7.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
       ],
@@ -299,7 +299,7 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
   public function providerTestDataFilters() {
     return [
       'date' => [
-        'expected' => '06.12.2023',
+        'expected' => '6.12.2023',
         'template' => '{{ variable|un_date }}',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T23:59:59',
@@ -311,13 +311,13 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'end' => '2023-12-07T23:59:59',
       ],
       'datetime' => [
-        'expected' => '06.12.2023 10.11 a.m.',
+        'expected' => '6.12.2023 10.11 a.m.',
         'template' => '{{ variable|un_datetime }}',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T23:59:59',
       ],
       'date_no_minutes' => [
-        'expected' => '06.12.2023',
+        'expected' => '6.12.2023',
         'template' => '{{ variable|un_date }}',
         'start' => '2023-12-06T10:00:12',
         'end' => '2023-12-07T23:59:59',
@@ -329,7 +329,7 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'end' => '2023-12-07T23:59:59',
       ],
       'datetime_no_minutes' => [
-        'expected' => '06.12.2023 10 a.m.',
+        'expected' => '6.12.2023 10 a.m.',
         'template' => '{{ variable|un_datetime }}',
         'start' => '2023-12-06T10:00:12',
         'end' => '2023-12-07T23:59:59',
@@ -359,25 +359,25 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'end' => '2023-12-07T23:59:59',
       ],
       'date_full' => [
-        'expected' => '06 December 2023',
+        'expected' => '6 December 2023',
         'template' => '{{ variable|un_date("full") }}',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T23:59:59',
       ],
       'datetime_full' => [
-        'expected' => '06 December 2023 10.11 a.m.',
+        'expected' => '6 December 2023 10.11 a.m.',
         'template' => '{{ variable|un_datetime(false, "full") }}',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T23:59:59',
       ],
       'date_abbreviation' => [
-        'expected' => '06 Dec. 2023',
+        'expected' => '6 Dec. 2023',
         'template' => '{{ variable|un_date("abbreviation") }}',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T23:59:59',
       ],
       'datetime_abbreviation' => [
-        'expected' => '06 Dec. 2023 10.11 a.m.',
+        'expected' => '6 Dec. 2023 10.11 a.m.',
         'template' => '{{ variable|un_datetime(false, "abbreviation") }}',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T23:59:59',

@@ -50,12 +50,11 @@ trait UnDateTimeTrait {
       case 'fr':
         $time_format = 'G \h i';
         if ($date->format('i') === '00') {
-          $time_format = 'G \h\o\u\r\e\s';
+          $time_format = 'G \h\e\u\r\e\s';
           if ($date->format('G') == '1') {
-            $time_format = 'G \h\o\u\r\e';
+            $time_format = 'G \h\e\u\r\e';
           }
         }
-
         break;
 
       case 'es':
@@ -66,9 +65,32 @@ trait UnDateTimeTrait {
             $time_format = 'G \h\o\r\a';
           }
         }
-
         break;
 
+      case 'ar':
+        $time_format = 'G.i';
+        if ($date->format('i') === '00') {
+          $time_format = 'G';
+        }
+        break;
+
+      case 'zh-hans':
+        $time_format = 'G時i分';
+        if ($date->format('i') === '00') {
+          $time_format = 'G時正';
+        }
+        break;
+
+    }
+
+    // Midnight.
+    if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {
+      return t('midnight');
+    }
+
+    // Noon.
+    if ($date->format('G') == '12' && $date->format('i') === '00') {
+      return t('noon');
     }
 
     return $date->format($time_format) . $ampm . $this->formatTimezone($date, $show_timezone);
@@ -83,18 +105,25 @@ trait UnDateTimeTrait {
       $month_format = $this->getSetting('month_format') ?? 'numeric';
     }
 
-    $date_format = 'd.m.Y';
+    $date_format = 'j.m.Y';
     switch ($month_format) {
       case 'numeric':
-        $date_format = 'd.m.Y';
+        $date_format = 'j.m.Y';
         break;
 
       case 'full':
-        $date_format = 'd F Y';
+        $date_format = 'j F Y';
         break;
 
       case 'abbreviation':
-        $date_format = 'd M. Y';
+        $date_format = 'j M. Y';
+
+        if ($this->getLocale() == 'zh-hans') {
+          $date_format = 'j F Y';
+        }
+        elseif ($this->getLocale() == 'ar') {
+          $date_format = 'Y F j';
+        }
         break;
 
     }

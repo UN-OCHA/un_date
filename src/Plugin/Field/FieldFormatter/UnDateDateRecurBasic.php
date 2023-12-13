@@ -100,6 +100,8 @@ class UnDateDateRecurBasic extends FormatterBase {
    */
   public static function defaultSettings(): array {
     return [
+      'display_timezone' => TRUE,
+      'month_format' => 'numeric',
       'show_next' => 5,
       'count_per_item' => TRUE,
       'interpreter' => 'un_interpreter',
@@ -113,6 +115,21 @@ class UnDateDateRecurBasic extends FormatterBase {
    */
   public function settingsForm(array $form, FormStateInterface $form_state): array {
     $form = parent::settingsForm($form, $form_state);
+
+    $form['display_timezone'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display Timezone'),
+      '#description' => $this->t('Should we display the timezone after the formatted date?'),
+      '#default_value' => $this->getSetting('display_timezone'),
+    ];
+
+    $form['month_format'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Month format'),
+      '#options' => $this->monthFormats,
+      '#description' => $this->t('In which format will the month be displayed'),
+      '#default_value' => $this->getSetting('month_format'),
+    ];
 
     $interpreterOptions = array_map(
       fn (DateRecurInterpreterInterface $interpreter): string => $interpreter->label() ?? (string) $this->t('- Missing label -'),
@@ -206,6 +223,14 @@ class UnDateDateRecurBasic extends FormatterBase {
   public function settingsSummary(): array {
     $summary = [];
 
+    $summary[] = $this->t('@action the timezone', [
+      '@action' => $this->getSetting('display_timezone') ? 'Showing' : 'Hiding',
+    ]);
+
+    $summary[] = $this->t('Month display: @action', [
+      '@action' => $this->monthFormats[$this->getSetting('month_format') ?? 'numeric'],
+    ]);
+
     $countPerItem = $this->getSetting('count_per_item');
     $showOccurrencesCount = $this->getSetting('show_next');
     if ($showOccurrencesCount > 0) {
@@ -216,28 +241,6 @@ class UnDateDateRecurBasic extends FormatterBase {
         ['@per' => $countPerItem ? $this->t('per field item') : $this->t('across all field items')]
       );
     }
-
-    $start = new DrupalDateTime('today 9am');
-    $endSameDay = clone $start;
-    $endSameDay->setTime(17, 0, 0);
-    $summary['sample_same_day'] = [
-      '#type' => 'inline_template',
-      '#template' => '{{ label }}: {{ sample }}',
-      '#context' => [
-        'label' => $this->t('Same day range'),
-        'sample' => $this->buildDateRangeValue($start, $endSameDay, TRUE),
-      ],
-    ];
-    $endDifferentDay = clone $endSameDay;
-    $endDifferentDay->modify('+1 day');
-    $summary['sample_different_day'] = [
-      '#type' => 'inline_template',
-      '#template' => '{{ label }}: {{ sample }}',
-      '#context' => [
-        'label' => $this->t('Different day range'),
-        'sample' => $this->buildDateRangeValue($start, $endDifferentDay, TRUE),
-      ],
-    ];
 
     return $summary;
   }

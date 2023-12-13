@@ -110,27 +110,27 @@ class DateRenderDateRangeDateOnlyTest extends FieldKernelTestBase {
   public function providerTestData() {
     return [
       'same' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06',
         'end' => '2023-12-06',
       ],
       'same_day' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06',
         'end' => '2023-12-06',
       ],
       'next_day' => [
-        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
+        'expected' => 'Start date: 6.12.2023 End date: 7.12.2023',
         'start' => '2023-12-06',
         'end' => '2023-12-07',
       ],
       'all_day' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06',
         'end' => '2023-12-06',
       ],
       'all_day_multi' => [
-        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
+        'expected' => 'Start date: 6.12.2023 End date: 7.12.2023',
         'start' => '2023-12-06',
         'end' => '2023-12-07',
       ],

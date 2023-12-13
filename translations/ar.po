@@ -1,0 +1,109 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Custom\\n"
+"MIME-Version: 1.0\\n"
+"Content-Type: text/plain; charset=UTF-8\\n"
+"Content-Transfer-Encoding: 8bit\\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\\n"
+
+# midnight
+msgid "midnight"
+msgstr "منتصف الليل"
+
+# noon
+msgid "noon"
+msgstr "وقت الظهيرة"
+
+msgctxt "Long month name"
+msgid "January"
+msgstr "يناير"
+
+msgctxt "Long month name"
+msgid "February"
+msgstr "فبراير"
+
+msgctxt "Long month name"
+msgid "March"
+msgstr "مارس"
+
+msgctxt "Long month name"
+msgid "April"
+msgstr "أبريل"
+
+msgctxt "Long month name"
+msgid "May"
+msgstr "مايو"
+
+msgctxt "Long month name"
+msgid "June"
+msgstr "يونيو"
+
+msgid "July"
+msgstr ""
+msgctxt "Long month name"
+msgid "August"
+msgstr "أغسطس"
+
+msgctxt "Long month name"
+msgid "September"
+msgstr "سبتمبر"
+
+msgctxt "Long month name"
+msgid "October"
+msgstr "أكتوبر"
+
+msgctxt "Long month name"
+msgid "November"
+msgstr "نوفمبر"
+
+msgctxt "Long month name"
+msgid "December"
+msgstr "ديسمبر"
+
+msgctxt "Abbreviated month name"
+msgid "Jan"
+msgstr "يناير"
+
+msgctxt "Abbreviated month name"
+msgid "Feb"
+msgstr "فبراير"
+
+msgctxt "Abbreviated month name"
+msgid "Mar"
+msgstr "مارس"
+
+msgctxt "Abbreviated month name"
+msgid "Apr"
+msgstr "أبريل"
+
+msgctxt "Abbreviated month name"
+msgid "May"
+msgstr "ماي"
+
+msgctxt "Abbreviated month name"
+msgid "Jun"
+msgstr "يونيو"
+
+msgctxt "Abbreviated month name"
+msgid "Jul"
+msgstr "يوليوز"
+
+msgctxt "Abbreviated month name"
+msgid "Aug"
+msgstr "غشت"
+
+msgctxt "Abbreviated month name"
+msgid "Sep"
+msgstr "شتنبر"
+
+msgctxt "Abbreviated month name"
+msgid "Oct"
+msgstr "أكتوبر"
+
+msgctxt "Abbreviated month name"
+msgid "Nov"
+msgstr "نونبر"
+
+msgctxt "Abbreviated month name"
+msgid "Dec"
+msgstr "دجنبر"

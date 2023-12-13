@@ -35,11 +35,6 @@ class DateRenderDateRecurUtcTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $strictConfigSchema = FALSE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = [
     'date_recur',
     'datetime_range',
@@ -116,73 +111,73 @@ class DateRenderDateRecurUtcTest extends FieldKernelTestBase {
   public function providerTestDataUtc() {
     return [
       'same_utc' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m. (UTC)',
+        'expected' => 'Date: 6.12.2023 10.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
         'timezone' => 'UTC',
       ],
       'same_day_utc' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m. — 11.11 a.m. (UTC)',
+        'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'UTC',
       ],
       'next_day_utc' => [
-        'expected' => 'Start date: 06.12.2023 10.11 a.m. (UTC) End date: 07.12.2023 11.11 a.m. (UTC)',
+        'expected' => 'Start date: 6.12.2023 10.11 a.m. (UTC) End date: 7.12.2023 11.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
         'timezone' => 'UTC',
       ],
       'all_day_utc' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
         'timezone' => 'UTC',
       ],
       'all_day_2_utc' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T00:00:00',
         'timezone' => 'UTC',
       ],
       'all_day_multi_utc' => [
-        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
+        'expected' => 'Start date: 6.12.2023 End date: 7.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
         'timezone' => 'UTC',
       ],
       'same_brussels' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m. (Europe/Brussels)',
+        'expected' => 'Date: 6.12.2023 10.11 a.m. (Europe/Brussels)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
         'timezone' => 'Europe/Brussels',
       ],
       'same_day_brussels' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m. — 11.11 a.m. (Europe/Brussels)',
+        'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m. (Europe/Brussels)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'Europe/Brussels',
       ],
       'next_day_brussels' => [
-        'expected' => 'Start date: 06.12.2023 10.11 a.m. (Europe/Brussels) End date: 07.12.2023 11.11 a.m. (Europe/Brussels)',
+        'expected' => 'Start date: 6.12.2023 10.11 a.m. (Europe/Brussels) End date: 7.12.2023 11.11 a.m. (Europe/Brussels)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
         'timezone' => 'Europe/Brussels',
       ],
       'all_day_brussels' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
         'timezone' => 'Europe/Brussels',
       ],
       'all_day_2_brussels' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T00:00:00',
         'timezone' => 'Europe/Brussels',
       ],
       'all_day_multi_brussels' => [
-        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
+        'expected' => 'Start date: 6.12.2023 End date: 7.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
         'timezone' => 'Europe/Brussels',
@@ -216,37 +211,37 @@ class DateRenderDateRecurUtcTest extends FieldKernelTestBase {
   public function providerTestDataRandom() {
     return [
       'same' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m. (Europe/Kyiv)',
+        'expected' => 'Date: 6.12.2023 10.11 a.m. (Europe/Kyiv)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
         'timezone' => 'Europe/Kyiv',
       ],
       'same_day' => [
-        'expected' => 'Date: 06.12.2023 10.11 a.m. — 11.11 a.m. (Europe/Amsterdam)',
+        'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m. (Europe/Amsterdam)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'Europe/Amsterdam',
       ],
       'next_day' => [
-        'expected' => 'Start date: 06.12.2023 10.11 a.m. (Asia/Tokyo) End date: 07.12.2023 11.11 a.m. (Asia/Tokyo)',
+        'expected' => 'Start date: 6.12.2023 10.11 a.m. (Asia/Tokyo) End date: 7.12.2023 11.11 a.m. (Asia/Tokyo)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
         'timezone' => 'Asia/Tokyo',
       ],
       'all_day' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
         'timezone' => 'Australia/Melbourne',
       ],
       'all_day_2' => [
-        'expected' => 'Date: 06.12.2023',
+        'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T00:00:00',
         'timezone' => 'Europe/Bucharest',
       ],
       'all_day_multi' => [
-        'expected' => 'Start date: 06.12.2023 End date: 07.12.2023',
+        'expected' => 'Start date: 6.12.2023 End date: 7.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
         'timezone' => 'Europe/London',

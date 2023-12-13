@@ -35,11 +35,6 @@ class DateRenderDateRecurUtcTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $strictConfigSchema = FALSE;
-
-  /**
-   * {@inheritdoc}
-   */
   protected static $modules = [
     'date_recur',
     'datetime_range',

@@ -13,3 +13,98 @@ msgstr "minuit"
 # noon
 msgid "noon"
 msgstr "midi"
+
+msgctxt "Long month name"
+msgid "January"
+msgstr "janvier"
+
+msgctxt "Long month name"
+msgid "February"
+msgstr "février"
+
+msgctxt "Long month name"
+msgid "March"
+msgstr "mars"
+
+msgctxt "Long month name"
+msgid "April"
+msgstr "avril"
+
+msgctxt "Long month name"
+msgid "May"
+msgstr "mai"
+
+msgctxt "Long month name"
+msgid "June"
+msgstr "juin"
+
+msgid "July"
+msgstr "juillet"
+
+msgctxt "Long month name"
+msgid "August"
+msgstr "août"
+
+msgctxt "Long month name"
+msgid "September"
+msgstr "septembre"
+
+msgctxt "Long month name"
+msgid "October"
+msgstr "octobre"
+
+msgctxt "Long month name"
+msgid "November"
+msgstr "novembre"
+
+msgctxt "Long month name"
+msgid "December"
+msgstr "décembre"
+
+msgctxt "Abbreviated month name"
+msgid "Jan"
+msgstr "Jan"
+
+msgctxt "Abbreviated month name"
+msgid "Feb"
+msgstr "Fév"
+
+msgctxt "Abbreviated month name"
+msgid "Mar"
+msgstr "Mar"
+
+msgctxt "Abbreviated month name"
+msgid "Apr"
+msgstr "Avr"
+
+msgctxt "Abbreviated month name"
+msgid "May"
+msgstr "Mai"
+
+msgctxt "Abbreviated month name"
+msgid "Jun"
+msgstr "Jun"
+
+msgctxt "Abbreviated month name"
+msgid "Jul"
+msgstr "Jul"
+
+msgctxt "Abbreviated month name"
+msgid "Aug"
+msgstr "Aoû"
+
+msgctxt "Abbreviated month name"
+msgid "Sep"
+msgstr "Sep"
+
+msgctxt "Abbreviated month name"
+msgid "Oct"
+msgstr "Oct"
+
+msgctxt "Abbreviated month name"
+msgid "Nov"
+msgstr "Nov"
+
+msgctxt "Abbreviated month name"
+msgid "Dec"
+msgstr "Déc"

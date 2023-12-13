@@ -50,9 +50,9 @@ trait UnDateTimeTrait {
       case 'fr':
         $time_format = 'G \h i';
         if ($date->format('i') === '00') {
-          $time_format = 'G \h\o\u\r\e\s';
+          $time_format = 'G \h\e\u\r\e\s';
           if ($date->format('G') == '1') {
-            $time_format = 'G \h\o\u\r\e';
+            $time_format = 'G \h\e\u\r\e';
           }
         }
 

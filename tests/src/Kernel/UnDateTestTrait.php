@@ -37,9 +37,9 @@ trait UnDateTestTrait {
   /**
    * Render entity.
    */
-  protected function renderIt($entity_type, $entity) {
+  protected function renderIt($entity_type, $entity, $lang_code = 'en') {
     $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity_type);
-    $build = $view_builder->view($entity);
+    $build = $view_builder->view($entity, 'full', $lang_code);
     $output = \Drupal::service('renderer')->renderRoot($build);
 
     $output = strip_tags($output->__toString());

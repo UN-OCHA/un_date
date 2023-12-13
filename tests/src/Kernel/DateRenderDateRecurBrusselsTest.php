@@ -75,7 +75,6 @@ class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
       'settings' => [
         'show_next' => 5,
         'count_per_item' => TRUE,
-        // @todo add config in code.
         'interpreter' => 'un_interpreter',
       ],
     ];

@@ -119,10 +119,10 @@ trait UnDateTimeTrait {
         $date_format = 'j M. Y';
 
         if ($this->getLocale() == 'zh-hans') {
-          $date_format = 'j F Y';
+          $date_format = 'j M Y';
         }
         elseif ($this->getLocale() == 'ar') {
-          $date_format = 'Y F j';
+          $date_format = 'j M Y';
         }
         break;
 

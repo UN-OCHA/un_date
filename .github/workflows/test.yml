@@ -55,6 +55,10 @@ jobs:
           composer --no-interaction --no-progress require \
             drupal/datetime_range_timezone drupal/date_recur
 
+      - name: Patch Drupal - https://www.drupal.org/project/drupal/issues/3004425
+        run: |
+          curl https://www.drupal.org/files/issues/2021-12-25/3004425-41.patch | patch -p1
+
       - name: Install Coder module
         run: |
           composer --dev --no-interaction --no-progress require \

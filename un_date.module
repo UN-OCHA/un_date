@@ -101,3 +101,25 @@ function un_date_theme($existing, $type, $theme, $path) {
     ],
   ];
 }
+
+/**
+ * Implements hook_locale_translation_projects_alter().
+ */
+function un_date_locale_translation_projects_alter(&$projects) {
+  $path = \Drupal::moduleHandler()->getModule('un_date')->getPath();
+
+  $projects['un_date'] = [
+    'name' => 'un_date',
+    'info' => [
+      'name' => 'UN Date',
+      'package' => 'Other',
+      'version' => 'custom',
+      'project' => 'un_date',
+      'datestamp' => '0',
+      'interface translation server pattern' => $path . '/translations/%language.po',
+    ],
+    'datestamp' => '0',
+    'project_type' => 'module',
+    'project_status' => TRUE,
+  ];
+}

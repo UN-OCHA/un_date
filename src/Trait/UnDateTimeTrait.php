@@ -71,6 +71,16 @@ trait UnDateTimeTrait {
 
     }
 
+    // Midnight.
+    if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {
+      return t('midnight');
+    }
+
+    // Noon.
+    if ($date->format('G') == '12' && $date->format('i') === '00') {
+      return t('noon');
+    }
+
     return $date->format($time_format) . $ampm . $this->formatTimezone($date, $show_timezone);
   }
 

@@ -30,13 +30,8 @@ trait UnDateTimeTrait {
   /**
    * Format time.
    */
-  protected function formatTime(\DateTime|DrupalDateTime $date, bool $to_utc = FALSE, $show_timezone = FALSE) : string {
+  protected function formatTime(\DateTime|DrupalDateTime $date, $show_timezone = FALSE) : string {
     $options = [];
-    if ($to_utc) {
-      $options = [
-        'timezone' => 'UTC',
-      ];
-    }
 
     $ampm = 'a.m.';
     if ($date instanceof \DateTime) {
@@ -53,19 +48,19 @@ trait UnDateTimeTrait {
     if ($date instanceof \DateTime) {
       // Hide zero minutes.
       if ($date->format('i') === '00') {
-        return $date->format('g') . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
+        return $date->format('g') . ' ' . $ampm . $this->formatTimezone($date, $show_timezone);
       }
       else {
-        return $date->format('g.i') . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
+        return $date->format('g.i') . ' ' . $ampm . $this->formatTimezone($date, $show_timezone);
       }
     }
 
     // Hide zero minutes.
     if ($date->format('i', $options) === '00') {
-      return $date->format('g', $options) . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
+      return $date->format('g', $options) . ' ' . $ampm . $this->formatTimezone($date, $show_timezone);
     }
     else {
-      return $date->format('g.i', $options) . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
+      return $date->format('g.i', $options) . ' ' . $ampm . $this->formatTimezone($date, $show_timezone);
     }
 
     return '';
@@ -74,13 +69,8 @@ trait UnDateTimeTrait {
   /**
    * Format date.
    */
-  protected function formatDate(\DateTime|DrupalDateTime|DateRangeItem $date, bool $to_utc = FALSE, $month_format = 'numeric') : string {
+  protected function formatDate(\DateTime|DrupalDateTime|DateRangeItem $date, $month_format = 'numeric') : string {
     $options = [];
-    if ($to_utc) {
-      $options = [
-        'timezone' => 'UTC',
-      ];
-    }
 
     // Twig doens't have a setting.
     if (!$this instanceof AbstractExtension) {
@@ -113,18 +103,15 @@ trait UnDateTimeTrait {
   /**
    * Format datetime.
    */
-  protected function formatDateTime(\DateTime|DrupalDateTime|DateRangeItem $date, bool $to_utc = FALSE, $show_timezone = FALSE, $month_format = 'numeric') : string {
-    return $this->formatDate($date, $to_utc, $month_format) . ' ' . $this->formatTime($date, $to_utc, $show_timezone);
+  protected function formatDateTime(\DateTime|DrupalDateTime|DateRangeItem $date, $show_timezone = FALSE, $month_format = 'numeric') : string {
+    return $this->formatDate($date, $month_format) . ' ' . $this->formatTime($date, $show_timezone);
   }
 
   /**
    * Format timezone.
    */
-  protected function formatTimezone(\DateTime|DrupalDateTime|DateRangeItem $date, bool $to_utc = FALSE, bool $show_timezone = FALSE) : string {
+  protected function formatTimezone(\DateTime|DrupalDateTime|DateRangeItem $date, bool $show_timezone = FALSE) : string {
     if ($show_timezone) {
-      if ($to_utc) {
-        return ' UTC';
-      }
       return ' ' . $date->getTimezone()->getName();
     }
 
@@ -175,7 +162,6 @@ trait UnDateTimeTrait {
   public static function defaultSettings() {
     return [
       'display_timezone' => TRUE,
-      'convert_to_utc' => FALSE,
       'month_format' => 'numeric',
     ] + parent::defaultSettings();
   }
@@ -193,13 +179,6 @@ trait UnDateTimeTrait {
       '#title' => $this->t('Display Timezone'),
       '#description' => $this->t('Should we display the timezone after the formatted date?'),
       '#default_value' => $this->getSetting('display_timezone'),
-    ];
-
-    $form['convert_to_utc'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Convert to UTC'),
-      '#description' => $this->t('Should we convert to UTC?'),
-      '#default_value' => $this->getSetting('convert_to_utc'),
     ];
 
     $form['month_format'] = [
@@ -223,10 +202,6 @@ trait UnDateTimeTrait {
 
     $summary[] = $this->t('@action the timezone', [
       '@action' => $this->getSetting('display_timezone') ? 'Showing' : 'Hiding',
-    ]);
-
-    $summary[] = $this->t('@action to UTC', [
-      '@action' => $this->getSetting('convert_to_utc') ? 'Convert' : 'Do not convert',
     ]);
 
     $summary[] = $this->t('Month display: @action', [

@@ -42,7 +42,6 @@ class UnDateDateTimeRange extends FormatterBase {
       /** @var \Drupal\Core\Datetime\DrupalDateTime $end_date */
       $end_date = $item->end_date;
 
-      $utc = $this->getSetting('convert_to_utc');
       $tz = $this->getSetting('display_timezone');
       $same_date = FALSE;
       $same_day = FALSE;
@@ -50,7 +49,7 @@ class UnDateDateTimeRange extends FormatterBase {
       if ($start_date->getTimestamp() == $end_date->getTimestamp()) {
         $same_date = TRUE;
       }
-      elseif ($this->formatDate($start_date, $utc) == $this->formatDate($end_date, $utc)) {
+      elseif ($this->formatDate($start_date) == $this->formatDate($end_date)) {
         $same_day = TRUE;
       }
 
@@ -75,10 +74,10 @@ class UnDateDateTimeRange extends FormatterBase {
         '#theme' => $theme . '__' . $theme_suggestions,
         '#iso_start_date' => $iso_start_date,
         '#iso_end_date' => $iso_end_date,
-        '#start_date' => $this->formatDate($start_date, $utc),
-        '#start_time' => $this->formatTime($start_date, $utc),
-        '#end_date' => $this->formatDate($end_date, $utc),
-        '#end_time' => $this->formatTime($end_date, $utc),
+        '#start_date' => $this->formatDate($start_date),
+        '#start_time' => $this->formatTime($start_date),
+        '#end_date' => $this->formatDate($end_date),
+        '#end_time' => $this->formatTime($end_date),
         '#timezone' => $timezone->getName(),
         '#display_timezone' => $tz,
         '#same_date' => $same_date,

@@ -40,7 +40,6 @@ class UnDateDateTime extends FormatterBase {
       /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
       $date = $item->date;
 
-      $utc = $this->getSetting('convert_to_utc');
       $tz = $this->getSetting('display_timezone');
       $datetime_type = $this->getFieldSetting('datetime_type');
 
@@ -61,8 +60,8 @@ class UnDateDateTime extends FormatterBase {
       $elements[$delta] = [
         '#theme' => $theme . '__' . $theme_suggestions,
         '#iso_start_date' => $iso_start_date,
-        '#start_date' => $this->formatDate($date, $utc),
-        '#start_time' => $this->formatTime($date, $utc),
+        '#start_date' => $this->formatDate($date),
+        '#start_time' => $this->formatTime($date),
         '#timezone' => $timezone->getName(),
         '#display_timezone' => $tz,
         '#cache' => [

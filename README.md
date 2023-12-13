@@ -4,16 +4,18 @@ Standard at https://www.un.org/dgacm/en/content/editorial-manual/numbers-dates-t
 
 ## Todo
 
-- Add support for *all day*
-- Month as
-  - Full name
-  - Abbrevation
-  - Number
+- Test twig filter with full name
+- Test formatters with full name
+- Add translations
+
+## Formatters
+
+## Twig filters and functions
 
 All filter allow options
 
-- to_utc to convert date to UTC first (default off), otherwise use user/site timezone
 - show_timezone to display the timezone (default off)
+- month_format: Either `numeric`, `full` or `abbreviation` (default numeric)
 
 ## un_date
 
@@ -46,41 +48,41 @@ Works on both `\Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList`
 ```twig
 <pre>
 Parameters:
-- to_utc to convert date to UTC first (default false)
 - show_timezone to display the timezone (default false)
+- month_format: Either `numeric`, `full` or `abbreviation` (default numeric)
 
-node.field_date|un_daterange_times(true, true): {{ node.field_date|un_daterange_times(true, true) }}
-node.field_date|un_daterange_times(true, false): {{ node.field_date|un_daterange_times(true, false) }}
-node.field_date|un_daterange_times(false, true): {{ node.field_date|un_daterange_times(false, true) }}
-node.field_date|un_daterange_times(false, false): {{ node.field_date|un_daterange_times(false, false) }}
+node.field_date|un_daterange_times(true, 'numeric'): {{ node.field_date|un_daterange_times(true, 'numeric') }}
+node.field_date|un_daterange_times(true, 'numeric'): {{ node.field_date|un_daterange_times(true, 'numeric') }}
+node.field_date|un_daterange_times(false, 'numeric'): {{ node.field_date|un_daterange_times(false, 'numeric') }}
+node.field_date|un_daterange_times(false, 'numeric'): {{ node.field_date|un_daterange_times(false, 'numeric') }}
 node.field_date|un_daterange_times: {{ node.field_date|un_daterange_times }}
 
-node.field_date|un_daterange(true, true): {{ node.field_date|un_daterange(true, true) }}
-node.field_date|un_daterange(true, false): {{ node.field_date|un_daterange(true, false) }}
-node.field_date|un_daterange(false, true): {{ node.field_date|un_daterange(false, true) }}
-node.field_date|un_daterange(false, false): {{ node.field_date|un_daterange(false, false) }}
+node.field_date|un_daterange(true, 'numeric'): {{ node.field_date|un_daterange(true, 'numeric') }}
+node.field_date|un_daterange(true, 'numeric'): {{ node.field_date|un_daterange(true, 'numeric') }}
+node.field_date|un_daterange(false, 'numeric'): {{ node.field_date|un_daterange(false, 'numeric') }}
+node.field_date|un_daterange(false, 'numeric'): {{ node.field_date|un_daterange(false, 'numeric') }}
 node.field_date|un_daterange: {{ node.field_date|un_daterange }}
 
 node.field_date|un_daterange_named('local_times'): {{ node.field_date|un_daterange_named('local_times') }}
 
 un_is_all_day(node.field_date): {{ un_is_all_day(node.field_date) }}
 
-node.field_date[0].start_date|un_time(true, true): {{ node.field_date[0].start_date|un_time(true, true) }}
-node.field_date[0].start_date|un_time(true, false): {{ node.field_date[0].start_date|un_time(true, false) }}
-node.field_date[0].start_date|un_time(false, true): {{ node.field_date[0].start_date|un_time(false, true) }}
-node.field_date[0].start_date|un_time(false, false): {{ node.field_date[0].start_date|un_time(false, false) }}
+node.field_date[0].start_date|un_time(true, 'numeric'): {{ node.field_date[0].start_date|un_time(true, 'numeric') }}
+node.field_date[0].start_date|un_time(true, 'numeric'): {{ node.field_date[0].start_date|un_time(true, 'numeric') }}
+node.field_date[0].start_date|un_time(false, 'numeric'): {{ node.field_date[0].start_date|un_time(false, 'numeric') }}
+node.field_date[0].start_date|un_time(false, 'numeric'): {{ node.field_date[0].start_date|un_time(false, 'numeric') }}
 node.field_date[0].start_date|un_time: {{ node.field_date[0].start_date|un_time }}
 
-node.field_date[0].start_date|un_date(true, true): {{ node.field_date[0].start_date|un_date(true, true) }}
-node.field_date[0].start_date|un_date(true, false): {{ node.field_date[0].start_date|un_date(true, false) }}
-node.field_date[0].start_date|un_date(false, true): {{ node.field_date[0].start_date|un_date(false, true) }}
-node.field_date[0].start_date|un_date(false, false): {{ node.field_date[0].start_date|un_date(false, false) }}
+node.field_date[0].start_date|un_date(true, 'numeric'): {{ node.field_date[0].start_date|un_date(true, 'numeric') }}
+node.field_date[0].start_date|un_date(true, 'numeric'): {{ node.field_date[0].start_date|un_date(true, 'numeric') }}
+node.field_date[0].start_date|un_date(false, 'numeric'): {{ node.field_date[0].start_date|un_date(false, 'numeric') }}
+node.field_date[0].start_date|un_date(false, 'numeric'): {{ node.field_date[0].start_date|un_date(false, 'numeric') }}
 node.field_date[0].start_date|un_date: {{ node.field_date[0].start_date|un_date }}
 
-node.field_date[0].start_date|un_datetime(true, true): {{ node.field_date[0].start_date|un_datetime(true, true) }}
-node.field_date[0].start_date|un_datetime(true, false): {{ node.field_date[0].start_date|un_datetime(true, false) }}
-node.field_date[0].start_date|un_datetime(false, true): {{ node.field_date[0].start_date|un_datetime(false, true) }}
-node.field_date[0].start_date|un_datetime(false, false): {{ node.field_date[0].start_date|un_datetime(false, false) }}
+node.field_date[0].start_date|un_datetime(true, 'numeric'): {{ node.field_date[0].start_date|un_datetime(true, 'numeric') }}
+node.field_date[0].start_date|un_datetime(true, 'numeric'): {{ node.field_date[0].start_date|un_datetime(true, 'numeric') }}
+node.field_date[0].start_date|un_datetime(false, 'numeric'): {{ node.field_date[0].start_date|un_datetime(false, 'numeric') }}
+node.field_date[0].start_date|un_datetime(false, 'numeric'): {{ node.field_date[0].start_date|un_datetime(false, 'numeric') }}
 node.field_date[0].start_date|un_datetime: {{ node.field_date[0].start_date|un_datetime }}
 </pre>
 ```
@@ -89,40 +91,39 @@ Output
 
 ```
 Parameters:
-- to_utc to convert date to UTC first (default false)
 - show_timezone to display the timezone (default false)
 
-node.field_date|un_daterange_times(true, true): 3.30 p.m. — 5.00 p.m. UTC
-node.field_date|un_daterange_times(true, false): 3.30 p.m. — 5.00 p.m.
-node.field_date|un_daterange_times(false, true): 5.30 p.m. — 7.00 p.m. Europe/Brussels
-node.field_date|un_daterange_times(false, false): 5.30 p.m. — 7.00 p.m.
+node.field_date|un_daterange_times(true, 'numeric'): 3.30 p.m. — 5.00 p.m. UTC
+node.field_date|un_daterange_times(true, 'numeric'): 3.30 p.m. — 5.00 p.m.
+node.field_date|un_daterange_times(false, 'numeric'): 5.30 p.m. — 7.00 p.m. Europe/Brussels
+node.field_date|un_daterange_times(false, 'numeric'): 5.30 p.m. — 7.00 p.m.
 node.field_date|un_daterange_times: 5.30 p.m. — 7.00 p.m.
 
-node.field_date|un_daterange(true, true): 17.05.2021 3.30 p.m. — 5.00 p.m. UTC
-node.field_date|un_daterange(true, false): 17.05.2021 3.30 p.m. — 5.00 p.m.
-node.field_date|un_daterange(false, true): 17.05.2021 5.30 p.m. — 7.00 p.m. Europe/Brussels
-node.field_date|un_daterange(false, false): 17.05.2021 5.30 p.m. — 7.00 p.m.
+node.field_date|un_daterange(true, 'numeric'): 17.05.2021 3.30 p.m. — 5.00 p.m. UTC
+node.field_date|un_daterange(true, 'numeric'): 17.05.2021 3.30 p.m. — 5.00 p.m.
+node.field_date|un_daterange(false, 'numeric'): 17.05.2021 5.30 p.m. — 7.00 p.m. Europe/Brussels
+node.field_date|un_daterange(false, 'numeric'): 17.05.2021 5.30 p.m. — 7.00 p.m.
 node.field_date|un_daterange: 17.05.2021 5.30 p.m. — 7.00 p.m.
 
 node.field_date|un_daterange_named('local_times'): 5.30 p.m. — 7.00 p.m. Europe/Brussels
 
 un_is_all_day(node.field_date):
 
-node.field_date[0].start_date|un_time(true, true): 3.30 p.m. UTC
-node.field_date[0].start_date|un_time(true, false): 3.30 p.m.
-node.field_date[0].start_date|un_time(false, true): 5.30 p.m. Europe/Brussels
-node.field_date[0].start_date|un_time(false, false): 5.30 p.m.
+node.field_date[0].start_date|un_time(true, 'numeric'): 3.30 p.m. UTC
+node.field_date[0].start_date|un_time(true, 'numeric'): 3.30 p.m.
+node.field_date[0].start_date|un_time(false, 'numeric'): 5.30 p.m. Europe/Brussels
+node.field_date[0].start_date|un_time(false, 'numeric'): 5.30 p.m.
 node.field_date[0].start_date|un_time: 5.30 p.m.
 
-node.field_date[0].start_date|un_date(true, true): 17.05.2021
-node.field_date[0].start_date|un_date(true, false): 17.05.2021
-node.field_date[0].start_date|un_date(false, true): 17.05.2021
-node.field_date[0].start_date|un_date(false, false): 17.05.2021
+node.field_date[0].start_date|un_date(true, 'numeric'): 17.05.2021
+node.field_date[0].start_date|un_date(true, 'numeric'): 17.05.2021
+node.field_date[0].start_date|un_date(false, 'numeric'): 17.05.2021
+node.field_date[0].start_date|un_date(false, 'numeric'): 17.05.2021
 node.field_date[0].start_date|un_date: 17.05.2021
 
-node.field_date[0].start_date|un_datetime(true, true): 17.05.2021 3.30 p.m. UTC
-node.field_date[0].start_date|un_datetime(true, false): 17.05.2021 3.30 p.m.
-node.field_date[0].start_date|un_datetime(false, true): 17.05.2021 5.30 p.m. Europe/Brussels
-node.field_date[0].start_date|un_datetime(false, false): 17.05.2021 5.30 p.m.
+node.field_date[0].start_date|un_datetime(true, 'numeric'): 17.05.2021 3.30 p.m. UTC
+node.field_date[0].start_date|un_datetime(true, 'numeric'): 17.05.2021 3.30 p.m.
+node.field_date[0].start_date|un_datetime(false, 'numeric'): 17.05.2021 5.30 p.m. Europe/Brussels
+node.field_date[0].start_date|un_datetime(false, 'numeric'): 17.05.2021 5.30 p.m.
 node.field_date[0].start_date|un_datetime: 17.05.2021 5.30 p.m.
 ```

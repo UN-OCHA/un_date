@@ -79,7 +79,6 @@ class DateRenderDateRecurUtcTest extends FieldKernelTestBase {
       'label' => 'hidden',
       'settings' => [
         'display_timezone' => TRUE,
-        'convert_to_utc' => FALSE,
       ],
     ];
     EntityViewDisplay::create([

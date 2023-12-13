@@ -5,9 +5,6 @@ field.formatter.settings.un_date_datetime:
     display_timezone:
       type: boolean
       label: 'Display timezone'
-    convert_to_utc:
-      type: boolean
-      label: 'Convert to UTC'
     month_format:
       type: string
       label: 'Month format'
@@ -18,9 +15,6 @@ field.formatter.settings.un_date_daterange:
     display_timezone:
       type: boolean
       label: 'Display timezone'
-    convert_to_utc:
-      type: boolean
-      label: 'Convert to UTC'
     month_format:
       type: string
       label: 'Month format'
@@ -31,9 +25,6 @@ field.formatter.settings.un_date_daterange_timezone:
     display_timezone:
       type: boolean
       label: 'Display timezone'
-    convert_to_utc:
-      type: boolean
-      label: 'Convert to UTC'
     month_format:
       type: string
       label: 'Month format'
@@ -44,9 +35,6 @@ field.formatter.settings.un_data_date_recur_basic:
     display_timezone:
       type: boolean
       label: 'Display timezone'
-    convert_to_utc:
-      type: boolean
-      label: 'Convert to UTC'
     month_format:
       type: string
       label: 'Month format'

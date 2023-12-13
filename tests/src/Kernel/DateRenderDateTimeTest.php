@@ -120,11 +120,11 @@ class DateRenderDateTimeTest extends FieldKernelTestBase {
         'date' => '2023-12-06T10:00:12',
       ],
       'all_day' => [
-        'expected' => 'Date: 06.12.2023 12 a.m.',
+        'expected' => 'Date: 06.12.2023 midnight',
         'date' => '2023-12-06T00:00:00',
       ],
       'all_day_multi' => [
-        'expected' => 'Date: 06.12.2023 12 a.m.',
+        'expected' => 'Date: 06.12.2023 midnight',
         'date' => '2023-12-06T00:00:00',
       ],
     ];

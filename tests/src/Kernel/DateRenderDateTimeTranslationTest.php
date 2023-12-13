@@ -300,7 +300,7 @@ class DateRenderDateTimeTranslationTest extends FieldKernelTestBase {
           'en' => 'Date: 6 December 2023 10.11 a.m.',
           'fr' => 'Date: 6 décembre 2023 10 h 11',
           'es' => 'Date: 6 Diciembre 2023 10.11 horas',
-          'ar' => 'Date: 6 ديسمبر 2023' . ' 10.11',
+          'ar' => implode('', ['Date: 6 ديسمبر 2023', ' 10.11']),
           'zh-hans' => 'Date: 6 十二月 2023 10時11分',
         ],
         'date' => '2023-12-06T10:11:12',

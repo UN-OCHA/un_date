@@ -30,58 +30,54 @@ trait UnDateTimeTrait {
   /**
    * Format time.
    */
-  protected function formatTime(\DateTime|DrupalDateTime $date, bool $to_utc = FALSE, $show_timezone = FALSE) : string {
-    $options = [];
-    if ($to_utc) {
-      $options = [
-        'timezone' => 'UTC',
-      ];
+  protected function formatTime(\DateTime|DrupalDateTime $date, $show_timezone = FALSE) : string {
+    $ampm = '';
+    $time_format = 'g.i';
+
+    switch ($this->getLocale()) {
+      case 'en':
+        $time_format = 'g.i';
+        if ($date->format('i') === '00') {
+          $time_format = 'g';
+        }
+
+        $ampm = ' a.m.';
+        if ($date->format('a') === 'pm') {
+          $ampm = ' p.m.';
+        }
+        break;
+
+      case 'fr':
+        $time_format = 'G \h i';
+        if ($date->format('i') === '00') {
+          $time_format = 'G \h\o\u\r\e\s';
+          if ($date->format('G') == '1') {
+            $time_format = 'G \h\o\u\r\e';
+          }
+        }
+
+        break;
+
+      case 'es':
+        $time_format = 'G.i \h\o\r\a\s';
+        if ($date->format('i') === '00') {
+          $time_format = 'G \h\o\r\a\s';
+          if ($date->format('G') == '1') {
+            $time_format = 'G \h\o\r\a';
+          }
+        }
+
+        break;
+
     }
 
-    $ampm = 'a.m.';
-    if ($date instanceof \DateTime) {
-      if ($date->format('a') === 'pm') {
-        $ampm = 'p.m.';
-      }
-    }
-    else {
-      if ($date->format('a', $options) === 'pm') {
-        $ampm = 'p.m.';
-      }
-    }
-
-    if ($date instanceof \DateTime) {
-      // Hide zero minutes.
-      if ($date->format('i') === '00') {
-        return $date->format('g') . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
-      }
-      else {
-        return $date->format('g.i') . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
-      }
-    }
-
-    // Hide zero minutes.
-    if ($date->format('i', $options) === '00') {
-      return $date->format('g', $options) . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
-    }
-    else {
-      return $date->format('g.i', $options) . ' ' . $ampm . $this->formatTimezone($date, $to_utc, $show_timezone);
-    }
-
-    return '';
+    return $date->format($time_format) . $ampm . $this->formatTimezone($date, $show_timezone);
   }
 
   /**
    * Format date.
    */
-  protected function formatDate(\DateTime|DrupalDateTime|DateRangeItem $date, bool $to_utc = FALSE, $month_format = 'numeric') : string {
-    $options = [];
-    if ($to_utc) {
-      $options = [
-        'timezone' => 'UTC',
-      ];
-    }
-
+  protected function formatDate(\DateTime|DrupalDateTime|DateRangeItem $date, $month_format = 'numeric') : string {
     // Twig doens't have a setting.
     if (!$this instanceof AbstractExtension) {
       $month_format = $this->getSetting('month_format') ?? 'numeric';
@@ -103,28 +99,21 @@ trait UnDateTimeTrait {
 
     }
 
-    if ($date instanceof \DateTime) {
-      return $date->format($date_format);
-    }
-
-    return $date->format($date_format, $options);
+    return $date->format($date_format);
   }
 
   /**
    * Format datetime.
    */
-  protected function formatDateTime(\DateTime|DrupalDateTime|DateRangeItem $date, bool $to_utc = FALSE, $show_timezone = FALSE, $month_format = 'numeric') : string {
-    return $this->formatDate($date, $to_utc, $month_format) . ' ' . $this->formatTime($date, $to_utc, $show_timezone);
+  protected function formatDateTime(\DateTime|DrupalDateTime|DateRangeItem $date, $show_timezone = FALSE, $month_format = 'numeric') : string {
+    return $this->formatDate($date, $month_format) . ' ' . $this->formatTime($date, $show_timezone);
   }
 
   /**
    * Format timezone.
    */
-  protected function formatTimezone(\DateTime|DrupalDateTime|DateRangeItem $date, bool $to_utc = FALSE, bool $show_timezone = FALSE) : string {
+  protected function formatTimezone(\DateTime|DrupalDateTime|DateRangeItem $date, bool $show_timezone = FALSE) : string {
     if ($show_timezone) {
-      if ($to_utc) {
-        return ' UTC';
-      }
       return ' ' . $date->getTimezone()->getName();
     }
 
@@ -175,7 +164,6 @@ trait UnDateTimeTrait {
   public static function defaultSettings() {
     return [
       'display_timezone' => TRUE,
-      'convert_to_utc' => FALSE,
       'month_format' => 'numeric',
     ] + parent::defaultSettings();
   }
@@ -193,13 +181,6 @@ trait UnDateTimeTrait {
       '#title' => $this->t('Display Timezone'),
       '#description' => $this->t('Should we display the timezone after the formatted date?'),
       '#default_value' => $this->getSetting('display_timezone'),
-    ];
-
-    $form['convert_to_utc'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Convert to UTC'),
-      '#description' => $this->t('Should we convert to UTC?'),
-      '#default_value' => $this->getSetting('convert_to_utc'),
     ];
 
     $form['month_format'] = [
@@ -225,15 +206,18 @@ trait UnDateTimeTrait {
       '@action' => $this->getSetting('display_timezone') ? 'Showing' : 'Hiding',
     ]);
 
-    $summary[] = $this->t('@action to UTC', [
-      '@action' => $this->getSetting('convert_to_utc') ? 'Convert' : 'Do not convert',
-    ]);
-
     $summary[] = $this->t('Month display: @action', [
       '@action' => $this->monthFormats[$this->getSetting('month_format') ?? 'numeric'],
     ]);
 
     return $summary;
+  }
+
+  /**
+   * Get current site language.
+   */
+  public function getLocale() {
+    return \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 
 }

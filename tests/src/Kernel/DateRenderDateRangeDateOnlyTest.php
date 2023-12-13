@@ -74,7 +74,6 @@ class DateRenderDateRangeDateOnlyTest extends FieldKernelTestBase {
       'label' => 'hidden',
       'settings' => [
         'display_timezone' => FALSE,
-        'convert_to_utc' => FALSE,
       ],
     ];
     EntityViewDisplay::create([

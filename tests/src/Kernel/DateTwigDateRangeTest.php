@@ -358,6 +358,30 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'start' => '2023-12-06T10:00:12',
         'end' => '2023-12-07T23:59:59',
       ],
+      'date_full' => [
+        'expected' => '06 December 2023',
+        'template' => '{{ variable|un_date("full") }}',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'datetime_full' => [
+        'expected' => '06 December 2023 10.11 a.m.',
+        'template' => '{{ variable|un_datetime(false, "full") }}',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'date_abbreviation' => [
+        'expected' => '06 Dec. 2023',
+        'template' => '{{ variable|un_date("abbreviation") }}',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
+      'datetime_abbreviation' => [
+        'expected' => '06 Dec. 2023 10.11 a.m.',
+        'template' => '{{ variable|un_datetime(false, "abbreviation") }}',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-07T23:59:59',
+      ],
     ];
   }
 

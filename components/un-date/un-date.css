@@ -13,3 +13,7 @@
 .un-date__time {
   display: inline;
 }
+
+.un-date.rtl {
+  direction: rtl;
+}

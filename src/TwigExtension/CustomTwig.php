@@ -42,6 +42,7 @@ class CustomTwig extends AbstractExtension {
     return [
       new TwigFunction('un_is_all_day', [$this, 'isAllDay']),
       new TwigFunction('un_is_utc', [$this, 'isUtc']),
+      new TwigFunction('un_is_rtl', [$this, 'isRtl']),
     ];
   }
 
@@ -267,6 +268,13 @@ class CustomTwig extends AbstractExtension {
     }
 
     return $timezone->getName() === 'UTC';
+  }
+
+  /**
+   * Is Rtl language.
+   */
+  public function isRtl() : bool {
+    return un_date_current_language_rtl();
   }
 
 }

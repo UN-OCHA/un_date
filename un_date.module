@@ -123,3 +123,11 @@ function un_date_locale_translation_projects_alter(&$projects) {
     'project_status' => TRUE,
   ];
 }
+
+/**
+ * Is current language Rtl.
+ */
+function un_date_current_language_rtl() {
+  $lang_code = \Drupal::languageManager()->getCurrentLanguage()->getId();
+  return $lang_code == 'ar';
+}

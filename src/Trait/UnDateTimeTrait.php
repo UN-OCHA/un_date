@@ -80,7 +80,8 @@ trait UnDateTimeTrait {
           $time_format = 'G時正';
         }
         break;
-      }
+
+    }
 
     // Midnight.
     if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {

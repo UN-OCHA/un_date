@@ -37,7 +37,7 @@ class DateTwigDateTimeTest extends KernelTestBase {
   public function providerTestData() {
     return [
       'date' => [
-        'expected' => '06.12.2023',
+        'expected' => '6.12.2023',
         'template' => '{{ variable|un_date }}',
         'date' => new \DateTime('2023-12-06T10:11:12'),
       ],
@@ -47,12 +47,12 @@ class DateTwigDateTimeTest extends KernelTestBase {
         'date' => new \DateTime('2023-12-06T10:11:12'),
       ],
       'datetime' => [
-        'expected' => '06.12.2023 10.11 a.m.',
+        'expected' => '6.12.2023 10.11 a.m.',
         'template' => '{{ variable|un_datetime }}',
         'date' => new \DateTime('2023-12-06T10:11:12'),
       ],
       'date_no_minutes' => [
-        'expected' => '06.12.2023',
+        'expected' => '6.12.2023',
         'template' => '{{ variable|un_date }}',
         'date' => new \DateTime('2023-12-06T10:00:12'),
       ],
@@ -62,7 +62,7 @@ class DateTwigDateTimeTest extends KernelTestBase {
         'date' => new \DateTime('2023-12-06T10:00:12'),
       ],
       'datetime_no_minutes' => [
-        'expected' => '06.12.2023 10 a.m.',
+        'expected' => '6.12.2023 10 a.m.',
         'template' => '{{ variable|un_datetime }}',
         'date' => new \DateTime('2023-12-06T10:00:12'),
       ],

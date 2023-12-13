@@ -245,55 +245,113 @@ class DateRenderDateTimeTranslationTest extends FieldKernelTestBase {
   }
 
   /**
+   * Test datetimes in Arabic.
+   *
+   * @dataProvider providerTestData
+   */
+  public function testDateTimeArabic($expected, $date) {
+    $lang_code = 'ar';
+
+    $this->importTranslations();
+    $this->setLanguage($lang_code);
+
+    $field_name = $this->fieldStorage->getName();
+    // Create an entity.
+    $entity = EntityTest::create([
+      'name' => $this->randomString(),
+      $field_name => [
+        'value' => $date,
+      ],
+    ]);
+
+    $this->assertStringContainsString($expected[$lang_code], (string) $this->renderIt('entity_test', $entity, $lang_code));
+  }
+
+  /**
+   * Test datetimes in Chinese.
+   *
+   * @dataProvider providerTestData
+   */
+  public function testDateTimeChinese($expected, $date) {
+    $lang_code = 'zh-hans';
+
+    $this->importTranslations();
+    $this->setLanguage($lang_code);
+
+    $field_name = $this->fieldStorage->getName();
+    // Create an entity.
+    $entity = EntityTest::create([
+      'name' => $this->randomString(),
+      $field_name => [
+        'value' => $date,
+      ],
+    ]);
+
+    $this->assertStringContainsString($expected[$lang_code], (string) $this->renderIt('entity_test', $entity, $lang_code));
+  }
+
+  /**
    * Provide test examples.
    */
   public function providerTestData() {
     return [
       'same' => [
         'expected' => [
-          'en' => 'Date: 06 December 2023 10.11 a.m.',
-          'fr' => 'Date: 06 décembre 2023 10 h 11',
-          'es' => 'Date: 06 Diciembre 2023 10.11 horas',
+          'en' => 'Date: 6 December 2023 10.11 a.m.',
+          'fr' => 'Date: 6 décembre 2023 10 h 11',
+          'es' => 'Date: 6 Diciembre 2023 10.11 horas',
+          'ar' => 'Date: 6 ديسمبر 2023' . ' 10.11',
+          'zh-hans' => 'Date: 6 十二月 2023 10時11分',
         ],
         'date' => '2023-12-06T10:11:12',
       ],
       'same_day' => [
         'expected' => [
-          'en' => 'Date: 06 December 2023 10.11 p.m.',
-          'fr' => 'Date: 06 décembre 2023 22 h 11',
-          'es' => 'Date: 06 Diciembre 2023 22.11 horas',
+          'en' => 'Date: 6 December 2023 10.11 p.m.',
+          'fr' => 'Date: 6 décembre 2023 22 h 11',
+          'es' => 'Date: 6 Diciembre 2023 22.11 horas',
+          'ar' => 'Date: 6 ديسمبر 2023' . ' 22.11',
+          'zh-hans' => 'Date: 6 十二月 2023 22時11分',
         ],
         'date' => '2023-12-06T22:11:12',
       ],
       '1am' => [
         'expected' => [
-          'en' => 'Date: 06 December 2023 1 a.m.',
-          'fr' => 'Date: 06 décembre 2023 1 heure',
-          'es' => 'Date: 06 Diciembre 2023 1 hora',
+          'en' => 'Date: 6 December 2023 1 a.m.',
+          'fr' => 'Date: 6 décembre 2023 1 heure',
+          'es' => 'Date: 6 Diciembre 2023 1 hora',
+          'ar' => 'Date: 6 ديسمبر 2023' . ' 1',
+          'zh-hans' => 'Date: 6 十二月 2023 1時正',
         ],
         'date' => '2023-12-06T01:00:00',
       ],
       'next_day' => [
         'expected' => [
-          'en' => 'Date: 06 December 2023 10 a.m.',
-          'fr' => 'Date: 06 décembre 2023 10 heures',
-          'es' => 'Date: 06 Diciembre 2023 10 horas',
+          'en' => 'Date: 6 December 2023 10 a.m.',
+          'fr' => 'Date: 6 décembre 2023 10 heures',
+          'es' => 'Date: 6 Diciembre 2023 10 horas',
+          'ar' => 'Date: 6 ديسمبر 2023' . ' 10',
+          'zh-hans' => 'Date: 6 十二月 2023 10時正',
         ],
         'date' => '2023-12-06T10:00:12',
       ],
       'all_day' => [
         'expected' => [
-          'en' => 'Date: 06 December 2023 midnight',
-          'fr' => 'Date: 06 décembre 2023 minuit',
-          'es' => 'Date: 06 Diciembre 2023 medianoche',
+          'en' => 'Date: 6 December 2023 midnight',
+          'fr' => 'Date: 6 décembre 2023 minuit',
+          'es' => 'Date: 6 Diciembre 2023 medianoche',
+          'ar' => 'Date: 6 ديسمبر 2023' . ' منتصف الليل',
+          'zh-hans' => 'Date: 6 十二月 2023 午夜',
         ],
         'date' => '2023-12-06T00:00:00',
       ],
       'all_day_multi' => [
         'expected' => [
-          'en' => 'Date: 06 December 2023 noon',
-          'fr' => 'Date: 06 décembre 2023 midi',
-          'es' => 'Date: 06 Diciembre 2023 mediodía',
+          'en' => 'Date: 6 December 2023 noon',
+          'fr' => 'Date: 6 décembre 2023 midi',
+          'es' => 'Date: 6 Diciembre 2023 mediodía',
+          'ar' => 'Date: 6 ديسمبر 2023' . ' وقت الظهيرة',
+          'zh-hans' => 'Date: 6 十二月 2023 中午',
         ],
         'date' => '2023-12-06T12:00:00',
       ],

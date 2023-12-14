@@ -17,10 +17,6 @@ class UnRRuleHumanReadable extends RRule {
    */
   public function humanReadable(array $opt = []) {
 
-    if (!isset($opt['use_intl'])) {
-      $opt['use_intl'] = self::intlLoaded();
-    }
-
     $default_opt = [
       'use_intl' => self::intlLoaded(),
       'locale' => NULL,
@@ -32,69 +28,17 @@ class UnRRuleHumanReadable extends RRule {
       'custom_path' => NULL,
     ];
 
-    // Attempt to detect default locale.
-    if ($opt['use_intl']) {
-      $default_opt['locale'] = \Locale::getDefault();
-    }
-    else {
-      $default_opt['locale'] = setlocale(LC_CTYPE, 0);
-      if ($default_opt['locale'] == 'C') {
-        $default_opt['locale'] = 'en';
-      }
-    }
-
-    if ($opt['use_intl']) {
-      $default_opt['date_format'] = \IntlDateFormatter::SHORT;
-      if ($this->freq >= self::SECONDLY || !empty($this->rule['BYSECOND'])) {
-        $default_opt['time_format'] = \IntlDateFormatter::LONG;
-      }
-      elseif ($this->freq >= self::HOURLY || !empty($this->rule['BYHOUR']) || !empty($this->rule['BYMINUTE'])) {
-        $default_opt['time_format'] = \IntlDateFormatter::SHORT;
-      }
-      else {
-        $default_opt['time_format'] = \IntlDateFormatter::NONE;
-      }
-    }
-
     $opt = array_merge($default_opt, $opt);
 
+    if (!$opt['locale']) {
+      throw new \InvalidArgumentException('The option locale must be set');
+    }
+
+    if (!$opt['date_formatter'] || !is_callable($opt['date_formatter'])) {
+      throw new \InvalidArgumentException('The option date_formatter must be set and callable');
+    }
+
     $i18n = self::i18nLoad($opt['locale'], $opt['fallback'], $opt['use_intl'], un_date_get_module_path() . '/i18n');
-
-    if ($opt['date_formatter'] && !is_callable($opt['date_formatter'])) {
-      throw new \InvalidArgumentException('The option date_formatter must callable');
-    }
-
-    if (!$opt['date_formatter']) {
-      if ($opt['use_intl']) {
-        $timezone = $this->dtstart->getTimezone()->getName();
-
-        if ($timezone === 'Z') {
-          // Otherwise IntlDateFormatter::create fails because... reasons.
-          $timezone = 'GMT';
-        }
-        elseif (preg_match('/[-+]\d{2}/', $timezone)) {
-          // Otherwise IntlDateFormatter::create fails because... other reasons.
-          $timezone = 'GMT' . $timezone;
-        }
-        $formatter = \IntlDateFormatter::create(
-        $opt['locale'],
-        $opt['date_format'],
-        $opt['time_format'],
-        $timezone
-        );
-        if (!$formatter) {
-          throw new \RuntimeException('IntlDateFormatter::create() failed. Error Code: ' . intl_get_error_code() . ' "' . intl_get_error_message() . '" (this should not happen, please open a bug report!)');
-        }
-        $opt['date_formatter'] = function ($date) use ($formatter) {
-          return $formatter->format($date);
-        };
-      }
-      else {
-        $opt['date_formatter'] = function ($date) {
-          return $date->format('Y-m-d H:i:s');
-        };
-      }
-    }
 
     $parts = [
       'freq' => '',

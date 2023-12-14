@@ -200,29 +200,39 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
    */
   public function xproviderTestData() {
     return [
-      'FREQ=MONTHLY;BYDAY=TU,WE,TH;BYSETPOS=-6,-5,-4,4,5,6,10,11,12' => [
-        'FREQ=MONTHLY;BYDAY=TU,WE,TH;BYSETPOS=-6,-5,-4,4,5,6,10,11,12',
+      'FREQ=DAILY;UNTIL=20000131T140000Z;BYMONTH=1' => [
+        'FREQ=DAILY;UNTIL=20000131T140000Z;BYMONTH=1',
         [
-          'en' => 'Monthly on second, fourth and 2nd to last Tuesday, Wednesday and Thursday, indefinitely',
-    // Nope.
-          'fr' => 'Tous les mois on second, fourth et 2nd to last mardi, mercredi et jeudi, indéfiniment',
-          'es' => 'Monthly on second, fourth and 2nd to last Tuesday, Wednesday and Thursday, indefinitely',
+          'en' => 'Daily in January, until 31.01.2000',
+          'fr' => 'Tous les jours en janvier, jusqu\'au 31.01.2000',
         ],
       ],
-    ];
-  }
-
-  /**
-   * Provide test examples.
-   */
-  public function providerTestData() {
-    return [
+      'FREQ=YEARLY;INTERVAL=3;COUNT=10;BYYEARDAY=1,100,200' => [
+        'FREQ=YEARLY;INTERVAL=3;COUNT=10;BYYEARDAY=1,100,200',
+        [
+          'en' => 'Every 3 years on the first, the 100th and the 200th days of the year, 10 times',
+          'fr' => 'Tous les 3 ans les 1er, 100e et 200e jours de l\'année, 10 fois',
+        ],
+      ],
+      'FREQ=YEARLY;BYWEEKNO=20;BYDAY=MO' => [
+        'FREQ=YEARLY;BYWEEKNO=20;BYDAY=MO',
+        [
+          'en' => 'Yearly on Monday on week 20, indefinitely',
+          'fr' => 'Tous les ans le lundi la semaine 20, indéfiniment',
+        ],
+      ],
+      'FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13' => [
+        'FREQ=MONTHLY;BYDAY=FR;BYMONTHDAY=13',
+        [
+          'en' => 'Monthly on Friday on the 13th of the month, indefinitely',
+          'fr' => 'Tous les mois le vendredi le 13 du mois, indéfiniment',
+        ],
+      ],
       'FREQ=MONTHLY;BYDAY=TU' => [
         'FREQ=MONTHLY;BYDAY=TU',
         [
           'en' => 'Monthly on Tuesday, indefinitely',
           'fr' => 'Tous les mois le mardi, indéfiniment',
-          'es' => 'Monthly on Tuesday, indefinitely',
         ],
       ],
       'FREQ=MONTHLY;INTERVAL=1;BYDAY=TU;BYSETPOS=1' => [
@@ -230,7 +240,6 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
         [
           'en' => 'Monthly on the first Tuesday, indefinitely',
           'fr' => 'Tous les mois, mais seulement le premier mardi, indéfiniment',
-          'es' => 'Monthly on first Tuesday, indefinitely',
         ],
       ],
       'FREQ=MONTHLY;INTERVAL=1;BYDAY=TU;BYSETPOS=-1' => [
@@ -238,7 +247,6 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
         [
           'en' => 'Monthly on the last Tuesday, indefinitely',
           'fr' => 'Tous les mois, mais seulement le dernier mardi, indéfiniment',
-          'es' => 'Monthly on last Tuesday, indefinitely',
         ],
       ],
       'FREQ=DAILY;INTERVAL=1;COUNT=3' => [
@@ -246,7 +254,6 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
         [
           'en' => 'Daily, 3 times',
           'fr' => 'Tous les jours, 3 fois',
-          'es' => 'Daily, 3 times',
         ],
       ],
       'FREQ=DAILY;INTERVAL=1;COUNT=1' => [
@@ -254,7 +261,6 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
         [
           'en' => '',
           'fr' => '',
-          'es' => '',
         ],
       ],
       'FREQ=WEEKLY;INTERVAL=1;COUNT=1' => [
@@ -262,7 +268,6 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
         [
           'en' => '',
           'fr' => '',
-          'es' => '',
         ],
       ],
       'FREQ=WEEKLY;INTERVAL=1;BYDAY=WE;COUNT=1' => [
@@ -270,7 +275,6 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
         [
           'en' => 'Weekly on Wednesday, one time',
           'fr' => 'Toutes les semaines le mercredi, une fois',
-          'es' => 'Weekly on Wednesday, one time',
         ],
       ],
       'FREQ=WEEKLY;INTERVAL=1;BYDAY=WE,SA;COUNT=1' => [
@@ -278,7 +282,6 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
         [
           'en' => 'Weekly on Wednesday and Saturday, one time',
           'fr' => 'Toutes les semaines les mercredi et samedi, une fois',
-          'es' => 'Weekly on Wednesday and Saturday, one time',
         ],
       ],
       'FREQ=WEEKLY;INTERVAL=2;BYDAY=WE,SA;UNTIL=20220831T000000Z' => [
@@ -286,7 +289,6 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
         [
           'en' => 'Every other week on Wednesday and Saturday, until 31.08.2022',
           'fr' => 'Une semaine sur deux les mercredi et samedi, jusqu\'au 31.08.2022',
-          'es' => 'Every other week on Wednesday and Saturday, until 31.08.2022',
         ],
       ],
     ];

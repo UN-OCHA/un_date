@@ -15,6 +15,7 @@ The Humand readable output of RRules is flaky.
 
 - Consolidate theme functions and templates
 - Add all date parts
+- Merge all settings to trait
 
 ## Install
 

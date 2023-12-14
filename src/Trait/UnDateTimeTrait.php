@@ -279,7 +279,7 @@ trait UnDateTimeTrait {
   /**
    * Get parts of start and end date.
    */
-  function getParts($start_date, $end_date) {
+  public function getParts($start_date, $end_date) {
     return [
       'start' => [
         'day' => $start_date->format('j'),
@@ -297,4 +297,5 @@ trait UnDateTimeTrait {
       ],
     ];
   }
+
 }

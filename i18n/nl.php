@@ -6,6 +6,7 @@
  */
 
 return [
+  'on' => ' op ',
   'yearly' => [
     '1' => 'jaarlijks',
     'else' => 'elke %{interval} jaar',

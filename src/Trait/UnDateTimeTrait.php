@@ -27,6 +27,16 @@ trait UnDateTimeTrait {
   ];
 
   /**
+   * List of supported templates.
+   *
+   * @var array
+   */
+  protected array $templates = [
+    'default' => 'Default',
+    'un_date_date_block' => 'Date as block',
+  ];
+
+  /**
    * Format time.
    */
   protected function formatTime(\DateTime|DrupalDateTime $date, $show_timezone = FALSE) : string {
@@ -198,6 +208,7 @@ trait UnDateTimeTrait {
     return [
       'display_timezone' => TRUE,
       'month_format' => 'numeric',
+      'template' => 'default',
     ] + parent::defaultSettings();
   }
 
@@ -224,6 +235,14 @@ trait UnDateTimeTrait {
       '#default_value' => $this->getSetting('month_format'),
     ];
 
+    $form['template'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Template'),
+      '#options' => $this->templates,
+      '#description' => $this->t('Template to use'),
+      '#default_value' => $this->getSetting('template'),
+    ];
+
     return $form;
   }
 
@@ -243,6 +262,10 @@ trait UnDateTimeTrait {
       '@action' => $this->monthFormats[$this->getSetting('month_format') ?? 'numeric'],
     ]);
 
+    $summary[] = $this->t('Template: @action', [
+      '@action' => $this->templates[$this->getSetting('template') ?? 'default'],
+    ]);
+
     return $summary;
   }
 
@@ -253,4 +276,25 @@ trait UnDateTimeTrait {
     return \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 
+  /**
+   * Get parts of start and end date.
+   */
+  function getParts($start_date, $end_date) {
+    return [
+      'start' => [
+        'day' => $start_date->format('j'),
+        'month' => $start_date->format('m'),
+        'month_abbr' => $start_date->format('M'),
+        'month_full' => $start_date->format('F'),
+        'year' => $start_date->format('Y'),
+      ],
+      'end' => [
+        'day' => $end_date->format('j'),
+        'month' => $end_date->format('m'),
+        'month_abbr' => $end_date->format('M'),
+        'month_full' => $end_date->format('F'),
+        'year' => $end_date->format('Y'),
+      ],
+    ];
+  }
 }

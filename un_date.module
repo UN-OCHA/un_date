@@ -84,6 +84,25 @@ function un_date_theme($existing, $type, $theme, $path) {
         'occurrences' => [],
       ],
     ],
+    'un_date_date_block' => [
+      'variables' => [
+        'parts' => [],
+        'iso_start_date' => NULL,
+        'iso_end_date' => NULL,
+        'start_date' => NULL,
+        'start_time' => NULL,
+        'end_date' => NULL,
+        'end_time' => NULL,
+        'timezone' => NULL,
+        'display_timezone' => NULL,
+        'same_date' => NULL,
+        'same_day' => NULL,
+        'all_day' => NULL,
+        'interpretation' => NULL,
+        'is_recurring' => FALSE,
+        'occurrences' => [],
+      ],
+    ],
     'un_date_occurence' => [
       'variables' => [
         'iso_start_date' => NULL,
@@ -147,5 +166,5 @@ function un_date_current_language_rtl() {
  * Get module path.
  */
 function un_date_get_module_path() {
-  return \Drupal::service('extension.path.resolver')->getPath('module', 'un_date');
+  return dirname(__FILE__);
 }

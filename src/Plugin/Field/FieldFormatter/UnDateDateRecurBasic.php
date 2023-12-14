@@ -103,6 +103,7 @@ class UnDateDateRecurBasic extends FormatterBase {
     return [
       'display_timezone' => TRUE,
       'month_format' => 'numeric',
+      'template' => 'default',
       'show_next' => 5,
       'count_per_item' => TRUE,
       'interpreter' => 'un_interpreter',
@@ -130,6 +131,14 @@ class UnDateDateRecurBasic extends FormatterBase {
       '#options' => $this->monthFormats,
       '#description' => $this->t('In which format will the month be displayed'),
       '#default_value' => $this->getSetting('month_format'),
+    ];
+
+    $form['template'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Template'),
+      '#options' => $this->templates,
+      '#description' => $this->t('Template to use'),
+      '#default_value' => $this->getSetting('template'),
     ];
 
     $interpreterOptions = array_map(
@@ -232,6 +241,10 @@ class UnDateDateRecurBasic extends FormatterBase {
       '@action' => $this->monthFormats[$this->getSetting('month_format') ?? 'numeric'],
     ]);
 
+    $summary[] = $this->t('Template: @action', [
+      '@action' => $this->templates[$this->getSetting('template') ?? 'default'],
+    ]);
+
     $countPerItem = $this->getSetting('count_per_item');
     $showOccurrencesCount = $this->getSetting('show_next');
     if ($showOccurrencesCount > 0) {
@@ -287,9 +300,14 @@ class UnDateDateRecurBasic extends FormatterBase {
       $item->getFieldDefinition()->getName(),
     ]);
 
+    $theme = $this->getSetting('template') ?? 'default';
+    if ($theme == 'default') {
+      $theme = 'un_date_date_recur_basic';
+    }
+
     $cacheability = new CacheableMetadata();
     $build = [
-      '#theme' => 'un_date_date_recur_basic__' . $theme_suggestions,
+      '#theme' => $theme . '__' . $theme_suggestions,
       '#is_recurring' => $item->isRecurring(),
     ];
 
@@ -385,6 +403,7 @@ class UnDateDateRecurBasic extends FormatterBase {
     $iso_end_date = $end_date->format('c') ?? '';
 
     $build = [
+      '#parts' => $this->getParts($start_date, $end_date),
       '#iso_start_date' => $iso_start_date,
       '#iso_end_date' => $iso_end_date,
       '#start_date' => $this->formatDate($start_date),

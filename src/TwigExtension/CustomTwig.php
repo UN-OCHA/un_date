@@ -118,13 +118,13 @@ class CustomTwig extends AbstractExtension {
     // Same day.
     if ($this->formatDate($date_item->start_date) === $this->formatDate($date_item->end_date)) {
       if ($this->allDay($date_item)) {
-        return $this->formatDate($date_item->start_date, FALSE, $month_format);
+        return $this->formatDate($date_item->start_date, $month_format);
       }
       return $this->formatDateTime($date_item->start_date, FALSE, $month_format) . $this->getSeparator() . $this->formatTime($date_item->end_date, $show_timezone);
     }
 
     if ($this->allDay($date_item)) {
-      return $this->formatDate($date_item->start_date, FALSE, $month_format) . $this->getSeparator() . $this->formatDate($date_item->end_date, FALSE, $month_format);
+      return $this->formatDate($date_item->start_date, $month_format) . $this->getSeparator() . $this->formatDate($date_item->end_date, $month_format);
     }
 
     return $this->formatDateTime($date_item->start_date, FALSE, $month_format) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $show_timezone, $month_format);
@@ -155,7 +155,7 @@ class CustomTwig extends AbstractExtension {
     }
 
     if ($this->allDay($date_item)) {
-      return $this->formatDate($date_item->start_date, FALSE, $month_format) . $this->getSeparator() . $this->formatDate($date_item->end_date, FALSE, $month_format);
+      return $this->formatDate($date_item->start_date, $month_format) . $this->getSeparator() . $this->formatDate($date_item->end_date, $month_format);
     }
 
     return $this->formatDateTime($date_item->start_date, FALSE, $month_format) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $show_timezone, $month_format);

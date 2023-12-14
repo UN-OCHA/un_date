@@ -2,13 +2,11 @@
 
 namespace Drupal\un_date\Trait;
 
-use DateTime;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone;
-use Drupal\un_date\Plugin\DateRecurInterpreter\UnRRulelInterpreter;
 use Twig\Extension\AbstractExtension;
 
 /**

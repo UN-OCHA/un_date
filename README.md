@@ -4,11 +4,18 @@ See [UN standard](https://www.un.org/dgacm/en/content/editorial-manual/numbers-d
 
 All dates will be outputted as entered, there's no automatic timezone conversion.
 
-We support English, French and Spanish.
+We support English, French, Spanish, Chinese and Arabic.
+
+Warning: You need the [patch](https://www.drupal.org/files/issues/2021-12-25/3004425-41.patch)
+to fix translation of [abbreviated month names](https://www.drupal.org/node/3004425).
+
+## Install
+
+Run `composer install unocha/un_date`
 
 ## Todo
 
-- Test formatters with full name
+- Test interpreter
 
 ## Formatters
 

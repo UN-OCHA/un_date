@@ -47,3 +47,47 @@ field.formatter.settings.un_data_date_recur_basic:
     interpreter:
       type: string
       label: 'Interpreter'
+date_recur.interpreter.un_interpreter:
+  type: mapping
+  label: 'Date recur interpreter'
+  mapping:
+    status:
+      type: boolean
+      label: 'Status'
+    id:
+      type: string
+      label: 'Interpreter Id'
+    label:
+      type: string
+      label: 'Label'
+    plugin:
+      type: string
+      label: 'Plugin Id'
+    uuid:
+      type: string
+      label: 'UUID'
+    langcode:
+      type: string
+      label: 'langcode'
+    dependencies:
+      type: sequence
+      label: 'dependencies'
+    _core:
+      type: string
+      label: 'Core'
+    settings:
+      type: mapping
+      label: 'Settings'
+      mapping:
+        show_start_date:
+          type: boolean
+          label: 'Show start date'
+        show_until:
+          type: boolean
+          label: 'Show until'
+        date_format:
+          type: string
+          label: 'Date format'
+        show_infinite:
+          type: boolean
+          label: 'Show forever'

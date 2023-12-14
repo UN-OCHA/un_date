@@ -4,6 +4,7 @@ namespace Drupal\Tests\un_date\Unit;
 
 use Drupal\Core\DependencyInjection\ContainerBuilder;
 use Drupal\Tests\UnitTestCase;
+use Drupal\un_date\Trait\UnDateTimeTrait;
 use Drupal\un_date\UnRRuleHumanReadable;
 
 /**
@@ -12,6 +13,8 @@ use Drupal\un_date\UnRRuleHumanReadable;
  * @coversDefaultClass \Drupal\un_date\UnRRuleHumanReadable
  */
 class UnRRuleHumanReadableTest extends UnitTestCase {
+
+  use UnDateTimeTrait;
 
   /**
    * {@inheritdoc}
@@ -39,7 +42,7 @@ class UnRRuleHumanReadableTest extends UnitTestCase {
       'include_start' => FALSE,
       'include_until' => TRUE,
       'date_formatter' => function ($date) {
-        return $date->format('d.m.Y');
+        return $this->formatDate($date);
       },
     ]);
 

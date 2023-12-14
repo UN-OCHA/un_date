@@ -45,6 +45,11 @@ class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
   /**
    * {@inheritdoc}
    */
+  protected $strictConfigSchema = FALSE;
+
+  /**
+   * {@inheritdoc}
+   */
   protected function setUp(): void {
     parent::setUp();
 
@@ -53,6 +58,8 @@ class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
       ->set('timezone.user.configurable', 0)
       ->set('timezone.default', 'Europe/Brussels')
       ->save();
+
+    $this->installConfig(['un_date']);
 
     // Add a datetime range field.
     $this->fieldStorage = FieldStorageConfig::create([
@@ -226,6 +233,13 @@ class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
         'end' => '2038-12-07T23:59:59',
         'timezone' => 'Europe/Brussels',
         'rrule' => 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO',
+      ],
+      'all_day_multi_brussels_rrule_past' => [
+        'expected' => 'Start date: 10.12.2018 End date: 11.12.2018',
+        'start' => '2018-12-06T00:00:00',
+        'end' => '2018-12-07T23:59:59',
+        'timezone' => 'Europe/Brussels',
+        'rrule' => 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO;COUNT=1',
       ],
     ];
   }

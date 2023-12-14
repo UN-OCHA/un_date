@@ -15,10 +15,6 @@ The Humand readable output of RRules is flaky.
 
 Run `composer install unocha/un_date`
 
-## Todo
-
-- Test interpreter
-
 ## Formatters
 
 There's support for the followig
@@ -35,24 +31,28 @@ All filter allow options
 - show_timezone to display the timezone (default off)
 - month_format: Either `numeric`, `full` or `abbreviation` (default numeric)
 
-## un_date
+### un_date
 
 Formatted as date `dd.mm.yyyy`
 
-## un_time
+### un_time
 
 Formatted as time `h.mm a.m.|p.m.`
 
-## un_datetime
+### un_datetime
 
 Formatted as date and time `dd.mm.yyyy h.mm a.m.|p.m.`
 
-## un_daterange
+### un_daterange
 
 Formatted as date and time `dd.mm.yyyy h.mm a.m.|p.m. — h.mm a.m.|p.m.`
 or `dd.mm.yyyy h.mm a.m.|p.m. — dd.mm.yyyy h.mm a.m.|p.m.` if dates are different
 
-## un_daterange_times
+### un_daterange_times
 
 Formatted as date and time `h.mm a.m.|p.m. — h.mm a.m.|p.m.`
 or `dd.mm.yyyy h.mm a.m.|p.m. — dd.mm.yyyy h.mm a.m.|p.m.` if dates are different
+
+## Human readable RRUle
+
+Currently using https://github.com/rlanvin/php-rrule but https://github.com/simshaun/recurr looks nicer

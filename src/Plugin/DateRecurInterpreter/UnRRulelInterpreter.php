@@ -4,16 +4,14 @@ declare(strict_types = 1);
 
 namespace Drupal\un_date\Plugin\DateRecurInterpreter;
 
-use Drupal\Core\Datetime\DateFormatInterface;
 use Drupal\Core\Datetime\DateFormatterInterface;
-use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
-use Drupal\Core\StringTranslation\TranslatableMarkup;
 use Drupal\date_recur\Plugin\DateRecurInterpreterPluginBase;
+use Drupal\un_date\Trait\UnDateTimeTrait;
 use Drupal\un_date\UnRRuleHumanReadable;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -30,6 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class UnRRulelInterpreter extends DateRecurInterpreterPluginBase implements ContainerFactoryPluginInterface, PluginFormInterface {
 
   use DependencyTrait;
+  use UnDateTimeTrait;
 
   /**
    * Constructs a new RlInterpreter.
@@ -68,9 +67,10 @@ class UnRRulelInterpreter extends DateRecurInterpreterPluginBase implements Cont
    */
   public function defaultConfiguration(): array {
     return [
+      'display_timezone' => TRUE,
+      'month_format' => 'numeric',
       'show_start_date' => TRUE,
       'show_until' => TRUE,
-      'date_format' => '',
       'show_infinite' => TRUE,
     ];
   }
@@ -86,23 +86,18 @@ class UnRRulelInterpreter extends DateRecurInterpreterPluginBase implements Cont
     }
 
     $options = [
-      'locale' => $language,
+      'use_intl' => TRUE,
+      'locale' => un_date_current_language(),
       'include_start' => $pluginConfig['show_start_date'],
       'include_until' => $pluginConfig['show_until'],
       'explicit_infinite' => $pluginConfig['show_infinite'],
     ];
 
-    $dateFormatId = $this->configuration['date_format'];
-    if (!empty($dateFormatId)) {
-      $dateFormat = $this->dateFormatStorage->load($dateFormatId);
-      if ($dateFormat) {
-        $dateFormatter = function (\DateTimeInterface $date) use ($dateFormat, $timeZone): string {
-          $timeZoneString = $timeZone?->getName();
-          return $this->dateFormatter->format($date->getTimestamp(), (string) $dateFormat->id(), '', $timeZoneString);
-        };
-        $options['date_formatter'] = $dateFormatter;
-      }
-    }
+    $month_format = $this->getSetting('month_format');
+    $dateFormatter = function (\DateTimeInterface $date) use ($month_format) : string {
+      return $this->formatDate($date, $month_format);
+    };
+    $options['date_formatter'] = $dateFormatter;
 
     $strings = [];
     foreach ($rules as $rule) {
@@ -114,9 +109,41 @@ class UnRRulelInterpreter extends DateRecurInterpreterPluginBase implements Cont
   }
 
   /**
+   * Wrapper for configuration.
+   */
+  public function getSetting(string $name) {
+    return $this->configuration[$name] ?? '';
+  }
+
+  /**
+   * Set a configuration.
+   */
+  public function setSetting(string $name, mixed $value) {
+    $this->configuration[$name] = $value;
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state): array {
+    $form['display_timezone'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Display Timezone'),
+      '#description' => $this->t('Should we display the timezone after the formatted date?'),
+      '#default_value' => $this->configuration['display_timezone'],
+    ];
+
+    $form['month_format'] = [
+      '#type' => 'select',
+      '#title' => $this->t('Month format'),
+      '#options' => $this->monthFormats,
+      '#description' => $this->t('In which format will the month be displayed'),
+      '#default_value' => $this->configuration['month_format'],
+    ];
+
     $form['show_start_date'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Show the start date'),
@@ -135,34 +162,21 @@ class UnRRulelInterpreter extends DateRecurInterpreterPluginBase implements Cont
       '#default_value' => $this->configuration['show_infinite'],
     ];
 
-    $exampleDate = new DrupalDateTime();
-    $dateFormatOptions = array_map(
-      fn (DateFormatInterface $dateFormat): TranslatableMarkup => $this->t('@name (@date)', [
-        '@name' => $dateFormat->label(),
-        '@date' => $this->dateFormatter->format($exampleDate->getTimestamp(), (string) $dateFormat->id()),
-      ]),
-      $this->dateFormatStorage->loadMultiple()
-    );
-    $form['date_format'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Date format'),
-      '#description' => $this->t('Date format used for start and until dates.'),
-      '#default_value' => $this->configuration['date_format'],
-      '#options' => $dateFormatOptions,
-      '#empty_option' => $this->t('- None -'),
-    ];
-
     return $form;
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
    */
   public function validateConfigurationForm(array &$form, FormStateInterface $form_state): void {
   }
 
   /**
    * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     $this->configuration['show_start_date'] = $form_state->getValue('show_start_date');
@@ -173,6 +187,8 @@ class UnRRulelInterpreter extends DateRecurInterpreterPluginBase implements Cont
 
   /**
    * {@inheritdoc}
+   *
+   * @codeCoverageIgnore
    */
   public function calculateDependencies(): array {
     /** @var string $dateFormatId */
@@ -189,13 +205,11 @@ class UnRRulelInterpreter extends DateRecurInterpreterPluginBase implements Cont
    */
   public function supportedLanguages(): array {
     return [
-      'de',
       'en',
       'es',
-      'fi',
       'fr',
-      'it',
-      'nl',
+      'ar',
+      'zh-hans',
     ];
   }
 

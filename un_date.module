@@ -125,9 +125,27 @@ function un_date_locale_translation_projects_alter(&$projects) {
 }
 
 /**
+ * Current language.
+ */
+function un_date_current_language() {
+  try {
+    return \Drupal::languageManager()->getCurrentLanguage()->getId();
+  }
+  catch (\Exception $e) {
+    return 'en';
+  }
+}
+
+/**
  * Is current language Rtl.
  */
 function un_date_current_language_rtl() {
-  $lang_code = \Drupal::languageManager()->getCurrentLanguage()->getId();
-  return $lang_code == 'ar';
+  return un_date_current_language() == 'ar';
+}
+
+/**
+ * Get module path.
+ */
+function un_date_get_module_path() {
+  return \Drupal::service('extension.path.resolver')->getPath('module', 'un_date');
 }

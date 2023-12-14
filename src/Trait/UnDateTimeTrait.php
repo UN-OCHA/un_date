@@ -7,7 +7,6 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone;
-use Twig\Extension\AbstractExtension;
 
 /**
  * Common formatting methods.
@@ -101,7 +100,7 @@ trait UnDateTimeTrait {
    */
   protected function formatDate(\DateTime|DrupalDateTime|DateRangeItem $date, $month_format = 'numeric') : string {
     // Twig doens't have a setting.
-    if (!$this instanceof AbstractExtension) {
+    if (is_callable([$this, 'getSetting'])) {
       $month_format = $this->getSetting('month_format') ?? 'numeric';
     }
 
@@ -126,6 +125,11 @@ trait UnDateTimeTrait {
         }
         break;
 
+    }
+
+    // Always use DrupalDateTime for translations.
+    if ($date instanceof \DateTime) {
+      $date = (new DrupalDateTime())->createFromDateTime($date);
     }
 
     return $date->format($date_format);

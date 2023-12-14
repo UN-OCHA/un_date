@@ -17,6 +17,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Entity\DateRecurInterpreterInterface;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
+use Drupal\un_date\Plugin\DateRecurInterpreter\UnRRulelInterpreter;
 use Drupal\un_date\Trait\UnDateTimeTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -313,8 +314,13 @@ class UnDateDateRecurBasic extends FormatterBase {
         $rules = $item->getHelper()->getRules();
         $plugin = $interpreter->getPlugin();
         $cacheability->addCacheableDependency($interpreter);
-        // @todo current language, inject LanguageManagerInterface $language_manager
-        $build['#interpretation'] = $plugin->interpret($rules, 'en');
+
+        if ($plugin instanceof UnRRulelInterpreter) {
+          $plugin->setSetting('display_timezone', $this->getSetting('display_timezone'));
+          $plugin->setSetting('month_format', $this->getSetting('month_format'));
+        }
+
+        $build['#interpretation'] = $plugin->interpret($rules, un_date_current_language());
       }
     }
 

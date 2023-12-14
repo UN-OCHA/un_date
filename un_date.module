@@ -128,7 +128,12 @@ function un_date_locale_translation_projects_alter(&$projects) {
  * Current language.
  */
 function un_date_current_language() {
-  return \Drupal::languageManager()->getCurrentLanguage()->getId();
+  try {
+    return \Drupal::languageManager()->getCurrentLanguage()->getId();
+  }
+  catch (\Exception $e) {
+    return 'en';
+  }
 }
 
 /**
@@ -136,4 +141,11 @@ function un_date_current_language() {
  */
 function un_date_current_language_rtl() {
   return un_date_current_language() == 'ar';
+}
+
+/**
+ * Get module path.
+ */
+function un_date_get_module_path() {
+  return \Drupal::service('extension.path.resolver')->getPath('module', 'un_date');
 }

@@ -155,7 +155,7 @@ class DateRenderDateTimeFullTranslationTest extends FieldKernelTestBase {
     $translationOptions['use_remote'] = FALSE;
     $batch = locale_translation_batch_update_build([], $this->getLanguages(), $translationOptions);
     batch_set($batch);
-    $batch =& batch_get();
+    $batch = & batch_get();
     $batch['progressive'] = FALSE;
     batch_process();
   }

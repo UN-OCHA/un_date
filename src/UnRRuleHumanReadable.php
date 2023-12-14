@@ -16,6 +16,7 @@ class UnRRuleHumanReadable extends RRule {
    * {@inheritdoc}
    */
   public function humanReadable(array $opt = []) {
+
     if (!isset($opt['use_intl'])) {
       $opt['use_intl'] = self::intlLoaded();
     }
@@ -57,11 +58,7 @@ class UnRRuleHumanReadable extends RRule {
 
     $opt = array_merge($default_opt, $opt);
 
-    $i18n = self::i18nLoad($opt['locale'], $opt['fallback'], $opt['use_intl'], $opt['custom_path']);
-
-    // Adapt some strings.
-    $i18n['byweekday'] = '%{weekdays}';
-    $i18n['infinite'] = ', indefinitely';
+    $i18n = self::i18nLoad($opt['locale'], $opt['fallback'], $opt['use_intl'], un_date_get_module_path() . '/i18n');
 
     if ($opt['date_formatter'] && !is_callable($opt['date_formatter'])) {
       throw new \InvalidArgumentException('The option date_formatter must callable');
@@ -231,7 +228,12 @@ class UnRRuleHumanReadable extends RRule {
           $value = $i18n[$selector][$value];
         }
 
-        $parts['byweekday'][] = strtr(self::i18nSelect($i18n['byweekday'], count($tmp)), [
+        // Avoid double articles (in French).
+        $byweekday_key = 'byweekday';
+        if ($this->bysetpos) {
+          $byweekday_key = 'byweekday_without';
+        }
+        $parts['byweekday'][] = strtr(self::i18nSelect($i18n[$byweekday_key], count($tmp)), [
           '%{weekdays}' => $prefix . self::i18nList($tmp, $i18n['and']),
         ]);
       }
@@ -239,14 +241,13 @@ class UnRRuleHumanReadable extends RRule {
       if ($this->byweekday_nth) {
         $tmp = $this->byweekday_nth;
         foreach ($tmp as & $value) {
-
           [$day, $n] = $value;
           $value = strtr(self::i18nSelect($i18n[$n > 0 ? 'nth_weekday' : '-nth_weekday'], $n), [
             '%{weekday}' => $i18n['weekdays'][$day],
             '%{n}' => abs($n),
           ]);
         }
-        $tmp = strtr(self::i18nSelect($i18n['byweekday'], count($tmp)), [
+        $tmp = strtr(self::i18nSelect($i18n['byweekday_without'], count($tmp)), [
           '%{weekdays}' => self::i18nList($tmp, $i18n['and']),
         ]);
         // ... of the year|month
@@ -255,7 +256,7 @@ class UnRRuleHumanReadable extends RRule {
         ]);
         $parts['byweekday'][] = $tmp;
       }
-      $parts['on'] = ' on ';
+      $parts['on'] = self::i18nSelect($i18n['on'], count($parts['byweekday']));
       $parts['byweekday'] = implode(' ' . $i18n['and'], $parts['byweekday']);
     }
 
@@ -297,35 +298,15 @@ class UnRRuleHumanReadable extends RRule {
 
     if ($this->bysetpos) {
       $tmp = $this->bysetpos;
-      $tmp_parts = $this->getRule();
-
-      // Translate to offsets.
-      $weekDays = isset($tmp_parts['BYDAY']) ? explode(',', $tmp_parts['BYDAY']) : [];
-      $weekdayCount = count($weekDays);
-      sort($tmp);
-
-      // Collapse all ordinals into simplified ordinals.
-      $chunks = array_chunk($tmp, $weekdayCount);
-      $ordinals = [];
-      foreach ($chunks as $chunk) {
-        $first = reset($chunk);
-        $end = ($first < 0) ? min($chunk) : max($chunk);
-        $ordinals[] = $end / $weekdayCount;
+      foreach ($tmp as & $value) {
+        $value = strtr(self::i18nSelect($i18n[$value > 0 ? 'nth_setpos' : '-nth_setpos'], $value), [
+          '%{n}' => abs($value),
+        ]);
       }
-
-      // As string.
-      $ordinalNames = [
-        1 => strtolower($this->t('First')),
-        2 => strtolower($this->t('Second')),
-        3 => strtolower($this->t('Third')),
-        4 => strtolower($this->t('Fourth')),
-        5 => strtolower($this->t('Fifth')),
-        -1 => strtolower($this->t('Last')),
-        -2 => strtolower($this->t('2nd to last')),
-      ];
-      $ordinal = array_intersect_key($ordinalNames, array_flip($ordinals));
-      $parts['on'] = ' on ';
-      $parts['bysetpos'] = self::i18nList(array_values($ordinal), $i18n['and']) . ' ';
+      $tmp = strtr(self::i18nSelect($i18n['bysetpos'], count($tmp)), [
+        '%{setpos}' => self::i18nList($tmp, $i18n['and']),
+      ]);
+      $parts['bysetpos'] = $tmp;
     }
 
     if ($opt['include_start']) {
@@ -359,6 +340,14 @@ class UnRRuleHumanReadable extends RRule {
 
     $parts = array_filter($parts);
     $str = implode('', $parts);
+
+    // Replace multiple spaces.
+    $str = preg_replace('!\s+!', ' ', $str);
+
+    // Replace double output.
+    $str = str_replace(' on on ', ' on ', $str);
+    $str = str_replace(' on , ', ' on ', $str);
+
     return $str;
   }
 

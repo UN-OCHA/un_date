@@ -198,7 +198,7 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
   /**
    * Provide test examples.
    */
-  public function xproviderTestData() {
+  public function providerTestData() {
     return [
       'FREQ=DAILY;UNTIL=20000131T140000Z;BYMONTH=1' => [
         'FREQ=DAILY;UNTIL=20000131T140000Z;BYMONTH=1',

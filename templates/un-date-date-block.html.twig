@@ -13,19 +13,22 @@
 	]
 %}
 
+<pre>
+duration: {{ un_duration(start, end) }}
+</pre>
 <div {{ attributes.addClass(classes) }}>
   <div class="un-date-block">
     <div class="un-date-block__wrapper">
       <span class="un-date-block__day">
-        {{ parts.start.day }}{% if parts.start.day != parts.end.day %} - {{ parts.end.day }}{% endif %}
+        {{ start|un_day }}{% if not un_is_same_day(start, end) %} {{ un_separator() }} {{ end|un_day }}{% endif %}
       </span>
     </div>
     <div class="un-date-block__wrapper">
       <span class="un-date-block__month">
-        {{ parts.start.month_abbr|t({}, {'context': 'Abbreviated month name'}) }}{% if parts.start.month != parts.end.month %} - {{ parts.end.month_abbr|t({}, {'context': 'Abbreviated month name'}) }}{% endif %}
+        {{ start|un_month_abbr }}{% if not un_is_same_month(start, end) %} {{ un_separator() }} {{ end|un_month_abbr }}{% endif %}
       </span>
       <span class="un-date-block__year">
-        {{ parts.start.year }}{% if parts.start.year != parts.end.year %} - {{ parts.end.year }}{% endif %}
+        {{ start|un_year }}{% if not un_is_same_year(start, end) %} {{ un_separator() }} {{ end|un_year }}{% endif %}
       </span>
     </div>
   </div>

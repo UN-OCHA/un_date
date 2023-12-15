@@ -40,6 +40,16 @@ trait UnDateTimeTrait {
    * Format time.
    */
   protected function formatTime(\DateTime|DrupalDateTime $date, $show_timezone = FALSE) : string {
+    // Midnight.
+    if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {
+      return t('midnight');
+    }
+
+    // Noon.
+    if ($date->format('G') == '12' && $date->format('i') === '00') {
+      return t('noon');
+    }
+
     $ampm = '';
     $time_format = 'g.i';
 
@@ -92,6 +102,13 @@ trait UnDateTimeTrait {
 
     }
 
+    return $date->format($time_format) . $ampm . $this->formatTimezone($date, $show_timezone);
+  }
+
+  /**
+   * Format hour.
+   */
+  protected function formatHour(\DateTime|DrupalDateTime $date) : string {
     // Midnight.
     if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {
       return t('midnight');
@@ -102,7 +119,62 @@ trait UnDateTimeTrait {
       return t('noon');
     }
 
-    return $date->format($time_format) . $ampm . $this->formatTimezone($date, $show_timezone);
+    $time_format = 'g';
+
+    switch ($this->getLocale()) {
+      case 'en':
+        $time_format = 'g';
+        break;
+
+      case 'fr':
+      case 'es':
+      case 'ar':
+      case 'zh-hans':
+        $time_format = 'G';
+    }
+
+    return $date->format($time_format);
+  }
+
+  /**
+   * Format minute.
+   */
+  protected function formatMinute(\DateTime|DrupalDateTime $date) : string {
+    if ($date->format('i') === '00') {
+      return '';
+    }
+
+    $time_format = 'i';
+    return $date->format($time_format);
+  }
+
+  /**
+   * Format AM/PM.
+   */
+  protected function formatAmPm(\DateTime|DrupalDateTime $date) : string {
+    // Midnight.
+    if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {
+      return '';
+    }
+
+    // Noon.
+    if ($date->format('G') == '12' && $date->format('i') === '00') {
+      return '';
+    }
+
+    $ampm = '';
+
+    switch ($this->getLocale()) {
+      case 'en':
+        $ampm = ' a.m.';
+        if ($date->format('a') === 'pm') {
+          $ampm = ' p.m.';
+        }
+        break;
+
+    }
+
+    return $ampm;
   }
 
   /**
@@ -178,14 +250,70 @@ trait UnDateTimeTrait {
   }
 
   /**
-   * Is all day event.
+   * Is same date.
+   */
+  protected function sameDate(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
+    return $this->sameDateStartEnd($date_item->start_date, $date_item->end_date, $timezone);
+  }
+
+  /**
+   * Is same date.
+   */
+  protected function sameDateStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
+    return $start->format('c') == $end->format('c');
+  }
+
+  /**
+   * Is same month and year.
+   */
+  protected function sameMonth(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
+    return $this->sameMonthStartEnd($date_item->start_date, $date_item->end_date, $timezone);
+  }
+
+  /**
+   * Is same month and year.
+   */
+  protected function sameMonthStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
+    return $start->format('Ym') == $end->format('Ym');
+  }
+
+  /**
+   * Is same year.
+   */
+  protected function sameYear(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
+    return $this->sameYearStartEnd($date_item->start_date, $date_item->end_date, $timezone);
+  }
+
+  /**
+   * Is same year.
+   */
+  protected function sameYearStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
+    return $start->format('Y') == $end->format('Y');
+  }
+
+  /**
+   * Is same day.
+   */
+  protected function sameDay(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
+    return $this->sameDayStartEnd($date_item->start_date, $date_item->end_date, $timezone);
+  }
+
+  /**
+   * Is same day.
+   */
+  protected function sameDayStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
+    return $this->formatDate($start) == $this->formatDate($end);
+  }
+
+  /**
+   * Is all day.
    */
   protected function allDay(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
     return $this->allDayStartEnd($date_item->start_date, $date_item->end_date, $timezone);
   }
 
   /**
-   * Is all day event.
+   * Is all day.
    */
   protected function allDayStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
     if ($start->format('Hi') === '0000' && $end->format('Hi') === '0000') {
@@ -197,6 +325,43 @@ trait UnDateTimeTrait {
     }
 
     return FALSE;
+  }
+
+  /**
+   * Duration.
+   */
+  protected function duration(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item) : string {
+    return $this->durationStartEnd($date_item->start_date, $date_item->end_date);
+  }
+
+  /**
+   * Duration.
+   */
+  protected function durationStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end) : string {
+    $output = [];
+    $interval = $start->diff($end, TRUE);
+
+
+    if ($interval->y) {
+      $output[] = un_date_format_plural($interval->format("%y"), '1 year', '@count years');
+    }
+    if ($interval->m) {
+      $output[] = un_date_format_plural($interval->format("%m"), '1 month', '@count months');
+    }
+    if ($interval->d) {
+      $output[] = un_date_format_plural($interval->format("%d"), '1 day', '@count days');
+    }
+    if ($interval->h) {
+      $output[] = un_date_format_plural($interval->format("%h"), '1 hour', '@count hours');
+    }
+    if ($interval->i) {
+      $output[] = un_date_format_plural($interval->format("%i"), '1 minute', '@count minutes');
+    }
+    if ($interval->s) {
+      $output[] = un_date_format_plural($interval->format("%s"), '1 second', '@count seconds');
+    }
+
+    return implode(', ', $output);
   }
 
   /**

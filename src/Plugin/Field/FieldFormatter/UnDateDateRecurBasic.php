@@ -404,6 +404,8 @@ class UnDateDateRecurBasic extends FormatterBase {
 
     $build = [
       '#parts' => $this->getParts($start_date, $end_date),
+      '#start' => $start_date,
+      '#end' => $end_date,
       '#iso_start_date' => $iso_start_date,
       '#iso_end_date' => $iso_end_date,
       '#start_date' => $this->formatDate($start_date),

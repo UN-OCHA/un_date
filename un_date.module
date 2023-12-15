@@ -12,6 +12,8 @@ function un_date_theme($existing, $type, $theme, $path) {
   return [
     'un_date_datetime_range_timezone' => [
       'variables' => [
+        'start' => NULL,
+        'end' => NULL,
         'iso_start_date' => NULL,
         'iso_end_date' => NULL,
         'start_date' => NULL,
@@ -27,6 +29,7 @@ function un_date_theme($existing, $type, $theme, $path) {
     ],
     'un_date_datetime' => [
       'variables' => [
+        'start' => NULL,
         'iso_start_date' => NULL,
         'start_date' => NULL,
         'start_time' => NULL,
@@ -36,12 +39,15 @@ function un_date_theme($existing, $type, $theme, $path) {
     ],
     'un_date_date' => [
       'variables' => [
+        'start' => NULL,
         'iso_start_date' => NULL,
         'start_date' => NULL,
       ],
     ],
     'un_date_datetime_range' => [
       'variables' => [
+        'start' => NULL,
+        'end' => NULL,
         'iso_start_date' => NULL,
         'iso_end_date' => NULL,
         'start_date' => NULL,
@@ -57,6 +63,8 @@ function un_date_theme($existing, $type, $theme, $path) {
     ],
     'un_date_date_range' => [
       'variables' => [
+        'start' => NULL,
+        'end' => NULL,
         'iso_start_date' => NULL,
         'iso_end_date' => NULL,
         'start_date' => NULL,
@@ -68,6 +76,8 @@ function un_date_theme($existing, $type, $theme, $path) {
     ],
     'un_date_date_recur_basic' => [
       'variables' => [
+        'start' => NULL,
+        'end' => NULL,
         'iso_start_date' => NULL,
         'iso_end_date' => NULL,
         'start_date' => NULL,
@@ -86,6 +96,8 @@ function un_date_theme($existing, $type, $theme, $path) {
     ],
     'un_date_date_block' => [
       'variables' => [
+        'start' => NULL,
+        'end' => NULL,
         'parts' => [],
         'iso_start_date' => NULL,
         'iso_end_date' => NULL,
@@ -105,6 +117,8 @@ function un_date_theme($existing, $type, $theme, $path) {
     ],
     'un_date_occurence' => [
       'variables' => [
+        'start' => NULL,
+        'end' => NULL,
         'iso_start_date' => NULL,
         'iso_end_date' => NULL,
         'start_date' => NULL,
@@ -167,4 +181,11 @@ function un_date_current_language_rtl() {
  */
 function un_date_get_module_path() {
   return dirname(__FILE__);
+}
+
+/**
+ * Format plural wrapper.
+ */
+function un_date_format_plural($count, $single, $multiple) {
+  return \Drupal::translation()->formatPlural($count, $single, $multiple);
 }

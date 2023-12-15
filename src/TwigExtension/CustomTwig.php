@@ -32,6 +32,15 @@ class CustomTwig extends AbstractExtension {
       new TwigFilter('un_daterange', [$this, 'getUnDaterange']),
       new TwigFilter('un_daterange_times', [$this, 'getUnDaterangeTimes']),
       new TwigFilter('un_daterange_named', [$this, 'getUnDaterangeNamed']),
+      new TwigFilter('un_timerange', [$this, 'getUnTimerange']),
+      new TwigFilter('un_year', [$this, 'getUnyear']),
+      new TwigFilter('un_month', [$this, 'getUnMonth']),
+      new TwigFilter('un_month_full', [$this, 'getUnMonthFull']),
+      new TwigFilter('un_month_abbr', [$this, 'getUnMonthAbbr']),
+      new TwigFilter('un_day', [$this, 'getUnDay']),
+      new TwigFilter('un_hour', [$this, 'getUnHour']),
+      new TwigFilter('un_minute', [$this, 'getUnMinute']),
+      new TwigFilter('un_ampm', [$this, 'getUnAmPm']),
     ];
   }
 
@@ -40,9 +49,15 @@ class CustomTwig extends AbstractExtension {
    */
   public function getFunctions() {
     return [
+      new TwigFunction('un_is_same_date', [$this, 'isSameDate']),
+      new TwigFunction('un_is_same_day', [$this, 'isSameDay']),
+      new TwigFunction('un_is_same_month', [$this, 'isSameMonth']),
+      new TwigFunction('un_is_same_year', [$this, 'isSameYear']),
       new TwigFunction('un_is_all_day', [$this, 'isAllDay']),
       new TwigFunction('un_is_utc', [$this, 'isUtc']),
       new TwigFunction('un_is_rtl', [$this, 'isRtl']),
+      new TwigFunction('un_separator', [$this, 'getSeparator']),
+      new TwigFunction('un_duration', [$this, 'getDuration']),
     ];
   }
 
@@ -111,12 +126,12 @@ class CustomTwig extends AbstractExtension {
     }
 
     // Same.
-    if ($date_item->start_date->format('c') == $date_item->end_date->format('c')) {
+    if ($this->sameDate($date_item)) {
       return $this->formatDateTime($date_item->start_date, $show_timezone, $month_format);
     }
 
     // Same day.
-    if ($this->formatDate($date_item->start_date) === $this->formatDate($date_item->end_date)) {
+    if ($this->sameDay($date_item)) {
       if ($this->allDay($date_item)) {
         return $this->formatDate($date_item->start_date, $month_format);
       }
@@ -224,7 +239,7 @@ class CustomTwig extends AbstractExtension {
     $show_timezone = TRUE;
 
     // Only output time if dates are equal.
-    if ($this->formatDate($daterange->start_date, TRUE) === $this->formatDate($daterange->start_date, FALSE)) {
+    if ($this->sameDay($daterange)) {
       if ($this->allDay($daterange)) {
         return '';
       }
@@ -236,20 +251,236 @@ class CustomTwig extends AbstractExtension {
   }
 
   /**
-   * Is all day event.
+   * Get start and end time.
    */
-  public function isAllDay($in) : bool {
+  public function getUnTimerange(DateRangeItem|DateRecurItem $daterange) : string {
+    $show_timezone = TRUE;
+
+    if ($this->allDay($daterange)) {
+      return '';
+    }
+
+    return $this->formatTime($daterange->start_date, FALSE) . ' — ' . $this->formatTime($daterange->end_date, $show_timezone);
+  }
+
+  /**
+   * Get year.
+   */
+  public function getUnyear($in) : string {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
+      return '';
+    }
+
+    return $date_item->format('Y');
+  }
+
+  /**
+   * Get month as number.
+   */
+  public function getUnMonth($in) : string {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return '';
+    }
+
+    return $date_item->format('m');
+  }
+
+  /**
+   * Get full month name.
+   */
+  public function getUnMonthFull($in) : string {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return '';
+    }
+
+    return $date_item->format('F');
+  }
+
+  /**
+   * Get abbreviaterd month name.
+   */
+  public function getUnMonthAbbr($in) : string {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return '';
+    }
+
+    return $date_item->format('M');
+  }
+
+  /**
+   * Get day.
+   */
+  public function getUnDay($in) : string {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return '';
+    }
+
+    return $date_item->format('j');
+  }
+
+  /**
+   * Get hour.
+   */
+  public function getUnHour($in) : string {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return '';
+    }
+
+    return $this->formatHour($date_item);
+  }
+
+  /**
+   * Get minute,
+   */
+  public function getUnMinute($in) : string {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return '';
+    }
+
+    return $this->formatMinute($date_item);
+  }
+
+  /**
+   * Get AM/PM.
+   */
+  public function getUnAmPm($in) : string {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return '';
+    }
+
+    return $this->formatAmPm($date_item);
+  }
+
+
+  /**
+   * Is same day.
+   */
+  public function isSameDate($start, $end = NULL) : bool {
+    $start = $this->getDateItem($start);
+
+    if (!$start) {
       return FALSE;
     }
 
-    if ($in instanceof \DateTime) {
+    if ($end) {
+      $end = $this->getDateItem($end);
+
+      if (!$end) {
+        return FALSE;
+      }
+
+      return $this->sameDateStartEnd($start, $end);
+    }
+
+    return $this->sameDate($start);
+  }
+
+  /**
+   * Is same day.
+   */
+  public function isSameDay($start, $end = NULL) : bool {
+    $start = $this->getDateItem($start);
+
+    if (!$start) {
       return FALSE;
     }
 
-    return $this->allDay($date_item);
+    if ($end) {
+      $end = $this->getDateItem($end);
+
+      if (!$end) {
+        return FALSE;
+      }
+
+      return $this->sameDayStartEnd($start, $end);
+    }
+
+    return $this->sameDay($start);
+  }
+
+  /**
+   * Is same month and year.
+   */
+  public function isSameMonth($start, $end = NULL) : bool {
+    $start = $this->getDateItem($start);
+
+    if (!$start) {
+      return FALSE;
+    }
+
+    if ($end) {
+      $end = $this->getDateItem($end);
+
+      if (!$end) {
+        return FALSE;
+      }
+
+      return $this->SameMonthStartEnd($start, $end);
+    }
+
+    return $this->SameMonth($start);
+  }
+
+  /**
+   * Is same year.
+   */
+  public function isSameYear($start, $end = NULL) : bool {
+    $start = $this->getDateItem($start);
+
+    if (!$start) {
+      return FALSE;
+    }
+
+    if ($end) {
+      $end = $this->getDateItem($end);
+
+      if (!$end) {
+        return FALSE;
+      }
+
+      return $this->sameYearStartEnd($start, $end);
+    }
+
+    return $this->sameYear($start);
+  }
+
+  /**
+   * Is all day.
+   */
+  public function isAllDay($start, $end = NULL) : bool {
+    $start = $this->getDateItem($start);
+
+    if (!$start) {
+      return FALSE;
+    }
+
+    if ($end) {
+      $end = $this->getDateItem($end);
+
+      if (!$end) {
+        return FALSE;
+      }
+
+      return $this->allDayStartEnd($start, $end);
+    }
+
+    return $this->allDay($start);
   }
 
   /**
@@ -277,4 +508,33 @@ class CustomTwig extends AbstractExtension {
     return un_date_current_language_rtl();
   }
 
+  /**
+   * Get separator.
+   */
+  public function getSeparator() : string {
+    return $this::SEPARATOR;
+  }
+
+  /**
+   * Get duration.
+   */
+  public function getDuration($start, $end = NULL) : string {
+    $start = $this->getDateItem($start);
+
+    if (!$start) {
+      return '';
+    }
+
+    if ($end) {
+      $end = $this->getDateItem($end);
+
+      if (!$end) {
+        return '';
+      }
+
+      return $this->durationStartEnd($start, $end);
+    }
+
+    return $this->duration($start);
+  }
 }

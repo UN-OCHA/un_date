@@ -7,3 +7,6 @@ settings:
   show_until: true
   date_format: ''
   show_infinite: true
+dependencies:
+  module:
+    - date_recur

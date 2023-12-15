@@ -3,7 +3,6 @@
 namespace Drupal\un_date\Trait;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\date_recur\Entity\DateRecurInterpreterInterface;
 use Drupal\un_date\Plugin\Field\FieldFormatter\UnDateDateRecurBasic;
 
 /**

@@ -115,7 +115,116 @@ class DateTwigIllegalTest extends KernelTestBase {
         'template' => '{{ un_is_utc(variable) }}',
         'date' => 'test',
       ],
-
+      'un_year' => [
+        'expected' => '',
+        'template' => '{{ variable|un_year }}',
+        'date' => 'test',
+      ],
+      'un_month' => [
+        'expected' => '',
+        'template' => '{{ variable|un_month }}',
+        'date' => 'test',
+      ],
+      'un_month_full' => [
+        'expected' => '',
+        'template' => '{{ variable|un_month_full }}',
+        'date' => 'test',
+      ],
+      'un_month_abbr' => [
+        'expected' => '',
+        'template' => '{{ variable|un_month_abbr }}',
+        'date' => 'test',
+      ],
+      'un_day' => [
+        'expected' => '',
+        'template' => '{{ variable|un_day }}',
+        'date' => 'test',
+      ],
+      'un_hour' => [
+        'expected' => '',
+        'template' => '{{ variable|un_hour }}',
+        'date' => 'test',
+      ],
+      'un_minute' => [
+        'expected' => '',
+        'template' => '{{ variable|un_minute }}',
+        'date' => 'test',
+      ],
+      'un_ampm' => [
+        'expected' => '',
+        'template' => '{{ variable|un_ampm }}',
+        'date' => 'test',
+      ],
+      'un_is_all_day' => [
+        'expected' => '',
+        'template' => '{{ un_is_all_day(variable) }}',
+        'date' => 'test',
+      ],
+      'un_is_utc' => [
+        'expected' => '',
+        'template' => '{{ un_is_utc(variable) }}',
+        'date' => 'test',
+      ],
+      'un_duration' => [
+        'expected' => '',
+        'template' => '{{ un_duration(variable) }}',
+        'date' => 'test',
+      ],
+      'un_year_object' => [
+        'expected' => '',
+        'template' => '{{ variable|un_year }}',
+        'date' => new \stdClass(),
+      ],
+      'un_month_object' => [
+        'expected' => '',
+        'template' => '{{ variable|un_month }}',
+        'date' => new \stdClass(),
+      ],
+      'un_month_full_object' => [
+        'expected' => '',
+        'template' => '{{ variable|un_month_full }}',
+        'date' => new \stdClass(),
+      ],
+      'un_month_abbr_object' => [
+        'expected' => '',
+        'template' => '{{ variable|un_month_abbr }}',
+        'date' => new \stdClass(),
+      ],
+      'un_day_object' => [
+        'expected' => '',
+        'template' => '{{ variable|un_day }}',
+        'date' => new \stdClass(),
+      ],
+      'un_hour_object' => [
+        'expected' => '',
+        'template' => '{{ variable|un_hour }}',
+        'date' => new \stdClass(),
+      ],
+      'un_minute_object' => [
+        'expected' => '',
+        'template' => '{{ variable|un_minute }}',
+        'date' => new \stdClass(),
+      ],
+      'un_ampm_object' => [
+        'expected' => '',
+        'template' => '{{ variable|un_ampm }}',
+        'date' => new \stdClass(),
+      ],
+      'un_is_all_day_object' => [
+        'expected' => '',
+        'template' => '{{ un_is_all_day(variable) }}',
+        'date' => new \stdClass(),
+      ],
+      'un_is_utc_object' => [
+        'expected' => '',
+        'template' => '{{ un_is_utc(variable) }}',
+        'date' => new \stdClass(),
+      ],
+      'un_duration_object' => [
+        'expected' => '',
+        'template' => '{{ un_duration(variable) }}',
+        'date' => new \stdClass(),
+      ],
     ];
   }
 

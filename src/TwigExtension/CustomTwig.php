@@ -342,7 +342,7 @@ class CustomTwig extends AbstractExtension {
   }
 
   /**
-   * Get minute,
+   * Get minute.
    */
   public function getUnMinute($in) : string {
     $date_item = $this->getDateItem($in);
@@ -366,7 +366,6 @@ class CustomTwig extends AbstractExtension {
 
     return $this->formatAmPm($date_item);
   }
-
 
   /**
    * Is same day.
@@ -537,4 +536,5 @@ class CustomTwig extends AbstractExtension {
 
     return $this->duration($start);
   }
+
 }

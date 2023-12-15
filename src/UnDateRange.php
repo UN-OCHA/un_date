@@ -32,7 +32,7 @@ class UnDateRange {
   /**
    * Creates a new DateRange.
    */
-  public function __construct(\DateTimeInterface|DrupalDateTime $start, \DateTimeInterface|DrupalDateTime $end) {
+  public function __construct(\DateTimeInterface|DrupalDateTime|string $start, \DateTimeInterface|DrupalDateTime|string $end) {
     $this->start_date = clone $this->getDateTime($start);
     $this->end_date = clone $this->getDateTime($end);
     $this->validateDates();
@@ -41,7 +41,11 @@ class UnDateRange {
   /**
    * Get datatime.
    */
-  protected function getDateTime(\DateTimeInterface|DrupalDateTime $date) {
+  protected function getDateTime(\DateTimeInterface|DrupalDateTime|string $date) {
+    if (is_string($date)) {
+      return new \DateTime($date);
+    }
+
     if ($date instanceof DrupalDateTime) {
       return $date->getPhpDateTime();
     }

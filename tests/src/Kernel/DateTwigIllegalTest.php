@@ -225,6 +225,46 @@ class DateTwigIllegalTest extends KernelTestBase {
         'template' => '{{ un_duration(variable) }}',
         'date' => new \stdClass(),
       ],
+      'un_is_same_date' => [
+        'expected' => '',
+        'template' => '{{ un_is_same_date(variable) }}',
+        'date' => 'test',
+      ],
+      'un_is_same_day' => [
+        'expected' => '',
+        'template' => '{{ un_is_same_day(variable) }}',
+        'date' => 'test',
+      ],
+      'un_is_same_month' => [
+        'expected' => '',
+        'template' => '{{ un_is_same_month(variable) }}',
+        'date' => 'test',
+      ],
+      'un_is_same_year' => [
+        'expected' => '',
+        'template' => '{{ un_is_same_year(variable) }}',
+        'date' => 'test',
+      ],
+      'un_is_same_date_object' => [
+        'expected' => '',
+        'template' => '{{ un_is_same_date(variable) }}',
+        'date' => new \stdClass(),
+      ],
+      'un_is_same_day_object' => [
+        'expected' => '',
+        'template' => '{{ un_is_same_day(variable) }}',
+        'date' => new \stdClass(),
+      ],
+      'un_is_same_month_object' => [
+        'expected' => '',
+        'template' => '{{ un_is_same_month(variable) }}',
+        'date' => new \stdClass(),
+      ],
+      'un_is_same_year_object' => [
+        'expected' => '',
+        'template' => '{{ un_is_same_year(variable) }}',
+        'date' => new \stdClass(),
+      ],
     ];
   }
 

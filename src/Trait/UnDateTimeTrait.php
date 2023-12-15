@@ -341,7 +341,7 @@ trait UnDateTimeTrait {
   /**
    * Duration.
    */
-  protected function duration(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item) : string {
+  protected function duration(DateRangeItem|DateRecurItem|DateRangeTimezone|UnDateRange $date_item) : string {
     return $this->durationStartEnd($date_item->start_date, $date_item->end_date);
   }
 

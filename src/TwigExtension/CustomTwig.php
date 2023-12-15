@@ -305,11 +305,6 @@ class CustomTwig extends AbstractExtension {
       return '';
     }
 
-    // Restrict to one date.
-    if (isset($date_item->start_date)) {
-      $date_item = $date_item->start_date;
-    }
-
     return $date_item->format('Y');
   }
 
@@ -323,11 +318,6 @@ class CustomTwig extends AbstractExtension {
       return '';
     }
 
-    // Restrict to one date.
-    if (isset($date_item->start_date)) {
-      $date_item = $date_item->start_date;
-    }
-
     return $date_item->format('m');
   }
 
@@ -339,11 +329,6 @@ class CustomTwig extends AbstractExtension {
 
     if (!$date_item) {
       return '';
-    }
-
-    // Restrict to one date.
-    if (isset($date_item->start_date)) {
-      $date_item = $date_item->start_date;
     }
 
     return $date_item->format('F');

@@ -166,9 +166,9 @@ trait UnDateTimeTrait {
 
     switch ($this->getLocale()) {
       case 'en':
-        $ampm = ' a.m.';
+        $ampm = 'a.m.';
         if ($date->format('a') === 'pm') {
-          $ampm = ' p.m.';
+          $ampm = 'p.m.';
         }
         break;
 

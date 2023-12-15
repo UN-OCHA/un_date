@@ -67,17 +67,11 @@ class CustomTwig extends AbstractExtension {
    * Format date.
    */
   public function getUnDate($in, $month_format = 'numeric') : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
     }
-
-    // Restrict to one date.
-    if (isset($date_item->start_date)) {
-      $date_item = $date_item->start_date;
-    }
-
     return $this->formatDate($date_item, $month_format);
   }
 
@@ -85,15 +79,10 @@ class CustomTwig extends AbstractExtension {
    * Format time.
    */
   public function getUnTime($in, bool $show_timezone = FALSE) : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
-    }
-
-    // Restrict to one date.
-    if (isset($date_item->start_date)) {
-      $date_item = $date_item->start_date;
     }
 
     return $this->formatTime($date_item, $show_timezone);
@@ -103,15 +92,10 @@ class CustomTwig extends AbstractExtension {
    * Format date and time.
    */
   public function getUnDateTime($in, bool $show_timezone = FALSE, $month_format = 'numeric') : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
-    }
-
-    // Restrict to one date.
-    if (isset($date_item->start_date)) {
-      $date_item = $date_item->start_date;
     }
 
     return $this->formatDateTime($date_item, $show_timezone, $month_format);
@@ -121,7 +105,7 @@ class CustomTwig extends AbstractExtension {
    * Format daterange.
    */
   public function getUnDaterange($in, $show_timezone = FALSE, $month_format = 'numeric') : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateRangeFromItem($in);
 
     if (!$date_item) {
       return '';
@@ -151,7 +135,7 @@ class CustomTwig extends AbstractExtension {
    * Format daterange.
    */
   public function getUnDaterangeTimes($in, $show_timezone = FALSE, $month_format = 'numeric') : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateRangeFromItem($in);
 
     if (!$date_item) {
       return '';
@@ -182,7 +166,7 @@ class CustomTwig extends AbstractExtension {
    * Format daterange.
    */
   public function getUnDaterangeNamed($in, $format = 'default', $month_format = 'numeric') : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateRangeFromItem($in);
 
     if (!$date_item) {
       return '';
@@ -247,6 +231,41 @@ class CustomTwig extends AbstractExtension {
   }
 
   /**
+   * Gat date from date item.
+   */
+  protected function getDateFromDateItem($in) {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return '';
+    }
+
+    // Restrict to one date.
+    if (isset($date_item->start_date)) {
+      $date_item = $date_item->start_date;
+    }
+
+    return $date_item;
+  }
+
+  /**
+   * Gat date from date item.
+   */
+  protected function getDateRangeFromItem($in) {
+    $date_item = $this->getDateItem($in);
+
+    if (!$date_item) {
+      return '';
+    }
+
+    if (!$this->isDateRange($date_item)) {
+      return '';
+    }
+
+    return $date_item;
+  }
+
+  /**
    * Format time.
    */
   protected function localTimes($daterange, $month_format = 'numeric') : string {
@@ -280,10 +299,15 @@ class CustomTwig extends AbstractExtension {
    * Get year.
    */
   public function getUnyear($in) : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
+    }
+
+    // Restrict to one date.
+    if (isset($date_item->start_date)) {
+      $date_item = $date_item->start_date;
     }
 
     return $date_item->format('Y');
@@ -293,10 +317,15 @@ class CustomTwig extends AbstractExtension {
    * Get month as number.
    */
   public function getUnMonth($in) : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
+    }
+
+    // Restrict to one date.
+    if (isset($date_item->start_date)) {
+      $date_item = $date_item->start_date;
     }
 
     return $date_item->format('m');
@@ -306,10 +335,15 @@ class CustomTwig extends AbstractExtension {
    * Get full month name.
    */
   public function getUnMonthFull($in) : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
+    }
+
+    // Restrict to one date.
+    if (isset($date_item->start_date)) {
+      $date_item = $date_item->start_date;
     }
 
     return $date_item->format('F');
@@ -319,7 +353,7 @@ class CustomTwig extends AbstractExtension {
    * Get abbreviaterd month name.
    */
   public function getUnMonthAbbr($in) : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
@@ -332,7 +366,7 @@ class CustomTwig extends AbstractExtension {
    * Get day.
    */
   public function getUnDay($in) : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
@@ -345,7 +379,7 @@ class CustomTwig extends AbstractExtension {
    * Get hour.
    */
   public function getUnHour($in) : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
@@ -358,7 +392,7 @@ class CustomTwig extends AbstractExtension {
    * Get minute.
    */
   public function getUnMinute($in) : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
@@ -371,7 +405,7 @@ class CustomTwig extends AbstractExtension {
    * Get AM/PM.
    */
   public function getUnAmPm($in) : string {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return '';
@@ -391,7 +425,7 @@ class CustomTwig extends AbstractExtension {
     }
 
     if ($end) {
-      $end = $this->getDateItem($end);
+      $end = $this->getDateFromDateItem($end);
 
       if (!$end) {
         return FALSE;
@@ -414,7 +448,7 @@ class CustomTwig extends AbstractExtension {
     }
 
     if ($end) {
-      $end = $this->getDateItem($end);
+      $end = $this->getDateFromDateItem($end);
 
       if (!$end) {
         return FALSE;
@@ -437,7 +471,7 @@ class CustomTwig extends AbstractExtension {
     }
 
     if ($end) {
-      $end = $this->getDateItem($end);
+      $end = $this->getDateFromDateItem($end);
 
       if (!$end) {
         return FALSE;
@@ -460,7 +494,7 @@ class CustomTwig extends AbstractExtension {
     }
 
     if ($end) {
-      $end = $this->getDateItem($end);
+      $end = $this->getDateFromDateItem($end);
 
       if (!$end) {
         return FALSE;
@@ -483,7 +517,7 @@ class CustomTwig extends AbstractExtension {
     }
 
     if ($end) {
-      $end = $this->getDateItem($end);
+      $end = $this->getDateFromDateItem($end);
 
       if (!$end) {
         return FALSE;
@@ -503,7 +537,7 @@ class CustomTwig extends AbstractExtension {
    * Is UTC timezone.
    */
   public function isUtc($in) : bool {
-    $date_item = $this->getDateItem($in);
+    $date_item = $this->getDateFromDateItem($in);
 
     if (!$date_item) {
       return FALSE;
@@ -549,7 +583,7 @@ class CustomTwig extends AbstractExtension {
     }
 
     if ($end) {
-      $end = $this->getDateItem($end);
+      $end = $this->getDateFromDateItem($end);
 
       if (!$end) {
         return '';

@@ -133,6 +133,8 @@ trait UnDateTimeFormatterTrait {
 
   /**
    * Get an option list of interpreters.
+   *
+   * @codeCoverageIgnore
    */
   protected function getInterpreterOptions() {
     return [];

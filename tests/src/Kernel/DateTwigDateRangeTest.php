@@ -86,7 +86,7 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
    * @dataProvider providerTestDataFilters
    * @dataProvider providerTestDataFiltersPart2
    */
-  public function xtestTwigFiltersDateRange($template, $expected, $start, $end) {
+  public function testTwigFiltersDateRange($template, $expected, $start, $end) {
     $field_name = $this->fieldStorage->getName();
     // Create an entity.
     $entity = EntityTest::create([
@@ -437,6 +437,36 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
       'un_duration' => [
         'template' => '{{ un_duration(variable) }}',
         'expected' => '1 day, 2 hours',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+      'un_is_same_date' => [
+        'template' => '{{ un_is_same_date(variable) }}',
+        'expected' => '',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+      'un_is_same_day' => [
+        'template' => '{{ un_is_same_day(variable) }}',
+        'expected' => '',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+      'un_is_same_month' => [
+        'template' => '{{ un_is_same_month(variable) }}',
+        'expected' => '1',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+      'un_is_same_year' => [
+        'template' => '{{ un_is_same_year(variable) }}',
+        'expected' => '1',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+      'un_is_all_day' => [
+        'template' => '{{ un_is_all_day(variable) }}',
+        'expected' => '',
         'start' => '2023-12-06T10:11:00',
         'end' => '2023-12-07T12:11:00',
       ],

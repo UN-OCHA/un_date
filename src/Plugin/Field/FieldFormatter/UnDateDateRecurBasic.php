@@ -255,6 +255,8 @@ final class UnDateDateRecurBasic extends FormatterBase {
 
   /**
    * Get an option list of interpreters.
+   *
+   * @codeCoverageIgnore
    */
   protected function getInterpreterOptions() {
     return array_map(

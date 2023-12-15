@@ -15,6 +15,7 @@
 
 <pre>
 duration: {{ un_duration(start, end) }}
+daterange: {{ daterange|un_daterange_named("local_times") }}
 </pre>
 <div {{ attributes.addClass(classes) }}>
   <div class="un-date-block">

@@ -2,6 +2,7 @@
 
 namespace Drupal\un_date\TwigExtension;
 
+use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList;
@@ -10,6 +11,7 @@ use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeFieldItemList;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\un_date\Trait\UnDateTimeTrait;
+use Drupal\un_date\UnDateRange;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFilter;
 use Twig\TwigFunction;
@@ -135,14 +137,14 @@ class CustomTwig extends AbstractExtension {
       if ($this->allDay($date_item)) {
         return $this->formatDate($date_item->start_date, $month_format);
       }
-      return $this->formatDateTime($date_item->start_date, FALSE, $month_format) . $this->getSeparator() . $this->formatTime($date_item->end_date, $show_timezone);
+      return $this->formatDateTime($date_item->start_date, FALSE, $month_format) . $this->getSeparatorWithSpaces() . $this->formatTime($date_item->end_date, $show_timezone);
     }
 
     if ($this->allDay($date_item)) {
-      return $this->formatDate($date_item->start_date, $month_format) . $this->getSeparator() . $this->formatDate($date_item->end_date, $month_format);
+      return $this->formatDate($date_item->start_date, $month_format) . $this->getSeparatorWithSpaces() . $this->formatDate($date_item->end_date, $month_format);
     }
 
-    return $this->formatDateTime($date_item->start_date, FALSE, $month_format) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $show_timezone, $month_format);
+    return $this->formatDateTime($date_item->start_date, FALSE, $month_format) . $this->getSeparatorWithSpaces() . $this->formatDateTime($date_item->end_date, $show_timezone, $month_format);
   }
 
   /**
@@ -166,14 +168,14 @@ class CustomTwig extends AbstractExtension {
       if ($this->allDay($date_item)) {
         return 'All day';
       }
-      return $this->formatTime($date_item->start_date, FALSE) . $this->getSeparator() . $this->formatTime($date_item->end_date, $show_timezone);
+      return $this->formatTime($date_item->start_date, FALSE) . $this->getSeparatorWithSpaces() . $this->formatTime($date_item->end_date, $show_timezone);
     }
 
     if ($this->allDay($date_item)) {
-      return $this->formatDate($date_item->start_date, $month_format) . $this->getSeparator() . $this->formatDate($date_item->end_date, $month_format);
+      return $this->formatDate($date_item->start_date, $month_format) . $this->getSeparatorWithSpaces() . $this->formatDate($date_item->end_date, $month_format);
     }
 
-    return $this->formatDateTime($date_item->start_date, FALSE, $month_format) . $this->getSeparator() . $this->formatDateTime($date_item->end_date, $show_timezone, $month_format);
+    return $this->formatDateTime($date_item->start_date, FALSE, $month_format) . $this->getSeparatorWithSpaces() . $this->formatDateTime($date_item->end_date, $show_timezone, $month_format);
   }
 
   /**
@@ -183,6 +185,10 @@ class CustomTwig extends AbstractExtension {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
+      return '';
+    }
+
+    if (!$this->isDateRange($date_item)) {
       return '';
     }
 
@@ -198,7 +204,7 @@ class CustomTwig extends AbstractExtension {
   }
 
   /**
-   * Get date range item.
+   * Get date item.
    */
   protected function getDateItem($in) {
     if ($in instanceof DateRecurItem) {
@@ -207,6 +213,14 @@ class CustomTwig extends AbstractExtension {
 
     if ($in instanceof DateRecurFieldItemList) {
       return $in->first();
+    }
+
+    if ($in instanceof UnDateRange) {
+      return $in;
+    }
+
+    if ($in instanceof DateRange) {
+      return $in;
     }
 
     if ($in instanceof DateRangeItem) {
@@ -235,25 +249,24 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format time.
    */
-  protected function localTimes(DateRangeItem|DateRecurItem $daterange, $month_format = 'numeric') : string {
+  protected function localTimes($daterange, $month_format = 'numeric') : string {
     $show_timezone = TRUE;
 
-    // Only output time if dates are equal.
+    if ($this->sameDate($daterange)) {
+      return '';
+    }
+
     if ($this->sameDay($daterange)) {
-      if ($this->allDay($daterange)) {
-        return '';
-      }
       return $this->formatTime($daterange->start_date, FALSE) . ' — ' . $this->formatTime($daterange->end_date, $show_timezone);
     }
-    else {
-      return $this->formatDateTime($daterange->start_date, FALSE, $month_format) . ' — ' . $this->formatDateTime($daterange->end_date, $show_timezone, $month_format);
-    }
+
+    return $this->formatDateTime($daterange->start_date, FALSE, $month_format) . ' — ' . $this->formatDateTime($daterange->end_date, $show_timezone, $month_format);
   }
 
   /**
    * Get start and end time.
    */
-  public function getUnTimerange(DateRangeItem|DateRecurItem $daterange) : string {
+  public function getUnTimerange($daterange) : string {
     $show_timezone = TRUE;
 
     if ($this->allDay($daterange)) {
@@ -479,6 +492,10 @@ class CustomTwig extends AbstractExtension {
       return $this->allDayStartEnd($start, $end);
     }
 
+    if (!$this->isDateRange($start)) {
+      return FALSE;
+    }
+
     return $this->allDay($start);
   }
 
@@ -512,6 +529,13 @@ class CustomTwig extends AbstractExtension {
    */
   public function getSeparator() : string {
     return $this::SEPARATOR;
+  }
+
+  /**
+   * Get separator with spaces.
+   */
+  public function getSeparatorWithSpaces() : string {
+    return ' ' . $this::SEPARATOR . ' ';
   }
 
   /**

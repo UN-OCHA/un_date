@@ -5,7 +5,7 @@ namespace Drupal\un_date\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
-use Drupal\un_date\Trait\UnDateTimeTrait;
+use Drupal\un_date\Trait\UnDateTimeFormatterTrait;
 
 /**
  * Plugin implementation of the 'UN Default' formatter for 'daterange_timezone'.
@@ -20,7 +20,7 @@ use Drupal\un_date\Trait\UnDateTimeTrait;
  */
 class UnDateDateTimeRangeTimezone extends FormatterBase {
 
-  use UnDateTimeTrait;
+  use UnDateTimeFormatterTrait;
 
   /**
    * {@inheritdoc}

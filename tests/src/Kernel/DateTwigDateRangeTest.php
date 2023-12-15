@@ -152,8 +152,8 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
    *
    * @dataProvider providerTestDataLocalTimes
    */
-  public function testTwigFiltersDateRangeNamedLocal($expected, $start, $end) {
-    $template = '{{ variable|un_daterange_named("local_times") }}';
+  public function testTwigFiltersLocalTime($expected, $start, $end) {
+    $template = '{{ variable|un_timerange }}';
     $field_name = $this->fieldStorage->getName();
     // Create an entity.
     $entity = EntityTest::create([

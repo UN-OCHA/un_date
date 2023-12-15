@@ -7,6 +7,7 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone;
+use Drupal\un_date\UnDateRange;
 
 /**
  * Common formatting methods.
@@ -250,72 +251,83 @@ trait UnDateTimeTrait {
   }
 
   /**
-   * Is same date.
+   * Is object a date range.
    */
-  protected function sameDate(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
-    return $this->sameDateStartEnd($date_item->start_date, $date_item->end_date, $timezone);
+  protected function isDateRange($object) : bool {
+    if ($object instanceof DateRangeItem || $object instanceof DateRecurItem || $object instanceof DateRangeTimezone || $object instanceof UnDateRange) {
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
   /**
    * Is same date.
    */
-  protected function sameDateStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
+  protected function sameDate($date_item) : bool {
+    return $this->sameDateStartEnd($date_item->start_date, $date_item->end_date);
+  }
+
+  /**
+   * Is same date.
+   */
+  protected function sameDateStartEnd($start, $end) : bool {
     return $start->format('c') == $end->format('c');
   }
 
   /**
    * Is same month and year.
    */
-  protected function sameMonth(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
-    return $this->sameMonthStartEnd($date_item->start_date, $date_item->end_date, $timezone);
+  protected function sameMonth($date_item) : bool {
+    return $this->sameMonthStartEnd($date_item->start_date, $date_item->end_date);
   }
 
   /**
    * Is same month and year.
    */
-  protected function sameMonthStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
+  protected function sameMonthStartEnd($start, $end) : bool {
     return $start->format('Ym') == $end->format('Ym');
   }
 
   /**
    * Is same year.
    */
-  protected function sameYear(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
-    return $this->sameYearStartEnd($date_item->start_date, $date_item->end_date, $timezone);
+  protected function sameYear($date_item) : bool {
+    return $this->sameYearStartEnd($date_item->start_date, $date_item->end_date);
   }
 
   /**
    * Is same year.
    */
-  protected function sameYearStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
+  protected function sameYearStartEnd($start, $end) : bool {
     return $start->format('Y') == $end->format('Y');
   }
 
   /**
    * Is same day.
    */
-  protected function sameDay(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
-    return $this->sameDayStartEnd($date_item->start_date, $date_item->end_date, $timezone);
+  protected function sameDay($date_item) : bool {
+    return $this->sameDayStartEnd($date_item->start_date, $date_item->end_date);
   }
 
   /**
    * Is same day.
    */
-  protected function sameDayStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
+  protected function sameDayStartEnd($start, $end) : bool {
     return $this->formatDate($start) == $this->formatDate($end);
   }
 
   /**
    * Is all day.
    */
-  protected function allDay(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
-    return $this->allDayStartEnd($date_item->start_date, $date_item->end_date, $timezone);
+  protected function allDay($date_item) : bool {
+    return $this->allDayStartEnd($date_item->start_date, $date_item->end_date);
   }
 
   /**
    * Is all day.
    */
-  protected function allDayStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
+  protected function allDayStartEnd($start, $end) : bool {
     if ($start->format('Hi') === '0000' && $end->format('Hi') === '0000') {
       return TRUE;
     }
@@ -361,76 +373,6 @@ trait UnDateTimeTrait {
     }
 
     return implode(', ', $output);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @codeCoverageIgnore
-   */
-  public static function defaultSettings() {
-    return [
-      'display_timezone' => TRUE,
-      'month_format' => 'numeric',
-      'template' => 'default',
-    ] + parent::defaultSettings();
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @codeCoverageIgnore
-   */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    $form = parent::settingsForm($form, $form_state);
-
-    $form['display_timezone'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Display Timezone'),
-      '#description' => $this->t('Should we display the timezone after the formatted date?'),
-      '#default_value' => $this->getSetting('display_timezone'),
-    ];
-
-    $form['month_format'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Month format'),
-      '#options' => $this->monthFormats,
-      '#description' => $this->t('In which format will the month be displayed'),
-      '#default_value' => $this->getSetting('month_format'),
-    ];
-
-    $form['template'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Template'),
-      '#options' => $this->templates,
-      '#description' => $this->t('Template to use'),
-      '#default_value' => $this->getSetting('template'),
-    ];
-
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @codeCoverageIgnore
-   */
-  public function settingsSummary() {
-    $summary = parent::settingsSummary();
-
-    $summary[] = $this->t('@action the timezone', [
-      '@action' => $this->getSetting('display_timezone') ? 'Showing' : 'Hiding',
-    ]);
-
-    $summary[] = $this->t('Month display: @action', [
-      '@action' => $this->monthFormats[$this->getSetting('month_format') ?? 'numeric'],
-    ]);
-
-    $summary[] = $this->t('Template: @action', [
-      '@action' => $this->templates[$this->getSetting('template') ?? 'default'],
-    ]);
-
-    return $summary;
   }
 
   /**

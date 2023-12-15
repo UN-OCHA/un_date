@@ -341,7 +341,6 @@ trait UnDateTimeTrait {
     $output = [];
     $interval = $start->diff($end, TRUE);
 
-
     if ($interval->y) {
       $output[] = un_date_format_plural($interval->format("%y"), '1 year', '@count years');
     }

@@ -18,7 +18,7 @@ use Drupal\un_date\Trait\UnDateTimeFormatterTrait;
  *   }
  * )
  */
-class UnDateDateTimeRangeTimezone extends FormatterBase {
+final class UnDateDateTimeRangeTimezone extends FormatterBase {
 
   use UnDateTimeFormatterTrait;
 

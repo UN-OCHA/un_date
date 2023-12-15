@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace Drupal\un_date\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -31,10 +30,17 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class UnDateDateRecurBasic extends FormatterBase {
+final class UnDateDateRecurBasic extends FormatterBase {
 
   use DependencyTrait;
   use UnDateTimeFormatterTrait;
+
+  /**
+   * Format storage
+   *
+   * @var \Drupal\Core\Entity\EntityStorageInterface
+   */
+  protected $dateRecurInterpreterStorage;
 
   /**
    * Constructs a new DateRecurBasicFormatter.
@@ -53,15 +59,10 @@ class UnDateDateRecurBasic extends FormatterBase {
    *   The view mode.
    * @param array $third_party_settings
    *   Third party settings.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
-   *   The date formatter service.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $dateFormatStorage
-   *   The date format entity storage.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $dateRecurInterpreterStorage
-   *   The date recur interpreter entity storage.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, DateFormatterInterface $dateFormatter, EntityStorageInterface $dateFormatStorage, protected EntityStorageInterface $dateRecurInterpreterStorage) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $dateFormatter, $dateFormatStorage);
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityStorageInterface $dateRecurInterpreterStorage) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
+    $this->dateRecurInterpreterStorage = $dateRecurInterpreterStorage;
   }
 
   /**
@@ -76,8 +77,6 @@ class UnDateDateRecurBasic extends FormatterBase {
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
-      $container->get('date.formatter'),
-      $container->get('entity_type.manager')->getStorage('date_format'),
       $container->get('entity_type.manager')->getStorage('date_recur_interpreter')
     );
   }
@@ -207,7 +206,7 @@ class UnDateDateRecurBasic extends FormatterBase {
     $same_day = FALSE;
 
     $timezone = $start_date->getTimezone();
-    $all_day = $this->allDayStartEnd($start_date, $end_date, $timezone);
+    $all_day = $this->allDayStartEnd($start_date, $end_date);
 
     if ($start_date->getTimestamp() == $end_date->getTimestamp()) {
       $same_date = TRUE;
@@ -269,4 +268,13 @@ class UnDateDateRecurBasic extends FormatterBase {
       ->getOccurrences($start, NULL, $maxOccurrences);
   }
 
+  /**
+   * Get an option list of interpreters.
+   */
+  protected function getInterpreterOptions() {
+    return array_map(
+      fn (DateRecurInterpreterInterface $interpreter): string => $interpreter->label() ?? (string) $this->t('- Missing label -'),
+      $this->dateRecurInterpreterStorage->loadMultiple()
+    );
+  }
 }

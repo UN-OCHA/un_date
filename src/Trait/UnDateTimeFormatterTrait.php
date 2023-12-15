@@ -69,16 +69,12 @@ trait UnDateTimeFormatterTrait {
     ];
 
     if (self::class == UnDateDateRecurBasic::class) {
-      $interpreterOptions = array_map(
-        fn (DateRecurInterpreterInterface $interpreter): string => $interpreter->label() ?? (string) $this->t('- Missing label -'),
-        $this->dateRecurInterpreterStorage->loadMultiple()
-      );
       $form['interpreter'] = [
         '#type' => 'select',
         '#title' => $this->t('Recurring date interpreter'),
         '#description' => $this->t('Choose a plugin for converting rules into a human readable description.'),
         '#default_value' => $this->getSetting('interpreter'),
-        '#options' => $interpreterOptions,
+        '#options' => $this->getInterpreterOptions(),
         '#required' => FALSE,
         '#empty_option' => $this->t('- Do not show interpreted rule -'),
       ];
@@ -117,12 +113,9 @@ trait UnDateTimeFormatterTrait {
     ]);
 
     if ($this->getSetting('interpreter')) {
-      $interpreter = $this->dateRecurInterpreterStorage->load($this->getSetting('interpreter'));
-      if ($interpreter) {
-        $summary[] = $this->t('Human readable interpreter: @action', [
-          '@action' => $interpreter->label() ?? '',
-        ]);
-      }
+      $summary[] = $this->t('Human readable interpreter: @action', [
+        '@action' => $this->getSetting('interpreter') ?? $this->t('Not specified'),
+      ]);
     }
 
     if (self::class == UnDateDateRecurBasic::class) {
@@ -137,6 +130,13 @@ trait UnDateTimeFormatterTrait {
     }
 
     return $summary;
+  }
+
+  /**
+   * Get an option list of interpreters.
+   */
+  protected function getInterpreterOptions() {
+    return [];
   }
 
 }

@@ -19,7 +19,7 @@ use Drupal\un_date\Trait\UnDateTimeFormatterTrait;
  *   }
  * )
  */
-class UnDateDateTime extends FormatterBase {
+final class UnDateDateTime extends FormatterBase {
 
   use UnDateTimeFormatterTrait;
 

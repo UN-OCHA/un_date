@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *
  * @ingroup RLanvinPhpRrule
  */
-class UnRRulelInterpreter extends DateRecurInterpreterPluginBase implements ContainerFactoryPluginInterface, PluginFormInterface {
+final class UnRRulelInterpreter extends DateRecurInterpreterPluginBase implements ContainerFactoryPluginInterface, PluginFormInterface {
 
   use DependencyTrait;
   use UnDateTimeTrait;

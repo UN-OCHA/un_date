@@ -15,6 +15,8 @@ class UnDateRange {
    * The start date.
    *
    * @var \DateTimeInterface
+   * @phpcs:disable Drupal.NamingConventions.ValidVariableName.LowerCamelName
+   * @phpcs:disable Drupal.Commenting.VariableComment.Missing
    */
   public readonly \DateTimeInterface $start_date;
 
@@ -22,16 +24,13 @@ class UnDateRange {
    * The end date.
    *
    * @var \DateTimeInterface
+   * @phpcs:disable Drupal.NamingConventions.ValidVariableName.LowerCamelName
+   * @phpcs:disable Drupal.Commenting.VariableComment.Missing
    */
   public readonly \DateTimeInterface $end_date;
 
   /**
    * Creates a new DateRange.
-   *
-   * @param \DateTimeInterface $start
-   *   The start date.
-   * @param \DateTimeInterface $end
-   *   The end date.
    */
   public function __construct(\DateTimeInterface|DrupalDateTime $start, \DateTimeInterface|DrupalDateTime $end) {
     $this->start_date = clone $this->getDateTime($start);
@@ -52,9 +51,6 @@ class UnDateRange {
 
   /**
    * Get the start date.
-   *
-   * @return \DateTimeInterface
-   *   The start date.
    */
   public function getStart(): \DateTimeInterface {
     return clone $this->start_date;
@@ -62,15 +58,6 @@ class UnDateRange {
 
   /**
    * Set the start date.
-   *
-   * @param \DateTimeInterface $start
-   *   The start date.
-   *
-   * @return $this
-   *   Return object for chaining.
-   *
-   * @throws \InvalidArgumentException
-   *   When there is a problem with the start and/or end date.
    */
   public function setStart(\DateTimeInterface|DrupalDateTime $start) {
     // Clone to ensure references are lost.
@@ -81,9 +68,6 @@ class UnDateRange {
 
   /**
    * Get the end date.
-   *
-   * @return \DateTimeInterface
-   *   The end date.
    */
   public function getEnd(): \DateTimeInterface {
     return clone $this->end_date;
@@ -91,15 +75,6 @@ class UnDateRange {
 
   /**
    * Set the end date.
-   *
-   * @param \DateTimeInterface $end
-   *   The end date.
-   *
-   * @return $this
-   *   Return object for chaining.
-   *
-   * @throws \InvalidArgumentException
-   *   When there is a problem with the start and/or end date.
    */
   public function setEnd(\DateTimeInterface|DrupalDateTime $end) {
     // Clone to ensure references are lost.

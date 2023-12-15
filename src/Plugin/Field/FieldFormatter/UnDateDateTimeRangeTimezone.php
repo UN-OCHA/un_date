@@ -71,7 +71,7 @@ class UnDateDateTimeRangeTimezone extends FormatterBase {
         '#display_timezone' => $tz,
         '#same_date' => $same_date,
         '#same_day' => $same_day,
-        '#all_day' => $this->allDay($item, $timezone->getName()),
+        '#all_day' => $this->allDay($item),
         '#cache' => [
           'contexts' => [
             'timezone',

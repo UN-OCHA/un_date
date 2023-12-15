@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\un_date\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
@@ -13,7 +12,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Entity\DateRecurInterpreterInterface;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;

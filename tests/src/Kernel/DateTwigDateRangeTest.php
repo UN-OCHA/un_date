@@ -117,6 +117,24 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
   public function testTwigFiltersDateRangeClass($template, $expected, $start, $end) {
     $variable = new UnDateRange($start, $end);
     $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+
+    $variable = new \DateTime($start);
+    $var2 = new \DateTime($end);
+    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable, $var2));
+  }
+
+  /**
+   * Test twig filters on date ranges.
+   *
+   * @dataProvider providerTestDataFiltersPart3
+   */
+  public function testTwigFiltersWithDoubleInput($template, $expected, $start, $end) {
+    $variable = new UnDateRange($start, $end);
+    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+
+    $variable = new \DateTime($start);
+    $var2 = new \DateTime($end);
+    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable, $var2));
   }
 
   /**
@@ -319,7 +337,7 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'end' => '2023-12-07T23:59:59',
       ],
       'datetime_all_day_1' => [
-        'template' => '{{ un_is_all_day(variable) }}',
+        'template' => '{{ un_is_all_day(variable, var2) }}',
         'expected' => '1',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
@@ -435,37 +453,81 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'end' => '2023-12-07T23:59:59',
       ],
       'un_duration' => [
-        'template' => '{{ un_duration(variable) }}',
+        'template' => '{{ un_duration(variable, var2) }}',
         'expected' => '1 day, 2 hours',
         'start' => '2023-12-06T10:11:00',
         'end' => '2023-12-07T12:11:00',
       ],
       'un_is_same_date' => [
-        'template' => '{{ un_is_same_date(variable) }}',
+        'template' => '{{ un_is_same_date(variable, var2) }}',
         'expected' => '',
         'start' => '2023-12-06T10:11:00',
         'end' => '2023-12-07T12:11:00',
       ],
       'un_is_same_day' => [
-        'template' => '{{ un_is_same_day(variable) }}',
+        'template' => '{{ un_is_same_day(variable, var2) }}',
         'expected' => '',
         'start' => '2023-12-06T10:11:00',
         'end' => '2023-12-07T12:11:00',
       ],
       'un_is_same_month' => [
-        'template' => '{{ un_is_same_month(variable) }}',
+        'template' => '{{ un_is_same_month(variable, var2) }}',
         'expected' => '1',
         'start' => '2023-12-06T10:11:00',
         'end' => '2023-12-07T12:11:00',
       ],
       'un_is_same_year' => [
-        'template' => '{{ un_is_same_year(variable) }}',
+        'template' => '{{ un_is_same_year(variable, var2) }}',
         'expected' => '1',
         'start' => '2023-12-06T10:11:00',
         'end' => '2023-12-07T12:11:00',
       ],
       'un_is_all_day' => [
-        'template' => '{{ un_is_all_day(variable) }}',
+        'template' => '{{ un_is_all_day(variable, var2) }}',
+        'expected' => '',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+    ];
+  }
+
+  /**
+   * Provide test examples.
+   */
+  public function providerTestDataFiltersPart3() {
+    return [
+      'un_duration' => [
+        'template' => '{{ un_duration(variable, var2) }}',
+        'expected' => '1 day, 2 hours',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+      'un_is_same_date' => [
+        'template' => '{{ un_is_same_date(variable, var2) }}',
+        'expected' => '',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+      'un_is_same_day' => [
+        'template' => '{{ un_is_same_day(variable, var2) }}',
+        'expected' => '',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+      'un_is_same_month' => [
+        'template' => '{{ un_is_same_month(variable, var2) }}',
+        'expected' => '1',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+      'un_is_same_year' => [
+        'template' => '{{ un_is_same_year(variable, var2) }}',
+        'expected' => '1',
+        'start' => '2023-12-06T10:11:00',
+        'end' => '2023-12-07T12:11:00',
+      ],
+      'un_is_all_day' => [
+        'template' => '{{ un_is_all_day(variable, var2) }}',
         'expected' => '',
         'start' => '2023-12-06T10:11:00',
         'end' => '2023-12-07T12:11:00',
@@ -479,15 +541,18 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
    * @return \Drupal\Component\Render\MarkupInterface
    *   The rendered HTML.
    */
-  protected function renderObjectWithTwig($template, $variable) {
+  protected function renderObjectWithTwig($template, $variable, $var2 = NULL) {
     /** @var \Drupal\Core\Render\RendererInterface $renderer */
     $renderer = \Drupal::service('renderer');
     $context = new RenderContext();
-    return $renderer->executeInRenderContext($context, function () use ($renderer, $template, $variable) {
+    return $renderer->executeInRenderContext($context, function () use ($renderer, $template, $variable, $var2) {
       $elements = [
         '#type' => 'inline_template',
         '#template' => $template,
-        '#context' => ['variable' => $variable],
+        '#context' => [
+          'variable' => $variable,
+          'var2' => $var2,
+        ],
       ];
       return $renderer->render($elements);
     });

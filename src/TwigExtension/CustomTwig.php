@@ -419,6 +419,11 @@ class CustomTwig extends AbstractExtension {
       return $this->sameDateStartEnd($start, $end);
     }
 
+    // Make sure start is a range.
+    if (!$this->isDateRange($start)) {
+      return FALSE;
+    }
+
     return $this->sameDate($start);
   }
 
@@ -440,6 +445,11 @@ class CustomTwig extends AbstractExtension {
       }
 
       return $this->sameDayStartEnd($start, $end);
+    }
+
+    // Make sure start is a range.
+    if (!$this->isDateRange($start)) {
+      return FALSE;
     }
 
     return $this->sameDay($start);
@@ -465,6 +475,11 @@ class CustomTwig extends AbstractExtension {
       return $this->SameMonthStartEnd($start, $end);
     }
 
+    // Make sure start is a range.
+    if (!$this->isDateRange($start)) {
+      return FALSE;
+    }
+
     return $this->SameMonth($start);
   }
 
@@ -486,6 +501,11 @@ class CustomTwig extends AbstractExtension {
       }
 
       return $this->sameYearStartEnd($start, $end);
+    }
+
+    // Make sure start is a range.
+    if (!$this->isDateRange($start)) {
+      return FALSE;
     }
 
     return $this->sameYear($start);
@@ -511,6 +531,7 @@ class CustomTwig extends AbstractExtension {
       return $this->allDayStartEnd($start, $end);
     }
 
+    // Make sure start is a range.
     if (!$this->isDateRange($start)) {
       return FALSE;
     }
@@ -575,6 +596,11 @@ class CustomTwig extends AbstractExtension {
       }
 
       return $this->durationStartEnd($start, $end);
+    }
+
+    // Make sure start is a range.
+    if (!$this->isDateRange($start)) {
+      return FALSE;
     }
 
     return $this->duration($start);

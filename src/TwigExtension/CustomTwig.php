@@ -73,7 +73,6 @@ class CustomTwig extends AbstractExtension {
       return '';
     }
 
-
     return $this->formatDate($date_item, $month_format);
   }
 

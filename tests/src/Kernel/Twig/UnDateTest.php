@@ -4,7 +4,6 @@ namespace Drupal\Tests\un_date\Kernel\Twig;
 
 use Drupal\date_recur\DateRange;
 use Drupal\un_date\UnDateRange;
-use stdClass;
 
 /**
  * Tests Twig with MarkupInterface objects.
@@ -12,7 +11,6 @@ use stdClass;
  * @group Theme
  */
 class UnDateTest extends TwigBase {
-
 
   /**
    * {@inheritdoc}
@@ -429,7 +427,7 @@ class UnDateTest extends TwigBase {
       ],
       __FUNCTION__ . '::stdClass' => [
         'expected' => '',
-        'date' => new stdClass(),
+        'date' => new \stdClass(),
         'format' => '',
       ],
     ];

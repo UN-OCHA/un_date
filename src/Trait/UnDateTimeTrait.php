@@ -3,6 +3,7 @@
 namespace Drupal\un_date\Trait;
 
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone;
@@ -180,11 +181,13 @@ trait UnDateTimeTrait {
   /**
    * Format date.
    */
-  protected function formatDate(\DateTime|DrupalDateTime|DateRangeItem $date, $month_format = 'numeric') : string {
+  protected function formatDate(\DateTime|\DateTimeImmutable|DrupalDateTime $date, $month_format = 'numeric') : string {
     // Twig doens't have a setting.
     if (is_callable([$this, 'getSetting'])) {
       $month_format = $this->getSetting('month_format') ?? 'numeric';
     }
+
+    $month_format = $this->validateMonthFormat($month_format);
 
     $date_format = 'j.m.Y';
     switch ($month_format) {
@@ -253,11 +256,46 @@ trait UnDateTimeTrait {
    * Is object a date range.
    */
   protected function isDateRange($object) : bool {
-    if ($object instanceof DateRangeItem || $object instanceof DateRecurItem || $object instanceof DateRangeTimezone || $object instanceof UnDateRange) {
+    if ($object instanceof DateRangeItem
+      || $object instanceof DateRange
+      || $object instanceof DateRecurItem
+      || $object instanceof DateRangeTimezone
+      || $object instanceof UnDateRange) {
       return TRUE;
     }
 
     return FALSE;
+  }
+
+  /**
+   * Get start date.
+   */
+  protected function getStartDate($object) : \DateTime {
+    if (!$this->isDateRange($object)) {
+      return NULL;
+    }
+
+    if ($object instanceof DateRangeItem) {
+      return $object->get('start_date');
+    }
+
+    if ($object instanceof DateRange) {
+      return $object->getStart();
+    }
+
+    if ($object instanceof DateRecurItem) {
+      return $object->start_date;
+    }
+
+    if ($object instanceof DateRangeTimezone) {
+      return $object->get('start_date');
+    }
+
+    if ($object instanceof UnDateRange) {
+      return $object->start_date;
+    }
+
+    return NULL;
   }
 
   /**
@@ -401,6 +439,27 @@ trait UnDateTimeTrait {
         'year' => $end_date->format('Y'),
       ],
     ];
+  }
+
+  /**
+   * Validate and fallback for month format.
+   */
+  protected function validateMonthFormat($month_format) {
+    if (!$month_format || !is_string($month_format)) {
+      $month_format = 'numeric';
+    }
+
+    $month_format = strtolower($month_format);
+
+    if ($month_format == 'abbr') {
+      $month_format = 'abbreviation';
+    }
+
+    if (!array_key_exists($month_format, $this->monthFormats)) {
+      $month_format = 'numeric';
+    }
+
+    return $month_format;
   }
 
 }

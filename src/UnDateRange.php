@@ -54,40 +54,6 @@ class UnDateRange {
   }
 
   /**
-   * Get the start date.
-   */
-  public function getStart(): \DateTimeInterface {
-    return clone $this->start_date;
-  }
-
-  /**
-   * Set the start date.
-   */
-  public function setStart(\DateTimeInterface|DrupalDateTime $start) {
-    // Clone to ensure references are lost.
-    $this->start_date = clone $this->getDateTime($start);
-    $this->validateDates();
-    return $this;
-  }
-
-  /**
-   * Get the end date.
-   */
-  public function getEnd(): \DateTimeInterface {
-    return clone $this->end_date;
-  }
-
-  /**
-   * Set the end date.
-   */
-  public function setEnd(\DateTimeInterface|DrupalDateTime $end) {
-    // Clone to ensure references are lost.
-    $this->end_date = clone $this->getDateTime($end);
-    $this->validateDates();
-    return $this;
-  }
-
-  /**
    * Validates the start and end dates.
    *
    * @throws \InvalidArgumentException

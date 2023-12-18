@@ -72,6 +72,8 @@ class CustomTwig extends AbstractExtension {
     if (!$date_item) {
       return '';
     }
+
+
     return $this->formatDate($date_item, $month_format);
   }
 
@@ -191,12 +193,12 @@ class CustomTwig extends AbstractExtension {
    * Get date item.
    */
   protected function getDateItem($in) {
-    if ($in instanceof DateRecurItem) {
+    if ($in instanceof \DateTime) {
       return $in;
     }
 
-    if ($in instanceof DateRecurFieldItemList) {
-      return $in->first();
+    if ($in instanceof \DateTimeImmutable) {
+      return $in;
     }
 
     if ($in instanceof UnDateRange) {
@@ -205,6 +207,14 @@ class CustomTwig extends AbstractExtension {
 
     if ($in instanceof DateRange) {
       return $in;
+    }
+
+    if ($in instanceof DateRecurItem) {
+      return $in;
+    }
+
+    if ($in instanceof DateRecurFieldItemList) {
+      return $in->first();
     }
 
     if ($in instanceof DateRangeItem) {
@@ -223,10 +233,6 @@ class CustomTwig extends AbstractExtension {
       return $in->first();
     }
 
-    if ($in instanceof \DateTime) {
-      return $in;
-    }
-
     return NULL;
   }
 
@@ -241,8 +247,8 @@ class CustomTwig extends AbstractExtension {
     }
 
     // Restrict to one date.
-    if (isset($date_item->start_date)) {
-      $date_item = $date_item->start_date;
+    if ($this->isDateRange($date_item)) {
+      $date_item = $this->getStartDate($date_item);
     }
 
     return $date_item;
@@ -575,7 +581,7 @@ class CustomTwig extends AbstractExtension {
    * Get separator with spaces.
    */
   public function getSeparatorWithSpaces() : string {
-    return ' ' . $this::SEPARATOR . ' ';
+    return ' ' . $this->getSeparator() . ' ';
   }
 
   /**

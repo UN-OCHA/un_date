@@ -40,7 +40,7 @@ trait UnDateTimeTrait {
   /**
    * Format time.
    */
-  protected function formatTime(\DateTime|DrupalDateTime $date, $show_timezone = FALSE) : string {
+  protected function formatTime(\DateTime|\DateTimeImmutable|DrupalDateTime $date, $show_timezone = FALSE) : string {
     // Midnight.
     if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {
       return t('midnight');
@@ -223,14 +223,14 @@ trait UnDateTimeTrait {
   /**
    * Format datetime.
    */
-  protected function formatDateTime(\DateTime|DrupalDateTime|DateRangeItem $date, $show_timezone = FALSE, $month_format = 'numeric') : string {
+  protected function formatDateTime(\DateTime|\DateTimeImmutable|DrupalDateTime|DateRangeItem $date, $month_format = 'numeric', $show_timezone = FALSE) : string {
     return $this->formatDate($date, $month_format) . ' ' . $this->formatTime($date, $show_timezone);
   }
 
   /**
    * Format timezone.
    */
-  protected function formatTimezone(\DateTime|DrupalDateTime|DateRangeItem $date, bool $show_timezone = FALSE) : string {
+  protected function formatTimezone(\DateTime|\DateTimeImmutable|DrupalDateTime|DateRangeItem $date, bool $show_timezone = FALSE) : string {
     if ($show_timezone) {
       return ' ' . $date->getTimezone()->getName();
     }
@@ -241,7 +241,7 @@ trait UnDateTimeTrait {
   /**
    * Get timezone offset.
    */
-  protected function getTimezoneOffset(\DateTime|DrupalDateTime|DateRangeItem $date) : string {
+  protected function getTimezoneOffset(\DateTime|\DateTimeImmutable|DrupalDateTime|DateRangeItem $date) : string {
     return $date->getTimezone()->getOffset($date->getPhpDateTime());
   }
 

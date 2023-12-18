@@ -42,6 +42,10 @@ trait UnDateTimeTrait {
    * Format time.
    */
   protected function formatTime(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed $date, $show_timezone = FALSE) : string {
+    if ($date instanceof DateTimeComputed) {
+      $date = $date->getValue();
+    }
+
     // Midnight.
     if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {
       return t('midnight');
@@ -276,8 +280,12 @@ trait UnDateTimeTrait {
       return NULL;
     }
 
+    if ($object instanceof DateTimeComputed) {
+      return $object->getValue();
+    }
+
     if ($object instanceof DateRangeItem) {
-      return $object->get('start_date');
+      return $object->get('start_date')->getValue();
     }
 
     if ($object instanceof DateRange) {

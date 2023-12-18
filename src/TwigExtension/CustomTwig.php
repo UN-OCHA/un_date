@@ -5,6 +5,7 @@ namespace Drupal\un_date\TwigExtension;
 use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
+use Drupal\datetime\DateTimeComputed;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeFieldItemList;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
@@ -72,7 +73,6 @@ class CustomTwig extends AbstractExtension {
     if (!$date_item) {
       return '';
     }
-
     return $this->formatDate($date_item, $month_format);
   }
 
@@ -106,10 +106,14 @@ class CustomTwig extends AbstractExtension {
    * Format daterange.
    */
   public function getUnDaterange($in, $month_format = 'numeric', $show_timezone = FALSE) : string {
-    $date_item = $this->getDateRangeFromItem($in);
+    $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return '';
+      return NULL;
+    }
+
+    if (!$this->isDateRange($date_item)) {
+      return $this->formatDateTime($date_item, $month_format, $show_timezone);
     }
 
     // Same.
@@ -136,13 +140,16 @@ class CustomTwig extends AbstractExtension {
    * Format daterange.
    */
   public function getUnDaterangeTimes($in, $show_timezone = FALSE, $month_format = 'numeric') : string {
-    $date_item = $this->getDateRangeFromItem($in);
+    $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
       return '';
     }
 
-    /** @var Datetime */
+    if (!$this->isDateRange($date_item)) {
+      return $this->formatTime($date_item, $show_timezone);
+    }
+
     // Same.
     if ($date_item->start_date->format('c') == $date_item->end_date->format('c')) {
       return $this->formatTime($date_item->start_date, $show_timezone);
@@ -194,6 +201,10 @@ class CustomTwig extends AbstractExtension {
   protected function getDateItem($in) {
     if ($in instanceof \DateTime) {
       return $in;
+    }
+
+    if ($in instanceof DateTimeComputed) {
+      return $in->getValue();
     }
 
     if ($in instanceof \DateTimeImmutable) {

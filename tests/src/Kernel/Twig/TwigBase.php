@@ -16,6 +16,8 @@ class TwigBase extends KernelTestBase {
   /**
    * Inline dataproviders.
    *
+   * @var bool
+   *
    * @see https://www.drupal.org/project/drupal/issues/1411074
    */
   protected $inlineDataProvider = TRUE;

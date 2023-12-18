@@ -213,7 +213,7 @@ trait UnDateTimeTrait {
     }
 
     // Always use DrupalDateTime for translations.
-    if ($date instanceof \DateTime) {
+    if (!$date instanceof DrupalDateTime) {
       $date = (new DrupalDateTime())->createFromDateTime($date);
     }
 

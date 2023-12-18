@@ -16,95 +16,95 @@ msgstr "mediodía"
 
 msgctxt "Long month name"
 msgid "January"
-msgstr "Enero"
+msgstr "enero"
 
 msgctxt "Long month name"
 msgid "February"
-msgstr "Febrero"
+msgstr "febrero"
 
 msgctxt "Long month name"
 msgid "March"
-msgstr "Marzo"
+msgstr "marzo"
 
 msgctxt "Long month name"
 msgid "April"
-msgstr "Abril"
+msgstr "abril"
 
 msgctxt "Long month name"
 msgid "May"
-msgstr "Mayo"
+msgstr "mayo"
 
 msgctxt "Long month name"
 msgid "June"
-msgstr "Junio"
+msgstr "junio"
 
 msgid "July"
-msgstr "Julio"
+msgstr "julio"
 
 msgctxt "Long month name"
 msgid "August"
-msgstr "Agosto"
+msgstr "agosto"
 
 msgctxt "Long month name"
 msgid "September"
-msgstr "Septiembre"
+msgstr "septiembre"
 
 msgctxt "Long month name"
 msgid "October"
-msgstr "Octubre"
+msgstr "octubre"
 
 msgctxt "Long month name"
 msgid "November"
-msgstr "Noviembre"
+msgstr "noviembre"
 
 msgctxt "Long month name"
 msgid "December"
-msgstr "Diciembre"
+msgstr "diciembre"
 
 msgctxt "Abbreviated month name"
 msgid "Jan"
-msgstr "Ene"
+msgstr "ene"
 
 msgctxt "Abbreviated month name"
 msgid "Feb"
-msgstr "Feb"
+msgstr "feb"
 
 msgctxt "Abbreviated month name"
 msgid "Mar"
-msgstr "Mar"
+msgstr "mar"
 
 msgctxt "Abbreviated month name"
 msgid "Apr"
-msgstr "Abr"
+msgstr "abr"
 
 msgctxt "Abbreviated month name"
 msgid "May"
-msgstr "May"
+msgstr "may"
 
 msgctxt "Abbreviated month name"
 msgid "Jun"
-msgstr "Jun"
+msgstr "jun"
 
 msgctxt "Abbreviated month name"
 msgid "Jul"
-msgstr "Jul"
+msgstr "jul"
 
 msgctxt "Abbreviated month name"
 msgid "Aug"
-msgstr "Ago"
+msgstr "ago"
 
 msgctxt "Abbreviated month name"
 msgid "Sep"
-msgstr "Sep"
+msgstr "sep"
 
 msgctxt "Abbreviated month name"
 msgid "Oct"
-msgstr "Oct"
+msgstr "oct"
 
 msgctxt "Abbreviated month name"
 msgid "Nov"
-msgstr "Nov"
+msgstr "nov"
 
 msgctxt "Abbreviated month name"
 msgid "Dec"
-msgstr "Dic"
+msgstr "dic"

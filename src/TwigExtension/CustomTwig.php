@@ -205,7 +205,7 @@ class CustomTwig extends AbstractExtension {
     }
 
     if ($in instanceof DateRange) {
-      return $in;
+      return new UnDateRange($in->getStart(), $in->getEnd());
     }
 
     if ($in instanceof DateRecurItem) {

@@ -14,6 +14,13 @@ use Drupal\language\Entity\ConfigurableLanguage;
 class TwigBase extends KernelTestBase {
 
   /**
+   * Inline dataproviders.
+   *
+   * @see https://www.drupal.org/project/drupal/issues/1411074
+   */
+  protected $inlineDataProvider = TRUE;
+
+  /**
    * Modules to enable.
    *
    * @var array

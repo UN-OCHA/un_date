@@ -28,111 +28,226 @@ class UnDateTest extends TwigBase {
   /**
    * Test filter in English.
    *
-   * @dataProvider providerValidTestDataNoFormat
-   * @dataProvider providerValidTestDataNumeric
-   * @dataProvider providerValidTestDataFull
-   * @dataProvider providerValidTestDatAbbreviation
-   * @dataProvider providerValidTestDateAbbr
+   * @x-dataProvider providerValidTestDataNoFormat
+   * @x-dataProvider providerValidTestDataNumeric
+   * @x-dataProvider providerValidTestDataFull
+   * @x-dataProvider providerValidTestDataAbbreviation
+   * @x-dataProvider providerValidTestDataAbbr
    */
-  public function testValidEnglish($expected, $variable, $format) {
+  public function testValidEnglish($expected = NULL, $variable = NULL, $format = NULL) {
     $lang_code = 'en';
 
     $this->importTranslations();
     $this->setLanguage($lang_code);
 
-    $template = '{{ variable|un_date("' . $format . '") }}';
-    $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerValidTestDataNoFormat(),
+        $this->providerValidTestDataNumeric(),
+        $this->providerValidTestDataFull(),
+        $this->providerValidTestDataAbbreviation(),
+        $this->providerValidTestDataAbbr(),
+      );
+
+      foreach ($data as $name => $row) {
+        $expected = $row['expected'];
+        $variable = $row['date'];
+        $format = $row['format'];
+
+        $template = '{{ variable|un_date("' . $format . '") }}';
+        $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable), $name);
+      }
+    }
+    else {
+      $template = '{{ variable|un_date("' . $format . '") }}';
+      $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    }
   }
 
   /**
    * Test filter in French.
    *
-   * @dataProvider providerValidTestDataNoFormat
-   * @dataProvider providerValidTestDataNumeric
-   * @dataProvider providerValidTestDataFull
-   * @dataProvider providerValidTestDatAbbreviation
-   * @dataProvider providerValidTestDateAbbr
+   * @x-dataProvider providerValidTestDataNoFormat
+   * @x-dataProvider providerValidTestDataNumeric
+   * @x-dataProvider providerValidTestDataFull
+   * @x-dataProvider providerValidTestDataAbbreviation
+   * @x-dataProvider providerValidTestDataAbbr
    */
-  public function testValidFrench($expected, $variable, $format) {
+  public function testValidFrench($expected = NULL, $variable = NULL, $format = NULL) {
     $lang_code = 'fr';
 
     $this->importTranslations();
     $this->setLanguage($lang_code);
 
-    $template = '{{ variable|un_date("' . $format . '") }}';
-    $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerValidTestDataNoFormat(),
+        $this->providerValidTestDataNumeric(),
+        $this->providerValidTestDataFull(),
+        $this->providerValidTestDataAbbreviation(),
+        $this->providerValidTestDataAbbr(),
+      );
+
+      foreach ($data as $name => $row) {
+        $expected = $row['expected'];
+        $variable = $row['date'];
+        $format = $row['format'];
+
+        $template = '{{ variable|un_date("' . $format . '") }}';
+        $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable), $name);
+      }
+    }
+    else {
+      $template = '{{ variable|un_date("' . $format . '") }}';
+      $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    }
   }
 
   /**
    * Test filter in Spanish.
    *
-   * @dataProvider providerValidTestDataNoFormat
-   * @dataProvider providerValidTestDataNumeric
-   * @dataProvider providerValidTestDataFull
-   * @dataProvider providerValidTestDatAbbreviation
-   * @dataProvider providerValidTestDateAbbr
+   * @x-dataProvider providerValidTestDataNoFormat
+   * @x-dataProvider providerValidTestDataNumeric
+   * @x-dataProvider providerValidTestDataFull
+   * @x-dataProvider providerValidTestDataAbbreviation
+   * @x-dataProvider providerValidTestDataAbbr
    */
-  public function testValidSpanish($expected, $variable, $format) {
+  public function testValidSpanish($expected = NULL, $variable = NULL, $format = NULL) {
     $lang_code = 'es';
 
     $this->importTranslations();
     $this->setLanguage($lang_code);
 
-    $template = '{{ variable|un_date("' . $format . '") }}';
-    $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerValidTestDataNoFormat(),
+        $this->providerValidTestDataNumeric(),
+        $this->providerValidTestDataFull(),
+        $this->providerValidTestDataAbbreviation(),
+        $this->providerValidTestDataAbbr(),
+      );
+
+      foreach ($data as $name => $row) {
+        $expected = $row['expected'];
+        $variable = $row['date'];
+        $format = $row['format'];
+
+        $template = '{{ variable|un_date("' . $format . '") }}';
+        $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable), $name);
+      }
+    }
+    else {
+      $template = '{{ variable|un_date("' . $format . '") }}';
+      $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    }
   }
 
   /**
    * Test filter in Arabic.
    *
-   * @dataProvider providerValidTestDataNoFormat
-   * @dataProvider providerValidTestDataNumeric
-   * @dataProvider providerValidTestDataFull
-   * @dataProvider providerValidTestDatAbbreviation
-   * @dataProvider providerValidTestDateAbbr
+   * @x-dataProvider providerValidTestDataNoFormat
+   * @x-dataProvider providerValidTestDataNumeric
+   * @x-dataProvider providerValidTestDataFull
+   * @x-dataProvider providerValidTestDataAbbreviation
+   * @x-dataProvider providerValidTestDataAbbr
    */
-  public function testValidArabic($expected, $variable, $format) {
+  public function testValidArabic($expected = NULL, $variable = NULL, $format = NULL) {
     $lang_code = 'ar';
 
     $this->importTranslations();
     $this->setLanguage($lang_code);
 
-    $template = '{{ variable|un_date("' . $format . '") }}';
-    $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerValidTestDataNoFormat(),
+        $this->providerValidTestDataNumeric(),
+        $this->providerValidTestDataFull(),
+        $this->providerValidTestDataAbbreviation(),
+        $this->providerValidTestDataAbbr(),
+      );
+
+      foreach ($data as $name => $row) {
+        $expected = $row['expected'];
+        $variable = $row['date'];
+        $format = $row['format'];
+
+        $template = '{{ variable|un_date("' . $format . '") }}';
+        $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable), $name);
+      }
+    }
+    else {
+      $template = '{{ variable|un_date("' . $format . '") }}';
+      $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    }
   }
 
   /**
    * Test filter in Chinese.
    *
-   * @dataProvider providerValidTestDataNoFormat
-   * @dataProvider providerValidTestDataNumeric
-   * @dataProvider providerValidTestDataFull
-   * @dataProvider providerValidTestDatAbbreviation
-   * @dataProvider providerValidTestDateAbbr
+   * @x-dataProvider providerValidTestDataNoFormat
+   * @x-dataProvider providerValidTestDataNumeric
+   * @x-dataProvider providerValidTestDataFull
+   * @x-dataProvider providerValidTestDataAbbreviation
+   * @x-dataProvider providerValidTestDataAbbr
    */
-  public function testValidChinese($expected, $variable, $format) {
+  public function testValidChinese($expected = NULL, $variable = NULL, $format = NULL) {
     $lang_code = 'zh-hans';
 
     $this->importTranslations();
     $this->setLanguage($lang_code);
 
-    $template = '{{ variable|un_date("' . $format . '") }}';
-    $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerValidTestDataNoFormat(),
+        $this->providerValidTestDataNumeric(),
+        $this->providerValidTestDataFull(),
+        $this->providerValidTestDataAbbreviation(),
+        $this->providerValidTestDataAbbr(),
+      );
+
+      foreach ($data as $name => $row) {
+        $expected = $row['expected'];
+        $variable = $row['date'];
+        $format = $row['format'];
+
+        $template = '{{ variable|un_date("' . $format . '") }}';
+        $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable), $name);
+      }
+    }
+    else {
+      $template = '{{ variable|un_date("' . $format . '") }}';
+      $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    }
   }
 
   /**
    * Test filters.
    *
-   * @dataProvider providerInvalidTestDataNoFormat
+   * @x-dataProvider providerInvalidTestDataNoFormat
    */
-  public function testEnInvalid($expected, $variable) {
+  public function testEnInvalid($expected = NULL, $variable = NULL) {
     $lang_code = 'en';
 
     $this->importTranslations();
     $this->setLanguage($lang_code);
 
-    $template = '{{ variable|un_date }}';
-    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerInvalidTestDataNoFormat(),
+      );
+
+      foreach ($data as $name => $row) {
+        $expected = $row['expected'];
+        $variable = $row['date'];
+
+        $template = '{{ variable|un_date }}';
+        $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable), $name);
+      }
+    }
+    else {
+      $template = '{{ variable|un_date }}';
+      $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+    }
   }
 
   /**
@@ -294,7 +409,7 @@ class UnDateTest extends TwigBase {
   /**
    * Valid examples - abbreviation.
    */
-  public function providerValidTestDatAbbreviation() {
+  public function providerValidTestDataAbbreviation() {
     return [
       __FUNCTION__ . '::DateTime' => [
         'expected' => [
@@ -346,7 +461,7 @@ class UnDateTest extends TwigBase {
   /**
    * Valid examples - abbr.
    */
-  public function providerValidTestDateAbbr() {
+  public function providerValidTestDataAbbr() {
     return [
       __FUNCTION__ . '::DateTime' => [
         'expected' => [

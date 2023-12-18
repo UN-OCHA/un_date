@@ -18,6 +18,8 @@ use Drupal\un_date\UnDateRange;
  */
 class DateTwigDateRangeTest extends FieldKernelTestBase {
 
+  use UnDateTestTrait;
+
   /**
    * A field storage to use in this test class.
    *
@@ -79,44 +81,95 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
   /**
    * Test twig filters on date ranges.
    *
-   * @dataProvider providerTestDataDateRange
-   * @dataProvider providerTestDataTimeRange
-   * @dataProvider providerTestDataLocalTimes
-   * @dataProvider providerTestDataTime
-   * @dataProvider providerTestDataFilters
-   * @dataProvider providerTestDataFiltersPart2
+   * @x-dataProvider providerTestDataDateRange
+   * @x-dataProvider providerTestDataLocalTimes
+   * @x-dataProvider providerTestDataTime
+   * @x-dataProvider providerTestDataFilters
+   * @x-dataProvider providerTestDataFiltersPart2
    */
-  public function testTwigFiltersDateRange($template, $expected, $start, $end) {
-    $field_name = $this->fieldStorage->getName();
-    // Create an entity.
-    $entity = EntityTest::create([
-      'name' => $this->randomString(),
-      $field_name => [
-        'value' => $start,
-        'end_value' => $end,
-      ],
-    ]);
+  public function testTwigFiltersDateRange($template = NULL, $expected = NULL, $start = NULL, $end = NULL) {
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerTestDataDateRange(),
+        $this->providerTestDataFilters(),
+        $this->providerTestDataFiltersPart2(),
+      );
 
-    $variable = $entity->{$field_name};
-    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+      foreach ($data as $name => $row) {
+        $template = $row['template'];
+        $expected = $row['expected'];
+        $start = $row['start'];
+        $end = $row['end'];
 
-    $variable = $entity->{$field_name}->first();
-    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+        $field_name = $this->fieldStorage->getName();
+        // Create an entity.
+        $entity = EntityTest::create([
+          'name' => $this->randomString(),
+          $field_name => [
+            'value' => $start,
+            'end_value' => $end,
+          ],
+        ]);
+
+        $variable = $entity->{$field_name};
+        $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable), $name);
+
+        $variable = $entity->{$field_name}->first();
+        $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable), $name);
+      }
+    }
+    else {
+      $field_name = $this->fieldStorage->getName();
+      // Create an entity.
+      $entity = EntityTest::create([
+        'name' => $this->randomString(),
+        $field_name => [
+          'value' => $start,
+          'end_value' => $end,
+        ],
+      ]);
+
+      $variable = $entity->{$field_name};
+      $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+
+      $variable = $entity->{$field_name}->first();
+      $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+    }
   }
 
   /**
    * Test twig filters on date ranges.
    *
-   * @dataProvider providerTestDataDateRange
-   * @dataProvider providerTestDataTimeRange
-   * @dataProvider providerTestDataLocalTimes
-   * @dataProvider providerTestDataTime
-   * @dataProvider providerTestDataFilters
-   * @dataProvider providerTestDataFiltersPart2
+   * @x-dataProvider providerTestDataDateRange
+   * @x-dataProvider providerTestDataLocalTimes
+   * @x-dataProvider providerTestDataTime
+   * @x-dataProvider providerTestDataFilters
+   * @x-dataProvider providerTestDataFiltersPart2
    */
-  public function testTwigFiltersDateRangeClass($template, $expected, $start, $end) {
-    $variable = new UnDateRange($start, $end);
-    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+  public function testTwigFiltersDateRangeClass($template = NULL, $expected = NULL, $start = NULL, $end = NULL) {
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerTestDataDateRange(),
+        $this->providerTestDataLocalTimes(),
+        $this->providerTestDataTime(),
+        $this->providerTestDataFilters(),
+        $this->providerTestDataFiltersPart2(),
+      );
+
+      foreach ($data as $name => $row) {
+        $template = $row['template'];
+        $expected = $row['expected'];
+        $start = $row['start'];
+        $end = $row['end'];
+
+        $variable = new UnDateRange($start, $end);
+        $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable), $name);
+      }
+    }
+    else {
+      $variable = new UnDateRange($start, $end);
+      $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+    }
   }
 
   /**
@@ -217,32 +270,32 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
       __FUNCTION__ . '::same' => [
         'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
         'expected' => '6.12.2023 10.11 a.m. UTC',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-06T10:11:12',
+        'start' => '2023-12-06T10:11:12 UTC',
+        'end' => '2023-12-06T10:11:12 UTC',
       ],
       __FUNCTION__ . '::same_day' => [
         'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
         'expected' => '6.12.2023 10.11 a.m. — 11.11 a.m. UTC',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-06T11:11:12',
+        'start' => '2023-12-06T10:11:12 UTC',
+        'end' => '2023-12-06T11:11:12 UTC',
       ],
       __FUNCTION__ . '::next_day' => [
         'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
         'expected' => '6.12.2023 10.11 a.m. — 7.12.2023 11.11 a.m. UTC',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-07T11:11:12',
+        'start' => '2023-12-06T10:11:12 UTC',
+        'end' => '2023-12-07T11:11:12 UTC',
       ],
       __FUNCTION__ . '::all_day' => [
         'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
         'expected' => '6.12.2023',
-        'start' => '2023-12-06T00:00:00',
-        'end' => '2023-12-06T23:59:59',
+        'start' => '2023-12-06T00:00:00 UTC',
+        'end' => '2023-12-06T23:59:59 UTC',
       ],
       __FUNCTION__ . '::all_day_multi' => [
         'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
         'expected' => '6.12.2023 — 7.12.2023',
-        'start' => '2023-12-06T00:00:00',
-        'end' => '2023-12-07T23:59:59',
+        'start' => '2023-12-06T00:00:00 UTC',
+        'end' => '2023-12-07T23:59:59 UTC',
       ],
     ];
   }
@@ -255,32 +308,32 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
       __FUNCTION__ . '::same' => [
         'template' => '{{ variable|un_time }}',
         'expected' => '10.11 a.m.',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-06T10:11:12',
+        'start' => '2023-12-06T10:11:12 UTC',
+        'end' => '2023-12-06T10:11:12 UTC',
       ],
       __FUNCTION__ . '::same_day' => [
         'template' => '{{ variable|un_time }}',
         'expected' => '10.11 a.m.',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-06T11:11:12',
+        'start' => '2023-12-06T10:11:12 UTC',
+        'end' => '2023-12-06T11:11:12 UTC',
       ],
       __FUNCTION__ . '::next_day' => [
         'template' => '{{ variable|un_time }}',
         'expected' => '10.11 a.m.',
-        'start' => '2023-12-06T10:11:12',
-        'end' => '2023-12-07T11:11:12',
+        'start' => '2023-12-06T10:11:12 UTC',
+        'end' => '2023-12-07T11:11:12 UTC',
       ],
       __FUNCTION__ . '::all_day' => [
         'template' => '{{ variable|un_time }}',
         'expected' => 'midnight',
-        'start' => '2023-12-06T00:00:00',
-        'end' => '2023-12-06T23:59:59',
+        'start' => '2023-12-06T00:00:00 UTC',
+        'end' => '2023-12-06T23:59:59 UTC',
       ],
       __FUNCTION__ . '::all_day_multi' => [
         'template' => '{{ variable|un_time }}',
         'expected' => 'midnight',
-        'start' => '2023-12-06T00:00:00',
-        'end' => '2023-12-07T23:59:59',
+        'start' => '2023-12-06T00:00:00 UTC',
+        'end' => '2023-12-07T23:59:59 UTC',
       ],
     ];
   }

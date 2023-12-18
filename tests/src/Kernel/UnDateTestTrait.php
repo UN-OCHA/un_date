@@ -12,6 +12,15 @@ use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 trait UnDateTestTrait {
 
   /**
+   * Inline dataproviders.
+   *
+   * @var bool
+   *
+   * @see https://www.drupal.org/project/drupal/issues/1411074
+   */
+  protected $inlineDataProvider = TRUE;
+
+  /**
    * {@inheritdoc}
    */
   protected function doTimezoneConversion(string $value, string $timezone) : string {

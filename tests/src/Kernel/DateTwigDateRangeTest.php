@@ -219,31 +219,31 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
   public function providerTestDataLocalTimes() {
     return [
       'same' => [
-        'template' => '{{ variable|un_daterange("local_times") }}',
+        'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
         'expected' => '6.12.2023 10.11 a.m. UTC',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
       ],
       'same_day' => [
-        'template' => '{{ variable|un_daterange("local_times") }}',
+        'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
         'expected' => '6.12.2023 10.11 a.m. — 11.11 a.m. UTC',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
       ],
       'next_day' => [
-        'template' => '{{ variable|un_daterange("local_times") }}',
+        'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
         'expected' => '6.12.2023 10.11 a.m. — 7.12.2023 11.11 a.m. UTC',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
       ],
       'all_day' => [
-        'template' => '{{ variable|un_daterange("local_times") }}',
+        'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
         'expected' => '6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
       ],
       'all_day_multi' => [
-        'template' => '{{ variable|un_daterange("local_times") }}',
+        'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
         'expected' => '6.12.2023 — 7.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
@@ -355,7 +355,7 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'end' => '2023-12-07T23:59:59',
       ],
       'datetime_full' => [
-        'template' => '{{ variable|un_datetime(false, "full") }}',
+        'template' => '{{ variable|un_datetime("full", false) }}',
         'expected' => '6 December 2023 10.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T23:59:59',
@@ -367,7 +367,7 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'end' => '2023-12-07T23:59:59',
       ],
       'datetime_abbreviation' => [
-        'template' => '{{ variable|un_datetime(false, "abbreviation") }}',
+        'template' => '{{ variable|un_datetime("abbreviation", false) }}',
         'expected' => '6 Dec. 2023 10.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T23:59:59',

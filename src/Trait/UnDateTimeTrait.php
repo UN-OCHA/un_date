@@ -270,7 +270,7 @@ trait UnDateTimeTrait {
   /**
    * Get start date.
    */
-  protected function getStartDate($object) : \DateTime {
+  protected function getStartDate($object) {
     if (!$this->isDateRange($object)) {
       return NULL;
     }

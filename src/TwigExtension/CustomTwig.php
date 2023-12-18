@@ -166,7 +166,7 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format daterange.
    */
-  public function getUnDaterangeNamed($in, $format = 'default', $month_format = 'numeric') : string {
+  public function getUnDaterangeNamed($in, $month_format = 'numeric', $format = 'default') : string {
     $date_item = $this->getDateRangeFromItem($in);
 
     if (!$date_item) {

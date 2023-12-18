@@ -66,6 +66,46 @@ class UnDateRangeTest extends TwigBase {
   }
 
   /**
+   * Test filter in English.
+   *
+   * @x-dataProvider providerValidTestDataNoFormat
+   * @x-dataProvider providerValidTestDataNumeric
+   * @x-dataProvider providerValidTestDataFullSameMonth
+   * @x-dataProvider providerValidTestDataFullNextMonth
+   * @x-dataProvider providerValidTestDataAbbrNextYear
+   * @x-dataProvider providerValidTestDateAbbr
+   */
+  public function testValidEnglishDaterangeNamed($expected = NULL, $variable = NULL, $format = NULL) {
+    $lang_code = 'en';
+
+    $this->importTranslations();
+    $this->setLanguage($lang_code);
+
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerValidTestDataNoFormat(),
+        $this->providerValidTestDataNumeric(),
+        $this->providerValidTestDataFullSameMonth(),
+        $this->providerValidTestDataFullNextMonth(),
+        $this->providerValidTestDataAbbrNextYear(),
+      );
+
+      foreach ($data as $name => $row) {
+        $expected = $row['expected'];
+        $variable = $row['date'];
+        $format = $row['format'];
+
+        $template = '{{ variable|un_daterange_named("' . $format . '") }}';
+        $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable), $name);
+      }
+    }
+    else {
+      $template = '{{ variable|un_daterange_named("' . $format . '") }}';
+      $this->assertSame($expected[$lang_code], (string) $this->renderObjectWithTwig($template, $variable));
+    }
+  }
+
+  /**
    * Test filter in French.
    *
    * @x-dataProvider providerValidTestDataNoFormat

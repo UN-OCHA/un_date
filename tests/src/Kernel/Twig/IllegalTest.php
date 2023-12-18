@@ -1,25 +1,13 @@
 <?php
 
-namespace Drupal\Tests\un_date\Kernel;
-
-use Drupal\Core\Render\RenderContext;
-use Drupal\KernelTests\KernelTestBase;
+namespace Drupal\Tests\un_date\Kernel\Twig;
 
 /**
  * Tests Twig with MarkupInterface objects.
  *
  * @group Theme
  */
-class DateTwigIllegalTest extends KernelTestBase {
-
-  /**
-   * Modules to enable.
-   *
-   * @var array
-   */
-  protected static $modules = [
-    'un_date',
-  ];
+class IllegalTest extends TwigBase {
 
   /**
    * Test filters.
@@ -266,26 +254,6 @@ class DateTwigIllegalTest extends KernelTestBase {
         'date' => new \stdClass(),
       ],
     ];
-  }
-
-  /**
-   * Render twig template.
-   *
-   * @return \Drupal\Component\Render\MarkupInterface
-   *   The rendered HTML.
-   */
-  protected function renderObjectWithTwig($template, $variable) {
-    /** @var \Drupal\Core\Render\RendererInterface $renderer */
-    $renderer = \Drupal::service('renderer');
-    $context = new RenderContext();
-    return $renderer->executeInRenderContext($context, function () use ($renderer, $template, $variable) {
-      $elements = [
-        '#type' => 'inline_template',
-        '#template' => $template,
-        '#context' => ['variable' => $variable],
-      ];
-      return $renderer->render($elements);
-    });
   }
 
 }

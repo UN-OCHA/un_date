@@ -298,8 +298,8 @@ class DateRenderDateTimeAbbreviationTranslationTest extends FieldKernelTestBase 
       'same' => [
         'expected' => [
           'en' => 'Date: 6 Dec. 2023 10.11 a.m.',
-          'fr' => 'Date: 6 Déc. 2023 10 h 11',
-          'es' => 'Date: 6 Dic. 2023 10.11 horas',
+          'fr' => 'Date: 6 déc. 2023 10 h 11',
+          'es' => 'Date: 6 dic. 2023 10.11 horas',
           'ar' => implode('', ['Date: 6 دجنبر 2023', ' 10.11']),
           'zh-hans' => 'Date: 6 十二月 2023 10時11分',
         ],
@@ -308,8 +308,8 @@ class DateRenderDateTimeAbbreviationTranslationTest extends FieldKernelTestBase 
       'same_day' => [
         'expected' => [
           'en' => 'Date: 6 Dec. 2023 10.11 p.m.',
-          'fr' => 'Date: 6 Déc. 2023 22 h 11',
-          'es' => 'Date: 6 Dic. 2023 22.11 horas',
+          'fr' => 'Date: 6 déc. 2023 22 h 11',
+          'es' => 'Date: 6 dic. 2023 22.11 horas',
           'ar' => implode('', ['Date: 6 دجنبر 2023', ' 22.11']),
           'zh-hans' => 'Date: 6 十二月 2023 22時11分',
         ],
@@ -318,8 +318,8 @@ class DateRenderDateTimeAbbreviationTranslationTest extends FieldKernelTestBase 
       '1am' => [
         'expected' => [
           'en' => 'Date: 6 Dec. 2023 1 a.m.',
-          'fr' => 'Date: 6 Déc. 2023 1 heure',
-          'es' => 'Date: 6 Dic. 2023 1 hora',
+          'fr' => 'Date: 6 déc. 2023 1 heure',
+          'es' => 'Date: 6 dic. 2023 1 hora',
           'ar' => implode('', ['Date: 6 دجنبر 2023', ' 1']),
           'zh-hans' => 'Date: 6 十二月 2023 1時正',
         ],
@@ -328,8 +328,8 @@ class DateRenderDateTimeAbbreviationTranslationTest extends FieldKernelTestBase 
       'next_day' => [
         'expected' => [
           'en' => 'Date: 6 Dec. 2023 10 a.m.',
-          'fr' => 'Date: 6 Déc. 2023 10 heures',
-          'es' => 'Date: 6 Dic. 2023 10 horas',
+          'fr' => 'Date: 6 déc. 2023 10 heures',
+          'es' => 'Date: 6 dic. 2023 10 horas',
           'ar' => implode('', ['Date: 6 دجنبر 2023', ' 10']),
           'zh-hans' => 'Date: 6 十二月 2023 10時正',
         ],
@@ -338,8 +338,8 @@ class DateRenderDateTimeAbbreviationTranslationTest extends FieldKernelTestBase 
       'all_day' => [
         'expected' => [
           'en' => 'Date: 6 Dec. 2023 midnight',
-          'fr' => 'Date: 6 Déc. 2023 minuit',
-          'es' => 'Date: 6 Dic. 2023 medianoche',
+          'fr' => 'Date: 6 déc. 2023 minuit',
+          'es' => 'Date: 6 dic. 2023 medianoche',
           'ar' => implode('', ['Date: 6 دجنبر 2023', ' منتصف الليل']),
           'zh-hans' => 'Date: 6 十二月 2023 午夜',
         ],
@@ -348,8 +348,8 @@ class DateRenderDateTimeAbbreviationTranslationTest extends FieldKernelTestBase 
       'all_day_multi' => [
         'expected' => [
           'en' => 'Date: 6 Dec. 2023 noon',
-          'fr' => 'Date: 6 Déc. 2023 midi',
-          'es' => 'Date: 6 Dic. 2023 mediodía',
+          'fr' => 'Date: 6 déc. 2023 midi',
+          'es' => 'Date: 6 dic. 2023 mediodía',
           'ar' => implode('', ['Date: 6 دجنبر 2023', ' وقت الظهيرة']),
           'zh-hans' => 'Date: 6 十二月 2023 中午',
         ],

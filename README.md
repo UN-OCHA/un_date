@@ -15,11 +15,14 @@ The Humand readable output of RRules is flaky.
 
 - Consolidate theme functions and templates
 - Add all date parts
-- Merge all settings to trait
 
 ## Install
 
 Run `composer install unocha/un_date`
+
+## Core date formatter service
+
+This service is replaced by `UnDateFormatter` and will enforce the proper format for `short`, `medium` and `long`.
 
 ## Formatters
 
@@ -55,7 +58,7 @@ Most filters have an option for month_format, either `numeric`, `full` or `abbre
 
 ### Functions
 
-Most function accept a DateRange object or 2 DateTime inputs.
+Most function accept a DateRange (compatible) object or 2 DateTime inputs.
 
 - un_is_same_date: identical
 - un_is_same_day: on the same day

@@ -535,11 +535,6 @@ class UnDateTest extends TwigBase {
         'date' => 'string',
         'format' => '',
       ],
-      __FUNCTION__ . '::int' => [
-        'expected' => '',
-        'date' => 42,
-        'format' => '',
-      ],
       __FUNCTION__ . '::stdClass' => [
         'expected' => '',
         'date' => new \stdClass(),

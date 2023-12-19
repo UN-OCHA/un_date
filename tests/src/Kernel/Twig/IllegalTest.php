@@ -12,10 +12,25 @@ class IllegalTest extends TwigBase {
   /**
    * Test filters.
    *
-   * @dataProvider providerTestData
+   * @x-dataProvider providerTestData
    */
-  public function testTwigFilters($expected, $template, $variable) {
-    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+  public function testTwigFilters($expected = NULL, $template = NULL, $variable = NULL) {
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerTestData(),
+      );
+
+      foreach ($data as $name => $row) {
+        $expected = $row['expected'];
+        $template = $row['template'];
+        $variable = $row['date'] ?? '';
+
+        $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable), $name);
+      }
+    }
+    else {
+      $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+    }
   }
 
   /**

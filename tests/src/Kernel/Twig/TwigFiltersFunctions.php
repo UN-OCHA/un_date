@@ -27,6 +27,7 @@ class TwigFiltersFunctions extends TwigBase {
         $this->providerTestDataFilters(),
         $this->providerTestDataFiltersPart2(),
         $this->providerTestDataFiltersPart3(),
+        $this->providerTestDataDefaultFormat(),
       );
 
       foreach ($data as $name => $row) {
@@ -490,6 +491,29 @@ class TwigFiltersFunctions extends TwigBase {
         'expected' => '',
         'start' => '2023-12-06T10:11:00',
         'end' => '2023-12-07T12:11:00',
+      ],
+    ];
+  }
+
+  /**
+   * Test custom Date formatter.
+   */
+  public function providerTestDataDefaultFormat() {
+    return [
+      __FUNCTION__ . '::short' => [
+        'expected' => '6.12.2023 10.11 a.m.',
+        'template' => '{{ variable|format_date("short") }}',
+        'date' => 1701857472,
+      ],
+      __FUNCTION__ . '::medium' => [
+        'expected' => '6 Dec. 2023 10.11 a.m.',
+        'template' => '{{ variable|format_date("medium") }}',
+        'date' => 1701857472,
+      ],
+      __FUNCTION__ . '::long' => [
+        'expected' => '6 December 2023 10.11 a.m.',
+        'template' => '{{ variable|format_date("long") }}',
+        'date' => 1701857472,
       ],
     ];
   }

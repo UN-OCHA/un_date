@@ -49,7 +49,7 @@ class TwigFiltersFunctions extends TwigBase {
   }
 
   /**
-   * Provide test examples.providerTestDataFiltersPart2
+   * Provide test examples.
    */
   public function providerTestData() {
     return [

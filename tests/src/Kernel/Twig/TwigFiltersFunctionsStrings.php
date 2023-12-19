@@ -2,8 +2,6 @@
 
 namespace Drupal\Tests\un_date\Kernel\Twig;
 
-use Drupal\un_date\UnDateRange;
-
 /**
  * Tests Twig with MarkupInterface objects.
  *

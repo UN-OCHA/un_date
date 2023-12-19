@@ -2,6 +2,7 @@
 
 namespace Drupal\un_date\TwigExtension;
 
+use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
@@ -199,6 +200,14 @@ class CustomTwig extends AbstractExtension {
    * Get date item.
    */
   protected function getDateItem($input) {
+    if (is_numeric($input)) {
+      return new DrupalDateTime(date('Y-m-dTH:i:s', $input));
+    }
+
+    if (is_string($input)) {
+      return new DrupalDateTime($input);
+    }
+
     if ($input instanceof \DateTime) {
       return $input;
     }

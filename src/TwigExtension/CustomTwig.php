@@ -109,7 +109,7 @@ class CustomTwig extends AbstractExtension {
     $date_item = $this->getDateItem($in);
 
     if (!$date_item) {
-      return NULL;
+      return '';
     }
 
     if (!$this->isDateRange($date_item)) {

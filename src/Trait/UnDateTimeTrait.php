@@ -233,6 +233,13 @@ trait UnDateTimeTrait {
   }
 
   /**
+   * Format HTML datetime.
+   */
+  protected function formatHtmlDateTime(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed|DateRangeItem $date, $month_format = 'numeric', $show_timezone = FALSE) : string {
+    return $date->format('c');
+  }
+
+  /**
    * Format daterange.
    */
   public function formatDaterange($date, $month_format = 'numeric', $show_timezone = FALSE) : string {

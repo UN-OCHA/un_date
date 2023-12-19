@@ -36,6 +36,7 @@ class CustomTwig extends AbstractExtension {
       new TwigFilter('un_date', [$this, 'getUnDate']),
       new TwigFilter('un_time', [$this, 'getUnTime']),
       new TwigFilter('un_datetime', [$this, 'getUnDateTime']),
+      new TwigFilter('un_html_datetime', [$this, 'getUnHtmlDateTime']),
       new TwigFilter('un_daterange', [$this, 'getUnDaterange']),
       new TwigFilter('un_daterange_times', [$this, 'getUnDaterangeTimes']),
       new TwigFilter('un_daterange_named', [$this, 'getUnDaterangeNamed']),
@@ -104,6 +105,19 @@ class CustomTwig extends AbstractExtension {
     }
 
     return $this->formatDateTime($date_item, $month_format, $show_timezone);
+  }
+
+  /**
+   * Format date and time.
+   */
+  public function getUnHtmlDateTime($input, $month_format = 'numeric', bool $show_timezone = FALSE) : string {
+    $date_item = $this->getDateFromDateItem($input);
+
+    if (!$date_item) {
+      return '';
+    }
+
+    return $this->formatHtmlDateTime($date_item, $month_format, $show_timezone);
   }
 
   /**

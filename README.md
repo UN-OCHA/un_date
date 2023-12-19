@@ -21,7 +21,7 @@ This service is replaced by `UnDateFormatter` and will enforce the proper format
 
 ## Formatters
 
-There's support for the followig
+There's support for the following
 
 - Core datetime field
 - Core datetime_range field
@@ -36,13 +36,14 @@ Most filters have an option for month_format, either `numeric`, `full` or `abbre
 
 ### Filters
 
-- un_date: Formatted as date `dd.mm.yyyy`
-- un_time: Formatted as time `h.mm a.m.|p.m.`
-- un_datetime: Formatted as date and time `dd.mm.yyyy h.mm a.m.|p.m.`
-- un_daterange: Formatted as date and time `dd.mm.yyyy h.mm a.m.|p.m. — h.mm a.m.|p.m.` or `dd.mm.yyyy h.mm a.m.|p.m. — dd.mm.yyyy h.mm a.m.|p.m.` if dates are different
-- un_daterange_times: Formatted as date and time `h.mm a.m.|p.m. — h.mm a.m.|p.m.` or `dd.mm.yyyy h.mm a.m.|p.m. — dd.mm.yyyy h.mm a.m.|p.m.` if dates are different
-- un_timerange: Formatted as time `h.mm a.m.|p.m. — h.mm a.m.|p.m.`
-- un_year: Formatted as `yyyy`
+- un_date: Formatted as date `j.m.Y`
+- un_time: Formatted as time `g.i a.m.|p.m.`
+- un_datetime: Formatted as date and time `d.m.Y g.i a.m.|p.m.`
+- un_html_datetime: Formatted as date and time `Y-m-dTH:i:s`
+- un_daterange: Formatted as date and time `j.m.Y g.i a.m.|p.m. — g.i a.m.|p.m.` or `j.m.Y g.i a.m.|p.m. — j.m.Y g.i a.m.|p.m.` if dates are different
+- un_daterange_times: Formatted as date and time `g.i a.m.|p.m. — g.i a.m.|p.m.` or `j.m.Y g.i a.m.|p.m. — j.m.Y g.i a.m.|p.m.` if dates are different
+- un_timerange: Formatted as time `g.i a.m.|p.m. — g.i a.m.|p.m.`
+- un_year: Formatted as `Y`
 - un_month: Formatted as `m`
 - un_month_full: Formatted as `F`
 - un_month_abbr: Formatted as `M`

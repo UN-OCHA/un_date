@@ -17,4 +17,5 @@ class UnDateServiceProvider extends ServiceProviderBase {
     $definition = $container->getDefinition('date.formatter');
     $definition->setClass(UnDateFormatter::class);
   }
+
 }

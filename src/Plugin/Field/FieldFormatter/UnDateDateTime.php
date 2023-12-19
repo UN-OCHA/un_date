@@ -6,7 +6,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
-use Drupal\un_date\Trait\UnDateTimeTrait;
+use Drupal\un_date\Trait\UnDateTimeFormatterTrait;
 
 /**
  * Plugin implementation of the 'Default' formatter for 'datetime' fields.
@@ -19,9 +19,9 @@ use Drupal\un_date\Trait\UnDateTimeTrait;
  *   }
  * )
  */
-class UnDateDateTime extends FormatterBase {
+final class UnDateDateTime extends FormatterBase {
 
-  use UnDateTimeTrait;
+  use UnDateTimeFormatterTrait;
 
   /**
    * {@inheritdoc}

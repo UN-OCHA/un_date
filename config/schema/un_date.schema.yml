@@ -8,6 +8,9 @@ field.formatter.settings.un_date_datetime:
     month_format:
       type: string
       label: 'Month format'
+    template:
+      type: string
+      label: 'Template to use'
 field.formatter.settings.un_date_daterange:
   type: mapping
   label: 'Datetime default display format settings'
@@ -18,6 +21,9 @@ field.formatter.settings.un_date_daterange:
     month_format:
       type: string
       label: 'Month format'
+    template:
+      type: string
+      label: 'Template to use'
 field.formatter.settings.un_date_daterange_timezone:
   type: mapping
   label: 'Datetime default display format settings'
@@ -28,6 +34,9 @@ field.formatter.settings.un_date_daterange_timezone:
     month_format:
       type: string
       label: 'Month format'
+    template:
+      type: string
+      label: 'Template to use'
 field.formatter.settings.un_data_date_recur_basic:
   type: mapping
   label: 'Datetime default display format settings'
@@ -38,6 +47,9 @@ field.formatter.settings.un_data_date_recur_basic:
     month_format:
       type: string
       label: 'Month format'
+    template:
+      type: string
+      label: 'Template to use'
     show_next:
       type: string
       label: 'Show maximum x number of occurences'

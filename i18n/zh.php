@@ -6,6 +6,7 @@
  */
 
 return [
+  'on' => ' on ',
   'yearly' => [
     '1' => '每年',
     'else' => '每 %{interval} 年',

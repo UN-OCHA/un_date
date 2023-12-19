@@ -1,0 +1,49 @@
+{#
+/**
+ * @file
+ * The template.
+ */
+#}
+{{ attach_library('un_date/un-date') }}
+
+{%
+	set classes = [
+		'un-date',
+    un_is_rtl() ? 'rtl' : 'ltr',
+	]
+%}
+
+<pre>
+duration: {{ un_duration(start, end) }}
+daterange: {{ daterange|un_daterange_named("local_times") }}
+</pre>
+<div {{ attributes.addClass(classes) }}>
+  <div class="un-date-block">
+    <div class="un-date-block__wrapper">
+      <span class="un-date-block__day">
+        {{ start|un_day }}{% if not un_is_same_day(start, end) %} {{ un_separator() }} {{ end|un_day }}{% endif %}
+      </span>
+    </div>
+    <div class="un-date-block__wrapper">
+      <span class="un-date-block__month">
+        {{ start|un_month_abbr }}{% if not un_is_same_month(start, end) %} {{ un_separator() }} {{ end|un_month_abbr }}{% endif %}
+      </span>
+      <span class="un-date-block__year">
+        {{ start|un_year }}{% if not un_is_same_year(start, end) %} {{ un_separator() }} {{ end|un_year }}{% endif %}
+      </span>
+    </div>
+  </div>
+
+  {% if interpretation -%}
+    <div class="date-recur-interpretaton">{{ interpretation }}</div>
+  {% endif %}
+
+  {% if is_recurring and occurrences|length > 0 %}
+    <ul class="date-recur-occurrences">
+      {% for item in occurrences %}
+        <li>{{ item }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+</div>
+

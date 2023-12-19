@@ -6,7 +6,7 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
-use Drupal\un_date\Trait\UnDateTimeTrait;
+use Drupal\un_date\Trait\UnDateTimeFormatterTrait;
 
 /**
  * Plugin implementation of the 'UN Default' formatter for 'daterange_timezone'.
@@ -19,9 +19,9 @@ use Drupal\un_date\Trait\UnDateTimeTrait;
  *   }
  * )
  */
-class UnDateDateTimeRange extends FormatterBase {
+final class UnDateDateTimeRange extends FormatterBase {
 
-  use UnDateTimeTrait;
+  use UnDateTimeFormatterTrait;
 
   /**
    * {@inheritdoc}
@@ -82,7 +82,7 @@ class UnDateDateTimeRange extends FormatterBase {
         '#display_timezone' => $tz,
         '#same_date' => $same_date,
         '#same_day' => $same_day,
-        '#all_day' => $this->allDay($item, $timezone->getName()),
+        '#all_day' => $this->allDay($item),
         '#cache' => [
           'contexts' => [
             'timezone',

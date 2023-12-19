@@ -1,7 +1,7 @@
 status: true
-id: un_interpreter
-label: 'RRule Interpreter (UN)'
-plugin: un_rl
+id: un_interpreter_ss
+label: 'RRule Interpreter (simshaun)'
+plugin: ss
 settings:
   show_start_date: true
   show_until: true
@@ -9,4 +9,4 @@ settings:
   show_infinite: true
 dependencies:
   module:
-    - date_recur
+    - date_recur_ss

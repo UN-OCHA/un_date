@@ -4,21 +4,19 @@ declare(strict_types = 1);
 
 namespace Drupal\un_date\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Cache\CacheableMetadata;
-use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Datetime\DrupalDateTime;
 use Drupal\Core\Entity\DependencyTrait;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
-use Drupal\Core\Form\FormStateInterface;
 use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Entity\DateRecurInterpreterInterface;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\un_date\Plugin\DateRecurInterpreter\UnRRulelInterpreter;
-use Drupal\un_date\Trait\UnDateTimeTrait;
+use Drupal\un_date\Trait\UnDateTimeFormatterTrait;
+use Drupal\un_date\UnDateRange;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -32,48 +30,24 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class UnDateDateRecurBasic extends FormatterBase {
+final class UnDateDateRecurBasic extends FormatterBase {
 
   use DependencyTrait;
-  use UnDateTimeTrait;
-
-  protected const COUNT_PER_ITEM_ITEM = 'per_item';
-
-  protected const COUNT_PER_ITEM_ALL = 'all_items';
+  use UnDateTimeFormatterTrait;
 
   /**
-   * Date format config ID.
+   * Interpreter storage.
    *
-   * @var string|null
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
-  protected ?string $formatType;
+  protected $dateRecurInterpreterStorage;
 
   /**
    * Constructs a new DateRecurBasicFormatter.
-   *
-   * @param string $plugin_id
-   *   The plugin_id for the formatter.
-   * @param mixed $plugin_definition
-   *   The plugin implementation definition.
-   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
-   *   The definition of the field to which the formatter is associated.
-   * @param array $settings
-   *   The formatter settings.
-   * @param string $label
-   *   The formatter label display setting.
-   * @param string $view_mode
-   *   The view mode.
-   * @param array $third_party_settings
-   *   Third party settings.
-   * @param \Drupal\Core\Datetime\DateFormatterInterface $dateFormatter
-   *   The date formatter service.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $dateFormatStorage
-   *   The date format entity storage.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $dateRecurInterpreterStorage
-   *   The date recur interpreter entity storage.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, DateFormatterInterface $dateFormatter, EntityStorageInterface $dateFormatStorage, protected EntityStorageInterface $dateRecurInterpreterStorage) {
-    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings, $dateFormatter, $dateFormatStorage);
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, EntityStorageInterface $dateRecurInterpreterStorage) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
+    $this->dateRecurInterpreterStorage = $dateRecurInterpreterStorage;
   }
 
   /**
@@ -88,181 +62,21 @@ class UnDateDateRecurBasic extends FormatterBase {
       $configuration['label'],
       $configuration['view_mode'],
       $configuration['third_party_settings'],
-      $container->get('date.formatter'),
-      $container->get('entity_type.manager')->getStorage('date_format'),
       $container->get('entity_type.manager')->getStorage('date_recur_interpreter')
     );
   }
 
   /**
    * {@inheritdoc}
-   *
-   * @codeCoverageIgnore
-   */
-  public static function defaultSettings(): array {
-    return [
-      'display_timezone' => TRUE,
-      'month_format' => 'numeric',
-      'show_next' => 5,
-      'count_per_item' => TRUE,
-      'interpreter' => 'un_interpreter',
-    ];
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @codeCoverageIgnore
-   */
-  public function settingsForm(array $form, FormStateInterface $form_state): array {
-    $form = parent::settingsForm($form, $form_state);
-
-    $form['display_timezone'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Display Timezone'),
-      '#description' => $this->t('Should we display the timezone after the formatted date?'),
-      '#default_value' => $this->getSetting('display_timezone'),
-    ];
-
-    $form['month_format'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Month format'),
-      '#options' => $this->monthFormats,
-      '#description' => $this->t('In which format will the month be displayed'),
-      '#default_value' => $this->getSetting('month_format'),
-    ];
-
-    $interpreterOptions = array_map(
-      fn (DateRecurInterpreterInterface $interpreter): string => $interpreter->label() ?? (string) $this->t('- Missing label -'),
-      $this->dateRecurInterpreterStorage->loadMultiple()
-    );
-    $form['interpreter'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Recurring date interpreter'),
-      '#description' => $this->t('Choose a plugin for converting rules into a human readable description.'),
-      '#default_value' => $this->getSetting('interpreter'),
-      '#options' => $interpreterOptions,
-      '#required' => FALSE,
-      '#empty_option' => $this->t('- Do not show interpreted rule -'),
-    ];
-
-    $form['occurrences'] = [
-      '#type' => 'container',
-      '#attributes' => ['class' => ['container-inline']],
-      '#tree' => FALSE,
-    ];
-
-    $form['occurrences']['show_next'] = [
-      '#field_prefix' => $this->t('Show maximum of'),
-      '#field_suffix' => $this->t('occurrences'),
-      '#type' => 'number',
-      '#min' => 0,
-      '#default_value' => $this->getSetting('show_next'),
-      '#attributes' => ['size' => 4],
-      '#element_validate' => [[static::class, 'validateSettingsShowNext']],
-    ];
-
-    $form['occurrences']['count_per_item'] = [
-      '#type' => 'select',
-      '#options' => [
-        static::COUNT_PER_ITEM_ITEM => $this->t('per field item'),
-        static::COUNT_PER_ITEM_ALL => $this->t('across all field items'),
-      ],
-      '#default_value' => $this->getSetting('count_per_item') ? static::COUNT_PER_ITEM_ITEM : static::COUNT_PER_ITEM_ALL,
-      '#element_validate' => [[static::class, 'validateSettingsCountPerItem']],
-    ];
-
-    return $form;
-  }
-
-  /**
-   * Validation callback for count_per_item.
-   *
-   * @param array $element
-   *   The element being processed.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param array $complete_form
-   *   The complete form structure.
-   *
-   * @codeCoverageIgnore
-   */
-  public static function validateSettingsCountPerItem(array &$element, FormStateInterface $form_state, array &$complete_form): void {
-    $countPerItem = $element['#value'] == static::COUNT_PER_ITEM_ITEM;
-    $arrayParents = array_slice($element['#array_parents'], 0, -2);
-    $formatterForm = NestedArray::getValue($complete_form, $arrayParents);
-    $parents = $formatterForm['#parents'];
-    $parents[] = 'count_per_item';
-    $form_state->setValue($parents, $countPerItem);
-  }
-
-  /**
-   * Validation callback for show_next.
-   *
-   * @param array $element
-   *   The element being processed.
-   * @param \Drupal\Core\Form\FormStateInterface $form_state
-   *   The current state of the form.
-   * @param array $complete_form
-   *   The complete form structure.
-   *
-   * @codeCoverageIgnore
-   */
-  public static function validateSettingsShowNext(array &$element, FormStateInterface $form_state, array &$complete_form): void {
-    $arrayParents = array_slice($element['#array_parents'], 0, -2);
-    $formatterForm = NestedArray::getValue($complete_form, $arrayParents);
-    $parents = $formatterForm['#parents'];
-    $parents[] = 'show_next';
-    $form_state->setValue($parents, $element['#value']);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @codeCoverageIgnore
-   */
-  public function settingsSummary(): array {
-    $summary = [];
-
-    $summary[] = $this->t('@action the timezone', [
-      '@action' => $this->getSetting('display_timezone') ? 'Showing' : 'Hiding',
-    ]);
-
-    $summary[] = $this->t('Month display: @action', [
-      '@action' => $this->monthFormats[$this->getSetting('month_format') ?? 'numeric'],
-    ]);
-
-    $countPerItem = $this->getSetting('count_per_item');
-    $showOccurrencesCount = $this->getSetting('show_next');
-    if ($showOccurrencesCount > 0) {
-      $summary[] = $this->formatPlural(
-        $showOccurrencesCount,
-        'Show maximum of @count occurrence @per',
-        'Show maximum of @count occurrences @per',
-        ['@per' => $countPerItem ? $this->t('per field item') : $this->t('across all field items')]
-      );
-    }
-
-    return $summary;
-  }
-
-  /**
-   * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode): array {
-    // Whether maximum is per field item or in total.
-    $isSharedMaximum = !$this->getSetting('count_per_item');
     // Maximum amount of occurrences to be displayed.
     $occurrenceQuota = (int) $this->getSetting('show_next');
 
     $elements = [];
     foreach ($items as $delta => $item) {
       $value = $this->viewItem($item, $occurrenceQuota);
-      $occurrenceQuota -= ($isSharedMaximum ? count($value['#occurrences']) : 0);
       $elements[$delta] = $value;
-      if ($occurrenceQuota <= 0) {
-        break;
-      }
     }
 
     return $elements;
@@ -287,9 +101,14 @@ class UnDateDateRecurBasic extends FormatterBase {
       $item->getFieldDefinition()->getName(),
     ]);
 
+    $theme = $this->getSetting('template') ?? 'default';
+    if ($theme == 'default') {
+      $theme = 'un_date_date_recur_basic';
+    }
+
     $cacheability = new CacheableMetadata();
     $build = [
-      '#theme' => 'un_date_date_recur_basic__' . $theme_suggestions,
+      '#theme' => $theme . '__' . $theme_suggestions,
       '#is_recurring' => $item->isRecurring(),
     ];
 
@@ -372,7 +191,7 @@ class UnDateDateRecurBasic extends FormatterBase {
     $same_day = FALSE;
 
     $timezone = $start_date->getTimezone();
-    $all_day = $this->allDayStartEnd($start_date, $end_date, $timezone);
+    $all_day = $this->allDayStartEnd($start_date, $end_date);
 
     if ($start_date->getTimestamp() == $end_date->getTimestamp()) {
       $same_date = TRUE;
@@ -385,6 +204,10 @@ class UnDateDateRecurBasic extends FormatterBase {
     $iso_end_date = $end_date->format('c') ?? '';
 
     $build = [
+      '#parts' => $this->getParts($start_date, $end_date),
+      '#daterange' => new UnDateRange($start_date, $end_date),
+      '#start' => $start_date,
+      '#end' => $end_date,
       '#iso_start_date' => $iso_start_date,
       '#iso_end_date' => $iso_end_date,
       '#start_date' => $this->formatDate($start_date),
@@ -428,6 +251,18 @@ class UnDateDateRecurBasic extends FormatterBase {
     $start = new \DateTime('now');
     return $item->getHelper()
       ->getOccurrences($start, NULL, $maxOccurrences);
+  }
+
+  /**
+   * Get an option list of interpreters.
+   *
+   * @codeCoverageIgnore
+   */
+  protected function getInterpreterOptions() {
+    return array_map(
+      fn (DateRecurInterpreterInterface $interpreter): string => $interpreter->label() ?? (string) $this->t('- Missing label -'),
+      $this->dateRecurInterpreterStorage->loadMultiple()
+    );
   }
 
 }

@@ -6,6 +6,7 @@
  */
 
 return [
+  'on' => ' on ',
   'yearly' => [
     '1' => 'anual',
 // Cada 8 años.

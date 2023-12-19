@@ -11,13 +11,15 @@ to fix translation of [abbreviated month names](https://www.drupal.org/node/3004
 
 The Humand readable output of RRules is flaky.
 
+## Todo
+
+- Consolidate theme functions and templates
+- Add all date parts
+- Merge all settings to trait
+
 ## Install
 
 Run `composer install unocha/un_date`
-
-## Todo
-
-- Test interpreter
 
 ## Formatters
 
@@ -30,29 +32,41 @@ There's support for the followig
 
 ## Twig filters and functions
 
-All filter allow options
+Input can be either a DateTime compatible object, a Drupal structured data item, a string or a timestamp.
 
-- show_timezone to display the timezone (default off)
-- month_format: Either `numeric`, `full` or `abbreviation` (default numeric)
+Most filters have an option for month_format, either `numeric`, `full` or `abbreviation` (default numeric)
 
-## un_date
+### Filters
 
-Formatted as date `dd.mm.yyyy`
+- un_date: Formatted as date `dd.mm.yyyy`
+- un_time: Formatted as time `h.mm a.m.|p.m.`
+- un_datetime: Formatted as date and time `dd.mm.yyyy h.mm a.m.|p.m.`
+- un_daterange: Formatted as date and time `dd.mm.yyyy h.mm a.m.|p.m. — h.mm a.m.|p.m.` or `dd.mm.yyyy h.mm a.m.|p.m. — dd.mm.yyyy h.mm a.m.|p.m.` if dates are different
+- un_daterange_times: Formatted as date and time `h.mm a.m.|p.m. — h.mm a.m.|p.m.` or `dd.mm.yyyy h.mm a.m.|p.m. — dd.mm.yyyy h.mm a.m.|p.m.` if dates are different
+- un_timerange: Formatted as time `h.mm a.m.|p.m. — h.mm a.m.|p.m.`
+- un_year: Formatted as `yyyy`
+- un_month: Formatted as `m`
+- un_month_full: Formatted as `F`
+- un_month_abbr: Formatted as `M`
+- un_day: Formatted as `j`
+- un_hour: Formatted as `G`, `g`, `noon`, `midnight`
+- un_minute: Formatted as `m` or blank if zero
+- un_ampm: Formatted as `a.m.|p.m.` or blank
 
-## un_time
+### Functions
 
-Formatted as time `h.mm a.m.|p.m.`
+Most function accept a DateRange object or 2 DateTime inputs.
 
-## un_datetime
+- un_is_same_date: identical
+- un_is_same_day: on the same day
+- un_is_same_month: in the same month and year
+- un_is_same_year: in the same year
+- un_is_all_day: all day event
+- un_is_utc: using UTC timezone
+- un_is_rtl: RTL locale
+- un_separator: the separator used
+- un_duration: Return duration as human readable string
 
-Formatted as date and time `dd.mm.yyyy h.mm a.m.|p.m.`
+## Human readable RRUle
 
-## un_daterange
-
-Formatted as date and time `dd.mm.yyyy h.mm a.m.|p.m. — h.mm a.m.|p.m.`
-or `dd.mm.yyyy h.mm a.m.|p.m. — dd.mm.yyyy h.mm a.m.|p.m.` if dates are different
-
-## un_daterange_times
-
-Formatted as date and time `h.mm a.m.|p.m. — h.mm a.m.|p.m.`
-or `dd.mm.yyyy h.mm a.m.|p.m. — dd.mm.yyyy h.mm a.m.|p.m.` if dates are different
+Currently using https://github.com/rlanvin/php-rrule but https://github.com/simshaun/recurr looks nicer

@@ -3,10 +3,12 @@
 namespace Drupal\un_date\Trait;
 
 use Drupal\Core\Datetime\DrupalDateTime;
-use Drupal\Core\Form\FormStateInterface;
+use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
+use Drupal\datetime\DateTimeComputed;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone;
+use Drupal\un_date\UnDateRange;
 
 /**
  * Common formatting methods.
@@ -27,9 +29,33 @@ trait UnDateTimeTrait {
   ];
 
   /**
+   * List of supported templates.
+   *
+   * @var array
+   */
+  protected array $templates = [
+    'default' => 'Default',
+    'un_date_date_block' => 'Date as block',
+  ];
+
+  /**
    * Format time.
    */
-  protected function formatTime(\DateTime|DrupalDateTime $date, $show_timezone = FALSE) : string {
+  protected function formatTime(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed $date, $show_timezone = FALSE) : string {
+    if ($date instanceof DateTimeComputed) {
+      $date = $date->getValue();
+    }
+
+    // Midnight.
+    if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {
+      return t('midnight');
+    }
+
+    // Noon.
+    if ($date->format('G') == '12' && $date->format('i') === '00') {
+      return t('noon');
+    }
+
     $ampm = '';
     $time_format = 'g.i';
 
@@ -82,6 +108,13 @@ trait UnDateTimeTrait {
 
     }
 
+    return $date->format($time_format) . $ampm . $this->formatTimezone($date, $show_timezone);
+  }
+
+  /**
+   * Format hour.
+   */
+  protected function formatHour(\DateTime|DrupalDateTime $date) : string {
     // Midnight.
     if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {
       return t('midnight');
@@ -92,17 +125,74 @@ trait UnDateTimeTrait {
       return t('noon');
     }
 
-    return $date->format($time_format) . $ampm . $this->formatTimezone($date, $show_timezone);
+    $time_format = 'g';
+
+    switch ($this->getLocale()) {
+      case 'en':
+        $time_format = 'g';
+        break;
+
+      case 'fr':
+      case 'es':
+      case 'ar':
+      case 'zh-hans':
+        $time_format = 'G';
+    }
+
+    return $date->format($time_format);
+  }
+
+  /**
+   * Format minute.
+   */
+  protected function formatMinute(\DateTime|DrupalDateTime $date) : string {
+    if ($date->format('i') === '00') {
+      return '';
+    }
+
+    $time_format = 'i';
+    return $date->format($time_format);
+  }
+
+  /**
+   * Format AM/PM.
+   */
+  protected function formatAmPm(\DateTime|DrupalDateTime $date) : string {
+    // Midnight.
+    if (($date->format('G') == '0' || $date->format('G') == '24') && $date->format('i') === '00') {
+      return '';
+    }
+
+    // Noon.
+    if ($date->format('G') == '12' && $date->format('i') === '00') {
+      return '';
+    }
+
+    $ampm = '';
+
+    switch ($this->getLocale()) {
+      case 'en':
+        $ampm = 'a.m.';
+        if ($date->format('a') === 'pm') {
+          $ampm = 'p.m.';
+        }
+        break;
+
+    }
+
+    return $ampm;
   }
 
   /**
    * Format date.
    */
-  protected function formatDate(\DateTime|DrupalDateTime|DateRangeItem $date, $month_format = 'numeric') : string {
+  protected function formatDate(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed $date, $month_format = 'numeric') : string {
     // Twig doens't have a setting.
     if (is_callable([$this, 'getSetting'])) {
       $month_format = $this->getSetting('month_format') ?? 'numeric';
     }
+
+    $month_format = $this->validateMonthFormat($month_format);
 
     $date_format = 'j.m.Y';
     switch ($month_format) {
@@ -128,7 +218,7 @@ trait UnDateTimeTrait {
     }
 
     // Always use DrupalDateTime for translations.
-    if ($date instanceof \DateTime) {
+    if (!$date instanceof DrupalDateTime) {
       $date = (new DrupalDateTime())->createFromDateTime($date);
     }
 
@@ -138,14 +228,14 @@ trait UnDateTimeTrait {
   /**
    * Format datetime.
    */
-  protected function formatDateTime(\DateTime|DrupalDateTime|DateRangeItem $date, $show_timezone = FALSE, $month_format = 'numeric') : string {
+  protected function formatDateTime(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed|DateRangeItem $date, $month_format = 'numeric', $show_timezone = FALSE) : string {
     return $this->formatDate($date, $month_format) . ' ' . $this->formatTime($date, $show_timezone);
   }
 
   /**
    * Format timezone.
    */
-  protected function formatTimezone(\DateTime|DrupalDateTime|DateRangeItem $date, bool $show_timezone = FALSE) : string {
+  protected function formatTimezone(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed|DateRangeItem $date, bool $show_timezone = FALSE) : string {
     if ($show_timezone) {
       return ' ' . $date->getTimezone()->getName();
     }
@@ -156,7 +246,7 @@ trait UnDateTimeTrait {
   /**
    * Get timezone offset.
    */
-  protected function getTimezoneOffset(\DateTime|DrupalDateTime|DateRangeItem $date) : string {
+  protected function getTimezoneOffset(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed|DateRangeItem $date) : string {
     return $date->getTimezone()->getOffset($date->getPhpDateTime());
   }
 
@@ -168,16 +258,122 @@ trait UnDateTimeTrait {
   }
 
   /**
-   * Is all day event.
+   * Is object a date range.
    */
-  protected function allDay(DateRangeItem|DateRecurItem|DateRangeTimezone $date_item, $timezone = 'UTC') : bool {
-    return $this->allDayStartEnd($date_item->start_date, $date_item->end_date, $timezone);
+  protected function isDateRange($object) : bool {
+    if ($object instanceof DateRangeItem
+      || $object instanceof DateRange
+      || $object instanceof DateRecurItem
+      || $object instanceof DateRangeTimezone
+      || $object instanceof UnDateRange) {
+      return TRUE;
+    }
+
+    return FALSE;
   }
 
   /**
-   * Is all day event.
+   * Get start date.
    */
-  protected function allDayStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end, $timezone = 'UTC') : bool {
+  protected function getStartDate($object) {
+    if (!$this->isDateRange($object)) {
+      return NULL;
+    }
+
+    if ($object instanceof DateTimeComputed) {
+      return $object->getValue();
+    }
+
+    if ($object instanceof DateRangeItem) {
+      return $object->get('start_date')->getValue();
+    }
+
+    if ($object instanceof DateRange) {
+      return $object->getStart();
+    }
+
+    if ($object instanceof DateRecurItem) {
+      return $object->start_date;
+    }
+
+    if ($object instanceof DateRangeTimezone) {
+      return $object->get('start_date');
+    }
+
+    if ($object instanceof UnDateRange) {
+      return $object->start_date;
+    }
+
+    return NULL;
+  }
+
+  /**
+   * Is same date.
+   */
+  protected function sameDate($date_item) : bool {
+    return $this->sameDateStartEnd($date_item->start_date, $date_item->end_date);
+  }
+
+  /**
+   * Is same date.
+   */
+  protected function sameDateStartEnd($start, $end) : bool {
+    return $start->format('c') == $end->format('c');
+  }
+
+  /**
+   * Is same month and year.
+   */
+  protected function sameMonth($date_item) : bool {
+    return $this->sameMonthStartEnd($date_item->start_date, $date_item->end_date);
+  }
+
+  /**
+   * Is same month and year.
+   */
+  protected function sameMonthStartEnd($start, $end) : bool {
+    return $start->format('Ym') == $end->format('Ym');
+  }
+
+  /**
+   * Is same year.
+   */
+  protected function sameYear($date_item) : bool {
+    return $this->sameYearStartEnd($date_item->start_date, $date_item->end_date);
+  }
+
+  /**
+   * Is same year.
+   */
+  protected function sameYearStartEnd($start, $end) : bool {
+    return $start->format('Y') == $end->format('Y');
+  }
+
+  /**
+   * Is same day.
+   */
+  protected function sameDay($date_item) : bool {
+    return $this->sameDayStartEnd($date_item->start_date, $date_item->end_date);
+  }
+
+  /**
+   * Is same day.
+   */
+  protected function sameDayStartEnd($start, $end) : bool {
+    return $this->formatDate($start) == $this->formatDate($end);
+  }
+
+  /**
+   * Is all day.
+   */
+  protected function allDay($date_item) : bool {
+    return $this->allDayStartEnd($date_item->start_date, $date_item->end_date);
+  }
+
+  /**
+   * Is all day.
+   */
+  protected function allDayStartEnd($start, $end) : bool {
     if ($start->format('Hi') === '0000' && $end->format('Hi') === '0000') {
       return TRUE;
     }
@@ -190,60 +386,39 @@ trait UnDateTimeTrait {
   }
 
   /**
-   * {@inheritdoc}
-   *
-   * @codeCoverageIgnore
+   * Duration.
    */
-  public static function defaultSettings() {
-    return [
-      'display_timezone' => TRUE,
-      'month_format' => 'numeric',
-    ] + parent::defaultSettings();
+  protected function duration(DateRangeItem|DateRecurItem|DateRangeTimezone|UnDateRange $date_item) : string {
+    return $this->durationStartEnd($date_item->start_date, $date_item->end_date);
   }
 
   /**
-   * {@inheritdoc}
-   *
-   * @codeCoverageIgnore
+   * Duration.
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
-    $form = parent::settingsForm($form, $form_state);
+  protected function durationStartEnd(\DateTime|DrupalDateTime $start, \DateTime|DrupalDateTime $end) : string {
+    $output = [];
+    $interval = $start->diff($end, TRUE);
 
-    $form['display_timezone'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Display Timezone'),
-      '#description' => $this->t('Should we display the timezone after the formatted date?'),
-      '#default_value' => $this->getSetting('display_timezone'),
-    ];
+    if ($interval->y) {
+      $output[] = un_date_format_plural($interval->format("%y"), '1 year', '@count years');
+    }
+    if ($interval->m) {
+      $output[] = un_date_format_plural($interval->format("%m"), '1 month', '@count months');
+    }
+    if ($interval->d) {
+      $output[] = un_date_format_plural($interval->format("%d"), '1 day', '@count days');
+    }
+    if ($interval->h) {
+      $output[] = un_date_format_plural($interval->format("%h"), '1 hour', '@count hours');
+    }
+    if ($interval->i) {
+      $output[] = un_date_format_plural($interval->format("%i"), '1 minute', '@count minutes');
+    }
+    if ($interval->s) {
+      $output[] = un_date_format_plural($interval->format("%s"), '1 second', '@count seconds');
+    }
 
-    $form['month_format'] = [
-      '#type' => 'select',
-      '#title' => $this->t('Month format'),
-      '#options' => $this->monthFormats,
-      '#description' => $this->t('In which format will the month be displayed'),
-      '#default_value' => $this->getSetting('month_format'),
-    ];
-
-    return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @codeCoverageIgnore
-   */
-  public function settingsSummary() {
-    $summary = parent::settingsSummary();
-
-    $summary[] = $this->t('@action the timezone', [
-      '@action' => $this->getSetting('display_timezone') ? 'Showing' : 'Hiding',
-    ]);
-
-    $summary[] = $this->t('Month display: @action', [
-      '@action' => $this->monthFormats[$this->getSetting('month_format') ?? 'numeric'],
-    ]);
-
-    return $summary;
+    return implode(', ', $output);
   }
 
   /**
@@ -251,6 +426,49 @@ trait UnDateTimeTrait {
    */
   public function getLocale() {
     return \Drupal::languageManager()->getCurrentLanguage()->getId();
+  }
+
+  /**
+   * Get parts of start and end date.
+   */
+  public function getParts($start_date, $end_date) {
+    return [
+      'start' => [
+        'day' => $start_date->format('j'),
+        'month' => $start_date->format('m'),
+        'month_abbr' => $start_date->format('M'),
+        'month_full' => $start_date->format('F'),
+        'year' => $start_date->format('Y'),
+      ],
+      'end' => [
+        'day' => $end_date->format('j'),
+        'month' => $end_date->format('m'),
+        'month_abbr' => $end_date->format('M'),
+        'month_full' => $end_date->format('F'),
+        'year' => $end_date->format('Y'),
+      ],
+    ];
+  }
+
+  /**
+   * Validate and fallback for month format.
+   */
+  protected function validateMonthFormat($month_format) {
+    if (!$month_format || !is_string($month_format)) {
+      $month_format = 'numeric';
+    }
+
+    $month_format = strtolower($month_format);
+
+    if ($month_format == 'abbr') {
+      $month_format = 'abbreviation';
+    }
+
+    if (!array_key_exists($month_format, $this->monthFormats)) {
+      $month_format = 'numeric';
+    }
+
+    return $month_format;
   }
 
 }

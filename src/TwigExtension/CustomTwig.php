@@ -4,6 +4,7 @@ namespace Drupal\un_date\TwigExtension;
 
 use Drupal\Component\Datetime\DateTimePlus;
 use Drupal\Core\Datetime\DrupalDateTime;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\date_recur\DateRange;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurFieldItemList;
 use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
@@ -25,6 +26,7 @@ use Twig\TwigFunction;
 class CustomTwig extends AbstractExtension {
 
   use UnDateTimeTrait;
+  use StringTranslationTrait;
 
   /**
    * {@inheritdoc}
@@ -141,7 +143,7 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format daterange.
    */
-  public function getUnDaterangeTimes($input, $show_timezone = FALSE, $month_format = 'numeric') : string {
+  public function getUnDaterangeTimes($input, $month_format = 'numeric', $show_timezone = FALSE) : string {
     $date_item = $this->getDateItem($input);
 
     if (!$date_item) {
@@ -160,7 +162,7 @@ class CustomTwig extends AbstractExtension {
     // Same day.
     if ($this->formatDate($date_item->start_date) === $this->formatDate($date_item->end_date)) {
       if ($this->allDay($date_item)) {
-        return 'All day';
+        return $this->t('All day');
       }
       return $this->formatTime($date_item->start_date, FALSE) . $this->getSeparatorWithSpaces() . $this->formatTime($date_item->end_date, $show_timezone);
     }

@@ -108,3 +108,7 @@ msgstr "nov"
 msgctxt "Abbreviated month name"
 msgid "Dec"
 msgstr "déc"
+
+msgid "All day"
+msgstr "Toute la journée"
+

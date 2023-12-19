@@ -67,8 +67,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format date.
    */
-  public function getUnDate($in, $month_format = 'numeric') : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnDate($input, $month_format = 'numeric') : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -79,8 +79,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format time.
    */
-  public function getUnTime($in, bool $show_timezone = FALSE) : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnTime($input, bool $show_timezone = FALSE) : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -92,8 +92,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format date and time.
    */
-  public function getUnDateTime($in, $month_format = 'numeric', bool $show_timezone = FALSE) : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnDateTime($input, $month_format = 'numeric', bool $show_timezone = FALSE) : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -105,8 +105,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format daterange.
    */
-  public function getUnDaterange($in, $month_format = 'numeric', $show_timezone = FALSE) : string {
-    $date_item = $this->getDateItem($in);
+  public function getUnDaterange($input, $month_format = 'numeric', $show_timezone = FALSE) : string {
+    $date_item = $this->getDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -139,8 +139,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format daterange.
    */
-  public function getUnDaterangeTimes($in, $show_timezone = FALSE, $month_format = 'numeric') : string {
-    $date_item = $this->getDateItem($in);
+  public function getUnDaterangeTimes($input, $show_timezone = FALSE, $month_format = 'numeric') : string {
+    $date_item = $this->getDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -173,8 +173,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Format daterange.
    */
-  public function getUnDaterangeNamed($in, $month_format = 'numeric', $format = 'default') : string {
-    $date_item = $this->getDateRangeFromItem($in);
+  public function getUnDaterangeNamed($input, $month_format = 'numeric', $format = 'default') : string {
+    $date_item = $this->getDateRangeFromItem($input);
 
     if (!$date_item) {
       return '';
@@ -198,49 +198,49 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get date item.
    */
-  protected function getDateItem($in) {
-    if ($in instanceof \DateTime) {
-      return $in;
+  protected function getDateItem($input) {
+    if ($input instanceof \DateTime) {
+      return $input;
     }
 
-    if ($in instanceof DateTimeComputed) {
-      return $in->getValue();
+    if ($input instanceof DateTimeComputed) {
+      return $input->getValue();
     }
 
-    if ($in instanceof \DateTimeImmutable) {
-      return $in;
+    if ($input instanceof \DateTimeImmutable) {
+      return $input;
     }
 
-    if ($in instanceof UnDateRange) {
-      return $in;
+    if ($input instanceof UnDateRange) {
+      return $input;
     }
 
-    if ($in instanceof DateRange) {
-      return new UnDateRange($in->getStart(), $in->getEnd());
+    if ($input instanceof DateRange) {
+      return new UnDateRange($input->getStart(), $input->getEnd());
     }
 
-    if ($in instanceof DateRecurItem) {
-      return $in;
+    if ($input instanceof DateRecurItem) {
+      return $input;
     }
 
-    if ($in instanceof DateRecurFieldItemList) {
-      return $in->first();
+    if ($input instanceof DateRecurFieldItemList) {
+      return $input->first();
     }
 
-    if ($in instanceof DateRangeItem) {
-      return $in;
+    if ($input instanceof DateRangeItem) {
+      return $input;
     }
 
-    if ($in instanceof DateRangeFieldItemList) {
-      return $in->first();
+    if ($input instanceof DateRangeFieldItemList) {
+      return $input->first();
     }
 
-    if ($in instanceof DateTimeItem) {
-      return $in;
+    if ($input instanceof DateTimeItem) {
+      return $input;
     }
 
-    if ($in instanceof DateTimeFieldItemList) {
-      return $in->first();
+    if ($input instanceof DateTimeFieldItemList) {
+      return $input->first();
     }
 
     return NULL;
@@ -249,8 +249,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Gat date from date item.
    */
-  protected function getDateFromDateItem($in) {
-    $date_item = $this->getDateItem($in);
+  protected function getDateFromDateItem($input) {
+    $date_item = $this->getDateItem($input);
 
     if (!$date_item) {
       return NULL;
@@ -267,8 +267,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Gat date from date item.
    */
-  protected function getDateRangeFromItem($in) {
-    $date_item = $this->getDateItem($in);
+  protected function getDateRangeFromItem($input) {
+    $date_item = $this->getDateItem($input);
 
     if (!$date_item) {
       return NULL;
@@ -314,8 +314,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get year.
    */
-  public function getUnyear($in) : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnyear($input) : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -327,8 +327,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get month as number.
    */
-  public function getUnMonth($in) : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnMonth($input) : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -340,8 +340,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get full month name.
    */
-  public function getUnMonthFull($in) : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnMonthFull($input) : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -353,8 +353,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get abbreviaterd month name.
    */
-  public function getUnMonthAbbr($in) : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnMonthAbbr($input) : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -366,8 +366,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get day.
    */
-  public function getUnDay($in) : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnDay($input) : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -379,8 +379,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get hour.
    */
-  public function getUnHour($in) : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnHour($input) : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -392,8 +392,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get minute.
    */
-  public function getUnMinute($in) : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnMinute($input) : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -405,8 +405,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get AM/PM.
    */
-  public function getUnAmPm($in) : string {
-    $date_item = $this->getDateFromDateItem($in);
+  public function getUnAmPm($input) : string {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return '';
@@ -558,8 +558,8 @@ class CustomTwig extends AbstractExtension {
   /**
    * Is UTC timezone.
    */
-  public function isUtc($in) : bool {
-    $date_item = $this->getDateFromDateItem($in);
+  public function isUtc($input) : bool {
+    $date_item = $this->getDateFromDateItem($input);
 
     if (!$date_item) {
       return FALSE;

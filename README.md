@@ -11,11 +11,6 @@ to fix translation of [abbreviated month names](https://www.drupal.org/node/3004
 
 The Humand readable output of RRules is flaky.
 
-## Todo
-
-- Consolidate theme functions and templates
-- Add all date parts
-
 ## Install
 
 Run `composer install unocha/un_date`

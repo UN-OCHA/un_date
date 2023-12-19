@@ -59,6 +59,7 @@ final class UnDateDateTime extends FormatterBase {
 
       $elements[$delta] = [
         '#theme' => $theme . '__' . $theme_suggestions,
+        '#start' => $date,
         '#iso_start_date' => $iso_start_date,
         '#start_date' => $this->formatDate($date),
         '#start_time' => $this->formatTime($date),

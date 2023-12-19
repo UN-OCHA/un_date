@@ -7,6 +7,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\un_date\Trait\UnDateTimeFormatterTrait;
+use Drupal\un_date\UnDateRange;
 
 /**
  * Plugin implementation of the 'UN Default' formatter for 'daterange_timezone'.
@@ -72,6 +73,9 @@ final class UnDateDateTimeRange extends FormatterBase {
 
       $elements[$delta] = [
         '#theme' => $theme . '__' . $theme_suggestions,
+        '#daterange' => new UnDateRange($start_date, $end_date),
+        '#start' => $start_date,
+        '#end' => $end_date,
         '#iso_start_date' => $iso_start_date,
         '#iso_end_date' => $iso_end_date,
         '#start_date' => $this->formatDate($start_date),

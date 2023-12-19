@@ -10,22 +10,11 @@
  */
 function un_date_theme($existing, $type, $theme, $path) {
   return [
-    'un_date_datetime_range_timezone' => [
+    'un_date_date' => [
       'variables' => [
         'start' => NULL,
-        'end' => NULL,
-        'daterange' => NULL,
         'iso_start_date' => NULL,
-        'iso_end_date' => NULL,
         'start_date' => NULL,
-        'start_time' => NULL,
-        'end_date' => NULL,
-        'end_time' => NULL,
-        'timezone' => NULL,
-        'display_timezone' => NULL,
-        'same_date' => NULL,
-        'same_day' => NULL,
-        'all_day' => NULL,
       ],
     ],
     'un_date_datetime' => [
@@ -36,13 +25,6 @@ function un_date_theme($existing, $type, $theme, $path) {
         'start_time' => NULL,
         'timezone' => NULL,
         'display_timezone' => NULL,
-      ],
-    ],
-    'un_date_date' => [
-      'variables' => [
-        'start' => NULL,
-        'iso_start_date' => NULL,
-        'start_date' => NULL,
       ],
     ],
     'un_date_datetime_range' => [
@@ -103,7 +85,6 @@ function un_date_theme($existing, $type, $theme, $path) {
         'start' => NULL,
         'end' => NULL,
         'daterange' => NULL,
-        'parts' => [],
         'iso_start_date' => NULL,
         'iso_end_date' => NULL,
         'start_date' => NULL,

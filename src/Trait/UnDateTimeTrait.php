@@ -233,6 +233,62 @@ trait UnDateTimeTrait {
   }
 
   /**
+   * Format daterange.
+   */
+  public function formatDaterange($date, $month_format = 'numeric', $show_timezone = FALSE) : string {
+    if (!$this->isDateRange($date)) {
+      return $this->formatDateTime($date, $month_format, $show_timezone);
+    }
+
+    // Same.
+    if ($this->sameDate($date)) {
+      return $this->formatDateTime($date->start_date, $month_format, $show_timezone);
+    }
+
+    // Same day.
+    if ($this->sameDay($date)) {
+      if ($this->allDay($date)) {
+        return $this->formatDate($date->start_date, $month_format);
+      }
+      return $this->formatDateTime($date->start_date, $month_format, FALSE) . $this->getSeparatorWithSpaces() . $this->formatTime($date->end_date, $show_timezone);
+    }
+
+    if ($this->allDay($date)) {
+      return $this->formatDate($date->start_date, $month_format) . $this->getSeparatorWithSpaces() . $this->formatDate($date->end_date, $month_format);
+    }
+
+    return $this->formatDateTime($date->start_date, $month_format, FALSE) . $this->getSeparatorWithSpaces() . $this->formatDateTime($date->end_date, $month_format, $show_timezone);
+  }
+
+  /**
+   * Format daterange times.
+   */
+  public function formatDaterangeTimes($date, $month_format = 'numeric', $show_timezone = FALSE) : string {
+    if (!$this->isDateRange($date)) {
+      return $this->formatTime($date, $show_timezone);
+    }
+
+    // Same.
+    if ($date->start_date->format('c') == $date->end_date->format('c')) {
+      return $this->formatTime($date->start_date, $show_timezone);
+    }
+
+    // Same day.
+    if ($this->formatDate($date->start_date) === $this->formatDate($date->end_date)) {
+      if ($this->allDay($date)) {
+        return $this->t('All day');
+      }
+      return $this->formatTime($date->start_date, FALSE) . $this->getSeparatorWithSpaces() . $this->formatTime($date->end_date, $show_timezone);
+    }
+
+    if ($this->allDay($date)) {
+      return $this->formatDate($date->start_date, $month_format) . $this->getSeparatorWithSpaces() . $this->formatDate($date->end_date, $month_format);
+    }
+
+    return $this->formatDateTime($date->start_date, $month_format, FALSE) . $this->getSeparatorWithSpaces() . $this->formatDateTime($date->end_date, $month_format, $show_timezone);
+  }
+
+  /**
    * Format timezone.
    */
   protected function formatTimezone(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed|DateRangeItem $date, bool $show_timezone = FALSE) : string {
@@ -251,10 +307,17 @@ trait UnDateTimeTrait {
   }
 
   /**
-   * Get separator with spacing.
+   * Get separator.
    */
-  protected function getSeparator() : string {
-    return ' ' . self::SEPARATOR . ' ';
+  public function getSeparator() : string {
+    return $this::SEPARATOR;
+  }
+
+  /**
+   * Get separator with spaces.
+   */
+  public function getSeparatorWithSpaces() : string {
+    return ' ' . $this->getSeparator() . ' ';
   }
 
   /**
@@ -426,28 +489,6 @@ trait UnDateTimeTrait {
    */
   public function getLocale() {
     return \Drupal::languageManager()->getCurrentLanguage()->getId();
-  }
-
-  /**
-   * Get parts of start and end date.
-   */
-  public function getParts($start_date, $end_date) {
-    return [
-      'start' => [
-        'day' => $start_date->format('j'),
-        'month' => $start_date->format('m'),
-        'month_abbr' => $start_date->format('M'),
-        'month_full' => $start_date->format('F'),
-        'year' => $start_date->format('Y'),
-      ],
-      'end' => [
-        'day' => $end_date->format('j'),
-        'month' => $end_date->format('m'),
-        'month_abbr' => $end_date->format('M'),
-        'month_full' => $end_date->format('F'),
-        'year' => $end_date->format('Y'),
-      ],
-    ];
   }
 
   /**

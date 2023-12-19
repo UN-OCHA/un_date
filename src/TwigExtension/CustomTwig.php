@@ -116,28 +116,7 @@ class CustomTwig extends AbstractExtension {
       return '';
     }
 
-    if (!$this->isDateRange($date_item)) {
-      return $this->formatDateTime($date_item, $month_format, $show_timezone);
-    }
-
-    // Same.
-    if ($this->sameDate($date_item)) {
-      return $this->formatDateTime($date_item->start_date, $month_format, $show_timezone);
-    }
-
-    // Same day.
-    if ($this->sameDay($date_item)) {
-      if ($this->allDay($date_item)) {
-        return $this->formatDate($date_item->start_date, $month_format);
-      }
-      return $this->formatDateTime($date_item->start_date, $month_format, FALSE) . $this->getSeparatorWithSpaces() . $this->formatTime($date_item->end_date, $show_timezone);
-    }
-
-    if ($this->allDay($date_item)) {
-      return $this->formatDate($date_item->start_date, $month_format) . $this->getSeparatorWithSpaces() . $this->formatDate($date_item->end_date, $month_format);
-    }
-
-    return $this->formatDateTime($date_item->start_date, $month_format, FALSE) . $this->getSeparatorWithSpaces() . $this->formatDateTime($date_item->end_date, $month_format, $show_timezone);
+    return $this->formatDaterange($date_item, $month_format, $show_timezone);
   }
 
   /**
@@ -150,28 +129,7 @@ class CustomTwig extends AbstractExtension {
       return '';
     }
 
-    if (!$this->isDateRange($date_item)) {
-      return $this->formatTime($date_item, $show_timezone);
-    }
-
-    // Same.
-    if ($date_item->start_date->format('c') == $date_item->end_date->format('c')) {
-      return $this->formatTime($date_item->start_date, $show_timezone);
-    }
-
-    // Same day.
-    if ($this->formatDate($date_item->start_date) === $this->formatDate($date_item->end_date)) {
-      if ($this->allDay($date_item)) {
-        return $this->t('All day');
-      }
-      return $this->formatTime($date_item->start_date, FALSE) . $this->getSeparatorWithSpaces() . $this->formatTime($date_item->end_date, $show_timezone);
-    }
-
-    if ($this->allDay($date_item)) {
-      return $this->formatDate($date_item->start_date, $month_format) . $this->getSeparatorWithSpaces() . $this->formatDate($date_item->end_date, $month_format);
-    }
-
-    return $this->formatDateTime($date_item->start_date, $month_format, FALSE) . $this->getSeparatorWithSpaces() . $this->formatDateTime($date_item->end_date, $month_format, $show_timezone);
+    return $this->formatDaterangeTimes($date_item, $month_format, $show_timezone);
   }
 
   /**
@@ -595,20 +553,6 @@ class CustomTwig extends AbstractExtension {
    */
   public function isRtl() : bool {
     return un_date_current_language_rtl();
-  }
-
-  /**
-   * Get separator.
-   */
-  public function getSeparator() : string {
-    return $this::SEPARATOR;
-  }
-
-  /**
-   * Get separator with spaces.
-   */
-  public function getSeparatorWithSpaces() : string {
-    return ' ' . $this->getSeparator() . ' ';
   }
 
   /**

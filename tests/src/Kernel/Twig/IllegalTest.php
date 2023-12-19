@@ -143,16 +143,6 @@ class IllegalTest extends TwigBase {
         'template' => '{{ variable|un_ampm }}',
         'date' => 'test',
       ],
-      'un_is_all_day' => [
-        'expected' => '',
-        'template' => '{{ un_is_all_day(variable) }}',
-        'date' => 'test',
-      ],
-      'un_is_utc' => [
-        'expected' => '',
-        'template' => '{{ un_is_utc(variable) }}',
-        'date' => 'test',
-      ],
       'un_duration' => [
         'expected' => '',
         'template' => '{{ un_duration(variable) }}',

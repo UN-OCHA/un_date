@@ -531,7 +531,7 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
         'start' => '2023-12-06T10:11:00',
         'end' => '2023-12-07T12:11:00',
       ],
-      __FUNCTION__ . '::un_is_all_day' => [
+      __FUNCTION__ . '::un_is_all_day2' => [
         'template' => '{{ un_is_all_day(variable, var2) }}',
         'expected' => '',
         'start' => '2023-12-06T10:11:00',

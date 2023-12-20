@@ -42,7 +42,7 @@ class DateRenderDateTimeFullTranslationTest extends UnDateTestBase {
         ]
       ],
     ];
-    
+
     parent::setUp();
   }
 
@@ -105,7 +105,7 @@ class DateRenderDateTimeFullTranslationTest extends UnDateTestBase {
    */
   public function providerTestData() {
     return [
-      'same' => [
+      __FUNCTION__ . '::same' => [
         'expected' => [
           'en' => 'Date: 6 December 2023 10.11 a.m.',
           'fr' => 'Date: 6 décembre 2023 10 h 11',
@@ -115,7 +115,7 @@ class DateRenderDateTimeFullTranslationTest extends UnDateTestBase {
         ],
         'date' => '2023-12-06T10:11:12',
       ],
-      'same_day' => [
+      __FUNCTION__ . '::same_day' => [
         'expected' => [
           'en' => 'Date: 6 December 2023 10.11 p.m.',
           'fr' => 'Date: 6 décembre 2023 22 h 11',
@@ -125,7 +125,7 @@ class DateRenderDateTimeFullTranslationTest extends UnDateTestBase {
         ],
         'date' => '2023-12-06T22:11:12',
       ],
-      '1am' => [
+      __FUNCTION__ . '::1am' => [
         'expected' => [
           'en' => 'Date: 6 December 2023 1 a.m.',
           'fr' => 'Date: 6 décembre 2023 1 heure',
@@ -135,7 +135,7 @@ class DateRenderDateTimeFullTranslationTest extends UnDateTestBase {
         ],
         'date' => '2023-12-06T01:00:00',
       ],
-      'next_day' => [
+      __FUNCTION__ . '::next_day' => [
         'expected' => [
           'en' => 'Date: 6 December 2023 10 a.m.',
           'fr' => 'Date: 6 décembre 2023 10 heures',
@@ -145,7 +145,7 @@ class DateRenderDateTimeFullTranslationTest extends UnDateTestBase {
         ],
         'date' => '2023-12-06T10:00:12',
       ],
-      'all_day' => [
+      __FUNCTION__ . '::all_day' => [
         'expected' => [
           'en' => 'Date: 6 December 2023 midnight',
           'fr' => 'Date: 6 décembre 2023 minuit',
@@ -155,7 +155,7 @@ class DateRenderDateTimeFullTranslationTest extends UnDateTestBase {
         ],
         'date' => '2023-12-06T00:00:00',
       ],
-      'all_day_multi' => [
+      __FUNCTION__ . '::all_day_multi' => [
         'expected' => [
           'en' => 'Date: 6 December 2023 noon',
           'fr' => 'Date: 6 décembre 2023 midi',

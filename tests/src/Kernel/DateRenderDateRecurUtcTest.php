@@ -98,73 +98,73 @@ class DateRenderDateRecurUtcTest extends UnDateTestBase {
    */
   public function providerTestDataUtc() {
     return [
-      'same_utc' => [
+      __FUNCTION__ . '::same_utc' => [
         'expected' => 'Date: 6.12.2023 10.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
         'timezone' => 'UTC',
       ],
-      'same_day_utc' => [
+      __FUNCTION__ . '::same_day_utc' => [
         'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'UTC',
       ],
-      'next_day_utc' => [
+      __FUNCTION__ . '::next_day_utc' => [
         'expected' => 'Start date: 6.12.2023 10.11 a.m. (UTC) End date: 7.12.2023 11.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
         'timezone' => 'UTC',
       ],
-      'all_day_utc' => [
+      __FUNCTION__ . '::all_day_utc' => [
         'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
         'timezone' => 'UTC',
       ],
-      'all_day_2_utc' => [
+      __FUNCTION__ . '::all_day_2_utc' => [
         'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T00:00:00',
         'timezone' => 'UTC',
       ],
-      'all_day_multi_utc' => [
+      __FUNCTION__ . '::all_day_multi_utc' => [
         'expected' => 'Start date: 6.12.2023 End date: 7.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
         'timezone' => 'UTC',
       ],
-      'same_brussels' => [
+      __FUNCTION__ . '::same_brussels' => [
         'expected' => 'Date: 6.12.2023 10.11 a.m. (Europe/Brussels)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
         'timezone' => 'Europe/Brussels',
       ],
-      'same_day_brussels' => [
+      __FUNCTION__ . '::same_day_brussels' => [
         'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m. (Europe/Brussels)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'Europe/Brussels',
       ],
-      'next_day_brussels' => [
+      __FUNCTION__ . '::next_day_brussels' => [
         'expected' => 'Start date: 6.12.2023 10.11 a.m. (Europe/Brussels) End date: 7.12.2023 11.11 a.m. (Europe/Brussels)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
         'timezone' => 'Europe/Brussels',
       ],
-      'all_day_brussels' => [
+      __FUNCTION__ . '::all_day_brussels' => [
         'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
         'timezone' => 'Europe/Brussels',
       ],
-      'all_day_2_brussels' => [
+      __FUNCTION__ . '::all_day_2_brussels' => [
         'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T00:00:00',
         'timezone' => 'Europe/Brussels',
       ],
-      'all_day_multi_brussels' => [
+      __FUNCTION__ . '::all_day_multi_brussels' => [
         'expected' => 'Start date: 6.12.2023 End date: 7.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',
@@ -178,37 +178,37 @@ class DateRenderDateRecurUtcTest extends UnDateTestBase {
    */
   public function providerTestDataRandom() {
     return [
-      'same' => [
+      __FUNCTION__ . '::same' => [
         'expected' => 'Date: 6.12.2023 10.11 a.m. (Europe/Kyiv)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T10:11:12',
         'timezone' => 'Europe/Kyiv',
       ],
-      'same_day' => [
+      __FUNCTION__ . '::same_day' => [
         'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m. (Europe/Amsterdam)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'Europe/Amsterdam',
       ],
-      'next_day' => [
+      __FUNCTION__ . '::next_day' => [
         'expected' => 'Start date: 6.12.2023 10.11 a.m. (Asia/Tokyo) End date: 7.12.2023 11.11 a.m. (Asia/Tokyo)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
         'timezone' => 'Asia/Tokyo',
       ],
-      'all_day' => [
+      __FUNCTION__ . '::all_day' => [
         'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T23:59:59',
         'timezone' => 'Australia/Melbourne',
       ],
-      'all_day_2' => [
+      __FUNCTION__ . '::all_day_2' => [
         'expected' => 'Date: 6.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T00:00:00',
         'timezone' => 'Europe/Bucharest',
       ],
-      'all_day_multi' => [
+      __FUNCTION__ . '::all_day_multi' => [
         'expected' => 'Start date: 6.12.2023 End date: 7.12.2023',
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-07T23:59:59',

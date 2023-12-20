@@ -107,7 +107,7 @@ class UnDateTestBase extends FieldKernelTestBase {
     // Set an explicit site timezone.
     $this->config('system.date')
       ->set('timezone.user.configurable', 0)
-      ->set('timezone.default', 'UTC')
+      ->set('timezone.default', $this->testConfig['timezone'] ?? 'UTC')
       ->save();
 
     // Add a datetime range field.

@@ -2,11 +2,7 @@
 
 namespace Drupal\Tests\un_date\Kernel;
 
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 
 /**
  * Test datetime range field type via API.
@@ -14,23 +10,7 @@ use Drupal\Tests\field\Kernel\FieldKernelTestBase;
  * @group datetime
  * @phpcs:disable DrupalPractice.Objects.StrictSchemaDisabled.StrictConfigSchema
  */
-class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
-
-  use UnDateTestTrait;
-
-  /**
-   * A field storage to use in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldStorageConfig
-   */
-  protected $fieldStorage;
-
-  /**
-   * The field used in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldConfig
-   */
-  protected $field;
+class DateRenderDateRecurBrusselsTest extends UnDateTestBase {
 
   /**
    * {@inheritdoc}
@@ -51,68 +31,73 @@ class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
-    // Set an explicit site timezone.
-    $this->config('system.date')
-      ->set('timezone.user.configurable', 0)
-      ->set('timezone.default', 'Europe/Brussels')
-      ->save();
-
-    $this->installConfig(['un_date']);
-
-    // Add a datetime range field.
-    $this->fieldStorage = FieldStorageConfig::create([
-      'field_name' => mb_strtolower($this->randomMachineName()),
-      'entity_type' => 'entity_test',
-      'type' => 'date_recur',
-    ]);
-    $this->fieldStorage->save();
-
-    $this->field = FieldConfig::create([
-      'field_storage' => $this->fieldStorage,
-      'bundle' => 'entity_test',
-      'required' => TRUE,
-    ]);
-    $this->field->save();
-
-    $display_options = [
-      'type' => 'un_data_date_recur_basic',
-      'label' => 'hidden',
-      'settings' => [
-        'show_next' => 5,
-        'count_per_item' => TRUE,
-        'interpreter' => 'un_interpreter',
+    $this->testConfig = [
+      'timezone' => 'Europe/Brussels',
+      'storage' => [
+        'type' => 'date_recur',
+        'settings' => [],
+      ],
+      'display' => [
+        'type' => 'un_data_date_recur_basic',
+        'settings' => [
+          'display_timezone' => TRUE,
+        ]
       ],
     ];
-    EntityViewDisplay::create([
-      'targetEntityType' => $this->field->getTargetEntityTypeId(),
-      'bundle' => $this->field->getTargetBundle(),
-      'mode' => 'default',
-      'status' => TRUE,
-    ])->setComponent($this->fieldStorage->getName(), $display_options)
-      ->save();
+
+    parent::setUp();
   }
 
   /**
    * Test with UTC timezone.
    *
-   * @dataProvider providerTestDataUtc
+   * @x-dataProvider providerTestDataUtc
+   * @x-dataProvider providerTestDataRandom
    */
-  public function testDateRangeUtc($expected, $start, $end, $timezone, $rrule = '') {
-    $field_name = $this->fieldStorage->getName();
-    // Create an entity.
-    $entity = EntityTest::create([
-      'name' => $this->randomString(),
-      $field_name => [
-        'value' => $this->doTimezoneConversion($start, $timezone),
-        'end_value' => $this->doTimezoneConversion($end, $timezone),
-        'timezone' => $timezone,
-        'rrule' => $rrule,
-      ],
-    ]);
+  public function testDateRangeUtc($expected = NULL, $start = NULL, $end = NULL, $timezone = NULL, $rrule = '') {
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerTestDataUtc(),
+        $this->providerTestDataRandom(),
+      );
 
-    $this->assertStringContainsString($expected, (string) $this->renderIt('entity_test', $entity));
+      foreach ($data as $name => $row) {
+        $expected = $row['expected'];
+        $start = $row['start'];
+        $end = $row['end'];
+        $timezone = $row['timezone'];
+        $rrule = $row['rrule'] ?? '';
+
+        $field_name = $this->fieldStorage->getName();
+        // Create an entity.
+        $entity = EntityTest::create([
+          'name' => $this->randomString(),
+          $field_name => [
+            'value' => $this->doTimezoneConversion($start, $timezone),
+            'end_value' => $this->doTimezoneConversion($end, $timezone),
+            'timezone' => $timezone,
+            'rrule' => $rrule,
+          ],
+        ]);
+
+        $this->assertStringContainsString($expected, (string) $this->renderIt('entity_test', $entity), $name);
+      }
+    }
+    else {
+      $field_name = $this->fieldStorage->getName();
+      // Create an entity.
+      $entity = EntityTest::create([
+        'name' => $this->randomString(),
+        $field_name => [
+          'value' => $this->doTimezoneConversion($start, $timezone),
+          'end_value' => $this->doTimezoneConversion($end, $timezone),
+          'timezone' => $timezone,
+          'rrule' => $rrule,
+        ],
+      ]);
+
+      $this->assertStringContainsString($expected, (string) $this->renderIt('entity_test', $entity));
+    }
   }
 
   /**
@@ -242,26 +227,6 @@ class DateRenderDateRecurBrusselsTest extends FieldKernelTestBase {
         'rrule' => 'FREQ=WEEKLY;INTERVAL=1;BYDAY=MO;COUNT=1',
       ],
     ];
-  }
-
-  /**
-   * Test with random timezones.
-   *
-   * @dataProvider providerTestDataRandom
-   */
-  public function testDateRangeRandom($expected, $start, $end, $timezone) {
-    $field_name = $this->fieldStorage->getName();
-    // Create an entity.
-    $entity = EntityTest::create([
-      'name' => $this->randomString(),
-      $field_name => [
-        'value' => $this->doTimezoneConversion($start, $timezone),
-        'end_value' => $this->doTimezoneConversion($end, $timezone),
-        'timezone' => $timezone,
-      ],
-    ]);
-
-    $this->assertStringContainsString($expected, (string) $this->renderIt('entity_test', $entity));
   }
 
   /**

@@ -12,8 +12,6 @@ use Drupal\entity_test\Entity\EntityTest;
  */
 class DateRenderDateRecurUtcTest extends UnDateTestBase {
 
-  use UnDateTestTrait;
-
   /**
    * {@inheritdoc}
    */

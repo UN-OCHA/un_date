@@ -12,8 +12,6 @@ use Drupal\entity_test\Entity\EntityTest;
  */
 class DateRenderDateTimeAbbreviationTranslationTest extends UnDateTestBase {
 
-  use UnDateTestTrait;
-
   /**
    * {@inheritdoc}
    */

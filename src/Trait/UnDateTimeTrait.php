@@ -15,7 +15,13 @@ use Drupal\un_date\UnDateRange;
  */
 trait UnDateTimeTrait {
 
-  const SEPARATOR = '—';
+  /**
+   * Actually a const, but only works in PHP8.2.
+   *
+   * @var string
+   * @phpcs:disable Drupal.NamingConventions.ValidVariableName.LowerCamelName
+   */
+  public static string $SEPARATOR = '—';
 
   /**
    * List of supported formats for months.
@@ -317,7 +323,7 @@ trait UnDateTimeTrait {
    * Get separator.
    */
   public function getSeparator() : string {
-    return $this::SEPARATOR;
+    return $this::$SEPARATOR;
   }
 
   /**

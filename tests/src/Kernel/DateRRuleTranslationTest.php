@@ -2,6 +2,7 @@
 
 namespace Drupal\Tests\un_date\Kernel;
 
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\un_date\Trait\UnDateTimeTrait;
@@ -16,6 +17,7 @@ class DateRRuleTranslationTest extends FieldKernelTestBase {
 
   use UnDateTestTrait;
   use UnDateTimeTrait;
+  use StringTranslationTrait;
 
   /**
    * A field storage to use in this test class.

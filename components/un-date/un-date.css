@@ -59,6 +59,11 @@
 }
 
 /* Hide our label if one is set */
+.field--label-above .field__label ~ .field__item .un-date,
+.field--label-inline .field__label ~ .field__item .un-date {
+  margin-block-start: 0;
+}
+
 .field--label-above .field__label ~ .field__item .un-date__label,
 .field--label-inline .field__label ~ .field__item .un-date__label {
   display: none;
@@ -68,3 +73,4 @@
 .field--label-above .field__label ~ .field__item .un-date__date {
   margin-inline-start: 0;
 }
+

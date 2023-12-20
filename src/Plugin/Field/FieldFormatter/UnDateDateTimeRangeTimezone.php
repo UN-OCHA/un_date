@@ -39,8 +39,15 @@ final class UnDateDateTimeRangeTimezone extends FormatterBase {
       /** @var \Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone $item */
       /** @var \Drupal\Core\Datetime\DrupalDateTime $start_date */
       $start_date = $item->start_date;
+      if (!$start_date) {
+        continue;
+      }
+
       /** @var \Drupal\Core\Datetime\DrupalDateTime $end_date */
       $end_date = $item->end_date;
+      if (!$end_date) {
+        $end_date = $start_date;
+      }
 
       $tz = $this->getSetting('display_timezone');
       $same_date = FALSE;

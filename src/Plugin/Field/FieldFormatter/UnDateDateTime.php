@@ -39,6 +39,9 @@ final class UnDateDateTime extends FormatterBase {
       /** @var \Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone $item */
       /** @var \Drupal\Core\Datetime\DrupalDateTime $date */
       $date = $item->date;
+      if (!$date) {
+        continue;
+      }
 
       $tz = $this->getSetting('display_timezone');
       $datetime_type = $this->getFieldSetting('datetime_type');

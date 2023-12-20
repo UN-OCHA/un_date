@@ -41,7 +41,7 @@ class DateRenderDateTimeAbbreviationTranslationTest extends UnDateTestBase {
         'settings' => [
           'display_timezone' => FALSE,
           'month_format' => 'abbreviation',
-        ]
+        ],
       ],
     ];
 

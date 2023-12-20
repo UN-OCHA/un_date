@@ -39,7 +39,7 @@ class DateRenderDateTimeFullTranslationTest extends UnDateTestBase {
         'settings' => [
           'display_timezone' => FALSE,
           'month_format' => 'full',
-        ]
+        ],
       ],
     ];
 

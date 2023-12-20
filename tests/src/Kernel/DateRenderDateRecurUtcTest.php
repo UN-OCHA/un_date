@@ -37,7 +37,7 @@ class DateRenderDateRecurUtcTest extends UnDateTestBase {
         'type' => 'un_data_date_recur_basic',
         'settings' => [
           'display_timezone' => TRUE,
-        ]
+        ],
       ],
     ];
 

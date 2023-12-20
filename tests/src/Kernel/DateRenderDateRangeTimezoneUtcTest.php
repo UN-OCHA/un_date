@@ -36,7 +36,7 @@ class DateRenderDateRangeTimezoneUtcTest extends UnDateTestBase {
         'type' => 'un_date_daterange_timezone',
         'settings' => [
           'display_timezone' => TRUE,
-        ]
+        ],
       ],
     ];
 

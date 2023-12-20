@@ -2,13 +2,9 @@
 
 namespace Drupal\Tests\un_date\Kernel;
 
-use Drupal\Core\Entity\Entity\EntityViewDisplay;
 use Drupal\Core\Render\RenderContext;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\entity_test\Entity\EntityTest;
-use Drupal\field\Entity\FieldConfig;
-use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\Tests\field\Kernel\FieldKernelTestBase;
 use Drupal\un_date\UnDateRange;
 
 /**
@@ -16,23 +12,7 @@ use Drupal\un_date\UnDateRange;
  *
  * @group datetime
  */
-class DateTwigDateRangeTest extends FieldKernelTestBase {
-
-  use UnDateTestTrait;
-
-  /**
-   * A field storage to use in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldStorageConfig
-   */
-  protected $fieldStorage;
-
-  /**
-   * The field used in this test class.
-   *
-   * @var \Drupal\field\Entity\FieldConfig
-   */
-  protected $field;
+class DateTwigDateRangeTest extends UnDateTestBase {
 
   /**
    * {@inheritdoc}
@@ -47,35 +27,19 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
    * {@inheritdoc}
    */
   protected function setUp(): void {
-    parent::setUp();
-
-    // Add a datetime range field.
-    $this->fieldStorage = FieldStorageConfig::create([
-      'field_name' => mb_strtolower($this->randomMachineName()),
-      'entity_type' => 'entity_test',
-      'type' => 'daterange',
-      'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATETIME],
-    ]);
-    $this->fieldStorage->save();
-
-    $this->field = FieldConfig::create([
-      'field_storage' => $this->fieldStorage,
-      'bundle' => 'entity_test',
-      'required' => TRUE,
-    ]);
-    $this->field->save();
-
-    $display_options = [
-      'type' => 'un_date_daterange',
-      'label' => 'hidden',
+    $this->testConfig = [
+      'timezone' => 'Europe/Brussels',
+      'storage' => [
+        'type' => 'daterange',
+        'settings' => ['datetime_type' => DateRangeItem::DATETIME_TYPE_DATETIME],
+      ],
+      'display' => [
+        'type' => 'un_date_daterange',
+        'settings' => [],
+      ],
     ];
-    EntityViewDisplay::create([
-      'targetEntityType' => $this->field->getTargetEntityTypeId(),
-      'bundle' => $this->field->getTargetBundle(),
-      'mode' => 'default',
-      'status' => TRUE,
-    ])->setComponent($this->fieldStorage->getName(), $display_options)
-      ->save();
+
+    parent::setUp();
   }
 
   /**
@@ -175,15 +139,36 @@ class DateTwigDateRangeTest extends FieldKernelTestBase {
   /**
    * Test twig filters on date ranges.
    *
-   * @dataProvider providerTestDataFiltersPart3
+   * @x-dataProvider providerTestDataFiltersPart3
    */
-  public function testTwigFiltersWithDoubleInput($template, $expected, $start, $end) {
-    $variable = new UnDateRange($start, $end);
-    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+  public function testTwigFiltersWithDoubleInput($template = NULL, $expected = NULL, $start = NULL, $end = NULL) {
+    if ($this->inlineDataProvider) {
+      $data = array_merge(
+        $this->providerTestDataFiltersPart3(),
+      );
 
-    $variable = new \DateTime($start);
-    $var2 = new \DateTime($end);
-    $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable, $var2));
+      foreach ($data as $name => $row) {
+        $template = $row['template'];
+        $expected = $row['expected'];
+        $start = $row['start'];
+        $end = $row['end'];
+
+        $variable = new UnDateRange($start, $end);
+        $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable), $name);
+
+        $variable = new \DateTime($start);
+        $var2 = new \DateTime($end);
+        $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable, $var2), $name);
+      }
+    }
+    else {
+      $variable = new UnDateRange($start, $end);
+      $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable));
+
+      $variable = new \DateTime($start);
+      $var2 = new \DateTime($end);
+      $this->assertSame($expected, (string) $this->renderObjectWithTwig($template, $variable, $var2));
+    }
   }
 
   /**

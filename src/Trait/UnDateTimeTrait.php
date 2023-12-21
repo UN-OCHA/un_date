@@ -306,7 +306,7 @@ trait UnDateTimeTrait {
    */
   protected function formatTimezone(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed|DateRangeItem $date, bool $show_timezone = FALSE) : string {
     if ($show_timezone) {
-      return ' ' . $date->getTimezone()->getName();
+      return ' (' . $date->getTimezone()->getName() . ')';
     }
 
     return '';

@@ -103,10 +103,22 @@ class DateRenderDateRangeTimezoneBrusselsTest extends UnDateTestBase {
         'end' => '2023-12-06T10:11:12',
         'timezone' => 'UTC',
       ],
-      __FUNCTION__ . '::same_day' => [
-        'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m. (UTC)',
+      __FUNCTION__ . '::same_day_am' => [
+        'expected' => 'Date: 6.12.2023 10.11 — 11.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
+        'timezone' => 'UTC',
+      ],
+      __FUNCTION__ . '::same_day_pm' => [
+        'expected' => 'Date: 6.12.2023 10.11 — 11.11 p.m.',
+        'start' => '2023-12-06T22:11:12',
+        'end' => '2023-12-06T23:11:12',
+        'timezone' => 'UTC',
+      ],
+      __FUNCTION__ . '::same_day_ampm' => [
+        'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 p.m.',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-06T23:11:12',
         'timezone' => 'UTC',
       ],
       __FUNCTION__ . '::next_day' => [
@@ -148,7 +160,7 @@ class DateRenderDateRangeTimezoneBrusselsTest extends UnDateTestBase {
         'timezone' => 'Europe/Kyiv',
       ],
       __FUNCTION__ . '::same_day' => [
-        'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m. (Europe/Amsterdam)',
+        'expected' => 'Date: 6.12.2023 10.11 — 11.11 a.m. (Europe/Amsterdam)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'Europe/Amsterdam',

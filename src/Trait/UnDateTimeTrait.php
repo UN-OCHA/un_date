@@ -47,7 +47,7 @@ trait UnDateTimeTrait {
   /**
    * Format time.
    */
-  protected function formatTime(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed $date, $show_timezone = FALSE) : string {
+  protected function formatTime(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed $date, $show_timezone = FALSE, $hide_ampm = FALSE) : string {
     if ($date instanceof DateTimeComputed) {
       $date = $date->getValue();
     }
@@ -112,6 +112,10 @@ trait UnDateTimeTrait {
         }
         break;
 
+    }
+
+    if ($hide_ampm) {
+      $ampm = '';
     }
 
     return $date->format($time_format) . $ampm . $this->formatTimezone($date, $show_timezone);
@@ -263,7 +267,8 @@ trait UnDateTimeTrait {
       if ($this->allDay($date)) {
         return $this->formatDate($date->start_date, $month_format);
       }
-      return $this->formatDateTime($date->start_date, $month_format, FALSE) . $this->getSeparatorWithSpaces() . $this->formatTime($date->end_date, $show_timezone);
+
+      return $this->formatDate($date->start_date, $month_format) . ' ' . $this->formatTimerange($date, $show_timezone);
     }
 
     if ($this->allDay($date)) {
@@ -271,6 +276,37 @@ trait UnDateTimeTrait {
     }
 
     return $this->formatDateTime($date->start_date, $month_format, FALSE) . $this->getSeparatorWithSpaces() . $this->formatDateTime($date->end_date, $month_format, $show_timezone);
+  }
+
+  /**
+   * Format timerange.
+   */
+  public function formatTimerange($date, $show_timezone = FALSE) : string {
+    if (!$this->isDateRange($date)) {
+      return $this->formatTime($date, $show_timezone);
+    }
+
+    // All day.
+    if ($this->allDay($date)) {
+      return '';
+    }
+
+    // Same.
+    if ($this->sameDate($date)) {
+      return $this->formatTime($date->start_date, $show_timezone);
+    }
+
+    // Same day.
+    if ($this->sameDay($date)) {
+      // Check if both are AM. But only in English.
+      if ($this->getLocale() == 'en') {
+        if ($this->formatAmPm($date->start_date) == $this->formatAmPm($date->end_date)) {
+          return $this->formatTime($date->start_date, FALSE, TRUE) . $this->getSeparatorWithSpaces() . $this->formatTime($date->end_date, $show_timezone);
+        }
+      }
+    }
+
+    return $this->formatTime($date->start_date, FALSE) . $this->getSeparatorWithSpaces() . $this->formatTime($date->end_date, $show_timezone);
   }
 
   /**

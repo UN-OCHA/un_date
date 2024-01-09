@@ -184,7 +184,7 @@ class DateTwigDateRangeTest extends UnDateTestBase {
       ],
       __FUNCTION__ . '::same_day' => [
         'template' => '{{ variable|un_daterange }}',
-        'expected' => '6.12.2023 10.11 a.m. — 11.11 a.m.',
+        'expected' => '6.12.2023 10.11 — 11.11 a.m.',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
       ],
@@ -222,13 +222,13 @@ class DateTwigDateRangeTest extends UnDateTestBase {
       ],
       __FUNCTION__ . '::same_day' => [
         'template' => '{{ variable|un_timerange }}',
-        'expected' => '10.11 a.m. — 11.11 a.m. (UTC)',
+        'expected' => '10.11 — 11.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
       ],
       __FUNCTION__ . '::next_day' => [
         'template' => '{{ variable|un_timerange }}',
-        'expected' => '10.11 a.m. — 11.11 a.m. (UTC)',
+        'expected' => '10.11 — 11.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
       ],
@@ -260,7 +260,7 @@ class DateTwigDateRangeTest extends UnDateTestBase {
       ],
       __FUNCTION__ . '::same_day' => [
         'template' => '{{ variable|un_daterange("numeric", "local_times") }}',
-        'expected' => '6.12.2023 10.11 a.m. — 11.11 a.m. (UTC)',
+        'expected' => '6.12.2023 10.11 — 11.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12 UTC',
         'end' => '2023-12-06T11:11:12 UTC',
       ],

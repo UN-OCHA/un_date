@@ -104,7 +104,7 @@ class DateRenderDateRangeTimezoneUtcTest extends UnDateTestBase {
         'timezone' => 'UTC',
       ],
       __FUNCTION__ . '::same_day' => [
-        'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m. (UTC)',
+        'expected' => 'Date: 6.12.2023 10.11 — 11.11 a.m. (UTC)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'UTC',
@@ -148,7 +148,7 @@ class DateRenderDateRangeTimezoneUtcTest extends UnDateTestBase {
         'timezone' => 'Europe/Kyiv',
       ],
       __FUNCTION__ . '::same_day' => [
-        'expected' => 'Date: 6.12.2023 10.11 a.m. — 11.11 a.m. (Europe/Amsterdam)',
+        'expected' => 'Date: 6.12.2023 10.11 — 11.11 a.m. (Europe/Amsterdam)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'Europe/Amsterdam',

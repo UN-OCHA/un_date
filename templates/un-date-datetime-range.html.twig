@@ -27,9 +27,8 @@
           {% if all_day %}
             <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }}</time>
           {% else %}
-            <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}</time>
-            —
-            <time class="un-date__date__value" datetime="{{ iso_end_date }}">{{ end_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time></dd>
+            <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ daterange|un_timerange }} {% if display_timezone %} ({{ timezone }}){% endif %}</time>
+            <time class="un-date__date__value" datetime="{{ iso_end_date }}"></time></dd>
           {% endif %}
       </div>
     {% else %}

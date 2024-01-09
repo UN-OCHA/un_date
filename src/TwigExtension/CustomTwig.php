@@ -290,14 +290,14 @@ class CustomTwig extends AbstractExtension {
   /**
    * Get start and end time.
    */
-  public function getUnTimerange($daterange) : string {
-    $show_timezone = TRUE;
+  public function getUnTimerange($daterange, bool $show_timezone = FALSE) : string {
+    $date_item = $this->getDateFromDateItem($daterange);
 
-    if ($this->allDay($daterange)) {
+    if (!$date_item) {
       return '';
     }
 
-    return $this->formatTime($daterange->start_date, FALSE) . ' — ' . $this->formatTime($daterange->end_date, $show_timezone);
+    return $this->formatTimerange($daterange, $show_timezone);
   }
 
   /**

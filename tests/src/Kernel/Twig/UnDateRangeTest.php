@@ -299,7 +299,7 @@ class UnDateRangeTest extends TwigBase {
       ],
       __FUNCTION__ . '::UnDateRange2' => [
         'expected' => [
-          'en' => '6.12.2023 8.11 p.m. — 9.11 p.m.',
+          'en' => '6.12.2023 8.11 — 9.11 p.m.',
           'fr' => '6.12.2023 20 h 11 — 21 h 11',
           'es' => '6.12.2023 20.11 horas',
           'ar' => '6.12.2023 20.11',
@@ -310,7 +310,7 @@ class UnDateRangeTest extends TwigBase {
       ],
       __FUNCTION__ . '::UnDateRange3' => [
         'expected' => [
-          'en' => '6.12.2023 10 a.m. — 11 a.m.',
+          'en' => '6.12.2023 10 — 11 a.m.',
           'fr' => '6.12.2023 10 heures — 11 heures',
           'es' => '6.12.2023 10 horas',
           'ar' => '6.12.2023 10',
@@ -332,7 +332,7 @@ class UnDateRangeTest extends TwigBase {
       ],
       __FUNCTION__ . '::UnDateRange5' => [
         'expected' => [
-          'en' => '6.12.2023 1 a.m. — 2 a.m.',
+          'en' => '6.12.2023 1 — 2 a.m.',
           'fr' => '6.12.2023 1 heure — 2 heures',
           'es' => '6.12.2023 1 hora',
           'ar' => '6.12.2023 1',
@@ -363,9 +363,20 @@ class UnDateRangeTest extends TwigBase {
         'date' => new UnDateRange('2023-12-06T12:00:00', '2023-12-06T14:00:00'),
         'format' => 'numeric',
       ],
+      __FUNCTION__ . '::UnDateRange8' => [
+        'expected' => [
+          'en' => '6.12.2023 2 a.m. — noon',
+          'fr' => '6.12.2023 2 heures — midi',
+          'es' => '6.12.2023 mediodía',
+          'ar' => '6.12.2023 وقت الظهيرة',
+          'zh-hans' => '6.12.2023 中午',
+        ],
+        'date' => new UnDateRange('2023-12-06T02:00:00', '2023-12-06T12:00:00'),
+        'format' => 'numeric',
+      ],
       __FUNCTION__ . '::UnDateRange' => [
         'expected' => [
-          'en' => '6.12.2023 10.11 a.m. — 10.11 a.m.',
+          'en' => '6.12.2023 10.11 — 10.11 a.m.',
           'fr' => '6.12.2023 10 h 11 — 10 h 11',
           'es' => '6.12.2023 10.11 horas',
           'ar' => '6.12.2023 10.11',
@@ -376,7 +387,7 @@ class UnDateRangeTest extends TwigBase {
       ],
       __FUNCTION__ . '::DateRange' => [
         'expected' => [
-          'en' => '6.12.2023 10.11 a.m. — 11.11 a.m.',
+          'en' => '6.12.2023 10.11 — 11.11 a.m.',
           'fr' => '6.12.2023 10 h 11 — 11 h 11',
           'es' => '6.12.2023 10.11 horas',
           'ar' => '6.12.2023 10.11',

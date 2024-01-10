@@ -16,7 +16,7 @@
 <dl{{ attributes.addClass(classes) }}>
   {% if same_date %}
   <div class="un-date__wrapper un-date__wrapper--date un-date__wrapper--date--start">
-    <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time>
+    <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}{% if display_timezone %} <span class="un-date__timezone">({{ timezone }})</span>{% endif %}</time>
   </div>
   {% else %}
     {% if same_day %}
@@ -24,7 +24,7 @@
         {% if all_day %}
           <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }}</time>
         {% else %}
-          <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ daterange|un_timerange }} {% if display_timezone %} ({{ timezone }}){% endif %}</time>
+          <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ daterange|un_timerange }} {% if display_timezone %} <span class="un-date__timezone">({{ timezone }})</span>{% endif %}</time>
           <time class="un-date__date__value" datetime="{{ iso_end_date }}"></time>
         {% endif %}
       </div>
@@ -33,13 +33,13 @@
         {% if all_day %}
           <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }}</time>
         {% else %}
-          <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time>
+          <time class="un-date__date__value" datetime="{{ iso_start_date }}">{{ start_date }} {{ start_time }}{% if display_timezone %} <span class="un-date__timezone">({{ timezone }})</span>{% endif %}</time>
         {% endif %}
         —
         {% if all_day %}
           <time class="un-date__date__value" datetime="{{ iso_end_date }}">{{ end_date }}</time>
         {% else %}
-          <time class="un-date__date__value" datetime="{{ iso_end_date }}">{{ end_date }} {{ end_time }}{% if display_timezone %} ({{ timezone }}){% endif %}</time>
+          <time class="un-date__date__value" datetime="{{ iso_end_date }}">{{ end_date }} {{ end_time }}{% if display_timezone %} <span class="un-date__timezone">({{ timezone }})</span>{% endif %}</time>
         {% endif %}
       </div>
     {% endif %}

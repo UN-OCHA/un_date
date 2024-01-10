@@ -13,7 +13,10 @@
 .un-date__time {
   display: inline;
 }
-
+.un-date__timezone {
+  font-size: 90%;
+  font-style: italic;
+}
 .un-date.rtl {
   direction: rtl;
 }

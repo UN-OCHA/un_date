@@ -17,6 +17,7 @@ use Drupal\date_recur\Plugin\Field\FieldType\DateRecurItem;
 use Drupal\un_date\Plugin\DateRecurInterpreter\UnRRulelInterpreter;
 use Drupal\un_date\Trait\UnDateTimeFormatterTrait;
 use Drupal\un_date\UnDateRange;
+use Drupal\un_date\UnDateTimeZone;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -190,7 +191,7 @@ final class UnDateDateRecurBasic extends FormatterBase {
     $same_date = FALSE;
     $same_day = FALSE;
 
-    $timezone = $start_date->getTimezone();
+    $timezone = new UnDateTimeZone($start_date->getTimezone());
     $all_day = $this->allDayStartEnd($start_date, $end_date);
 
     if ($start_date->getTimestamp() == $end_date->getTimestamp()) {
@@ -213,7 +214,7 @@ final class UnDateDateRecurBasic extends FormatterBase {
       '#start_time' => $this->formatTime($start_date),
       '#end_date' => $this->formatDate($end_date),
       '#end_time' => $this->formatTime($end_date),
-      '#timezone' => $timezone->getName(),
+      '#timezone' => $timezone->getHumanFriendlyName(),
       '#display_timezone' => TRUE,
       '#same_date' => $same_date,
       '#same_day' => $same_day,

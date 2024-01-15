@@ -9,6 +9,7 @@ use Drupal\datetime\DateTimeComputed;
 use Drupal\datetime_range\Plugin\Field\FieldType\DateRangeItem;
 use Drupal\datetime_range_timezone\Plugin\Field\FieldType\DateRangeTimezone;
 use Drupal\un_date\UnDateRange;
+use Drupal\un_date\UnDateTimeZone;
 
 /**
  * Common formatting methods.
@@ -342,7 +343,8 @@ trait UnDateTimeTrait {
    */
   protected function formatTimezone(\DateTime|\DateTimeImmutable|DrupalDateTime|DateTimeComputed|DateRangeItem $date, bool $show_timezone = FALSE) : string {
     if ($show_timezone) {
-      return ' (' . $date->getTimezone()->getName() . ')';
+      $timezone = new UnDateTimeZone($date->getTimezone());
+      return ' (' . $timezone->getHumanFriendlyName() . ')';
     }
 
     return '';

@@ -247,10 +247,10 @@ class DateRenderDateRecurBrusselsTest extends UnDateTestBase {
         'timezone' => 'Europe/Amsterdam',
       ],
       __FUNCTION__ . '::next_day' => [
-        'expected' => 'Start date: 6.12.2023 10.11 a.m. (Asia/Tokyo) End date: 7.12.2023 11.11 a.m. (Asia/Tokyo)',
+        'expected' => 'Start date: 6.12.2023 10.11 a.m. (America/New York) End date: 7.12.2023 11.11 a.m. (America/New York)',
         'start' => '2023-12-06T10:11:12',
         'end' => '2023-12-07T11:11:12',
-        'timezone' => 'Asia/Tokyo',
+        'timezone' => 'America/New_York',
       ],
       __FUNCTION__ . '::all_day' => [
         'expected' => 'Date: 6.12.2023',

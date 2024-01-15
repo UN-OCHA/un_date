@@ -7,6 +7,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItem;
 use Drupal\datetime\Plugin\Field\FieldType\DateTimeItemInterface;
 use Drupal\un_date\Trait\UnDateTimeFormatterTrait;
+use Drupal\un_date\UnDateTimeZone;
 
 /**
  * Plugin implementation of the 'Default' formatter for 'datetime' fields.
@@ -46,9 +47,9 @@ final class UnDateDateTime extends FormatterBase {
       $tz = $this->getSetting('display_timezone');
       $datetime_type = $this->getFieldSetting('datetime_type');
 
-      $timezone = new \DateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
+      $timezone = new UnDateTimeZone(DateTimeItemInterface::STORAGE_TIMEZONE);
       if ($datetime_type === DateTimeItem::DATETIME_TYPE_DATETIME) {
-        $timezone = new \DateTimeZone(date_default_timezone_get());
+        $timezone = new UnDateTimeZone(date_default_timezone_get());
       }
       $date->setTimeZone($timezone);
 
@@ -66,7 +67,7 @@ final class UnDateDateTime extends FormatterBase {
         '#iso_start_date' => $iso_start_date,
         '#start_date' => $this->formatDate($date),
         '#start_time' => $this->formatTime($date),
-        '#timezone' => $timezone->getName(),
+        '#timezone' => $timezone->getHumanFriendlyName(),
         '#display_timezone' => $tz,
         '#cache' => [
           'contexts' => [

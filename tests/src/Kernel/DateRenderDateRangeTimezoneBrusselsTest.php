@@ -165,6 +165,12 @@ class DateRenderDateRangeTimezoneBrusselsTest extends UnDateTestBase {
         'end' => '2023-12-06T11:11:12',
         'timezone' => 'Europe/Amsterdam',
       ],
+      __FUNCTION__ . '::same_day2' => [
+        'expected' => 'Date: 6.12.2023 10.11 — 11.11 a.m. (America/New York)',
+        'start' => '2023-12-06T10:11:12',
+        'end' => '2023-12-06T11:11:12',
+        'timezone' => 'America/New_York',
+      ],
       __FUNCTION__ . '::next_day' => [
         'expected' => 'Start date: 6.12.2023 10.11 a.m. (Asia/Tokyo) End date: 7.12.2023 11.11 a.m. (Asia/Tokyo)',
         'start' => '2023-12-06T10:11:12',
@@ -182,6 +188,12 @@ class DateRenderDateRangeTimezoneBrusselsTest extends UnDateTestBase {
         'start' => '2023-12-06T00:00:00',
         'end' => '2023-12-06T00:00:00',
         'timezone' => 'Europe/Bucharest',
+      ],
+      __FUNCTION__ . '::all_day_3' => [
+        'expected' => 'Date: 6.12.2023',
+        'start' => '2023-12-06T00:00:00',
+        'end' => '2023-12-06T00:00:00',
+        'timezone' => 'America/New_York',
       ],
       __FUNCTION__ . '::all_day_multi' => [
         'expected' => 'Start date: 6.12.2023 End date: 7.12.2023',

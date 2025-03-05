@@ -35,7 +35,6 @@ class UnDateFormatter extends DateFormatter {
     // Create a DrupalDateTime object from the timestamp and timezone.
     $create_settings = [
       'langcode' => $langcode,
-      'country' => $this->country(),
     ];
     $date = DrupalDateTime::createFromTimestamp($timestamp, $this->timezones[$timezone], $create_settings);
 

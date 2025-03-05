@@ -20,6 +20,10 @@ jobs:
         exclude:
           - drupal-core: '10.4.x'
             php-versions: '8.4'
+          - drupal-core: '10.2.x'
+            php-versions: '8.2'
+          - drupal-core: '10.1.x'
+            php-versions: '8.2'
     steps:
       - name: Checkout Drupal core
         uses: actions/checkout@v4
